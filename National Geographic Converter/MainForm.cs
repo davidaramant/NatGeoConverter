@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -20,6 +21,9 @@ namespace National_Geographic_Converter {
 
         int _numberDone;
         int _totalNumber;
+
+        string _inputPath;
+        string _outputPath;
 
         public MainForm() {
             InitializeComponent();
@@ -41,7 +45,7 @@ namespace National_Geographic_Converter {
 
         #endregion UI Properties
 
-        #region UI Update Code
+        #region UI Code
 
         void ChangeState( UIState state ) {
             SetValueSafe( ChangeStateUnsafe, state );
@@ -57,9 +61,12 @@ namespace National_Geographic_Converter {
                 case UIState.InputChosen:
                     _pickInputButton.Enabled = false;
                     _pickOutputButton.Enabled = true;
+                    _inputPathTextBox.Text = _inputPath;
                     break;
                 case UIState.Processing:
                     _pickOutputButton.Enabled = false;
+                    _outputPathTextBox.Text = _outputPath;
+                    StartProcessing();
                     break;
                 case UIState.Done:
                 default:
@@ -83,7 +90,7 @@ namespace National_Geographic_Converter {
 
         void SetTotalNumberUnsafe( int totalNumber ) {
             _totalNumber = totalNumber;
-            _numTotalLabel.Text = _totalNumber.ToString();
+            _numTotalLabel.Text = _totalNumber.ToString("###,###,###,###");
             _progressBar.Maximum = _totalNumber;
         }
 
@@ -95,13 +102,32 @@ namespace National_Geographic_Converter {
             }
         }
 
-        #endregion UI Update Code
-
         private void PickInputButton_Click( object sender, EventArgs e ) {
-
+            using( var chooser = new FolderBrowserDialog() ) {
+                chooser.ShowNewFolderButton = false;
+                if( chooser.ShowDialog() == System.Windows.Forms.DialogResult.OK ) {
+                    _inputPath = Path.GetFullPath( chooser.SelectedPath );
+                    ChangeState( UIState.InputChosen );
+                }
+            }
         }
 
         private void PickOutputButton_Click( object sender, EventArgs e ) {
+            using( var chooser = new FolderBrowserDialog() ) {
+                chooser.ShowNewFolderButton = true;
+                if( chooser.ShowDialog() == System.Windows.Forms.DialogResult.OK ) {
+                    _outputPath = Path.GetFullPath( chooser.SelectedPath );
+                    ChangeState( UIState.Processing );
+                }
+            }
+        }
+
+        #endregion UI Code
+
+        void StartProcessing() {
+            var allFiles = Directory.EnumerateFiles( _inputPath, "*.cng", SearchOption.AllDirectories ).ToArray();
+
+            TotalNumber = allFiles.Length;
 
         }
     }

@@ -29,17 +29,17 @@
         private void InitializeComponent()
         {
             this._pickInputButton = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this._inputPathTextBox = new System.Windows.Forms.TextBox();
+            this._outputPathTextBox = new System.Windows.Forms.TextBox();
             this._pickOutputButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this._progressBar = new System.Windows.Forms.ProgressBar();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this._numDoneLabel = new System.Windows.Forms.Label();
             this._numTotalLabel = new System.Windows.Forms.Label();
+            this._numDoneLabel = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this._progressBar = new System.Windows.Forms.ProgressBar();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -54,25 +54,25 @@
             this._pickInputButton.UseVisualStyleBackColor = true;
             this._pickInputButton.Click += new System.EventHandler(this.PickInputButton_Click);
             // 
-            // textBox1
+            // _inputPathTextBox
             // 
-            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this._inputPathTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox1.Location = new System.Drawing.Point(67, 12);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(230, 22);
-            this.textBox1.TabIndex = 1;
+            this._inputPathTextBox.Location = new System.Drawing.Point(67, 12);
+            this._inputPathTextBox.Name = "_inputPathTextBox";
+            this._inputPathTextBox.ReadOnly = true;
+            this._inputPathTextBox.Size = new System.Drawing.Size(230, 22);
+            this._inputPathTextBox.TabIndex = 1;
             // 
-            // textBox2
+            // _outputPathTextBox
             // 
-            this.textBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this._outputPathTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox2.Location = new System.Drawing.Point(67, 40);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.ReadOnly = true;
-            this.textBox2.Size = new System.Drawing.Size(230, 22);
-            this.textBox2.TabIndex = 2;
+            this._outputPathTextBox.Location = new System.Drawing.Point(67, 40);
+            this._outputPathTextBox.Name = "_outputPathTextBox";
+            this._outputPathTextBox.ReadOnly = true;
+            this._outputPathTextBox.Size = new System.Drawing.Size(230, 22);
+            this._outputPathTextBox.TabIndex = 2;
             // 
             // _pickOutputButton
             // 
@@ -120,32 +120,14 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Status";
             // 
-            // _progressBar
+            // _numTotalLabel
             // 
-            this._progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this._progressBar.Location = new System.Drawing.Point(6, 80);
-            this._progressBar.Name = "_progressBar";
-            this._progressBar.Size = new System.Drawing.Size(390, 23);
-            this._progressBar.TabIndex = 0;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(3, 28);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(64, 13);
-            this.label3.TabIndex = 1;
-            this.label3.Text = "Files Done:";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(3, 52);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(35, 13);
-            this.label4.TabIndex = 2;
-            this.label4.Text = "Total:";
+            this._numTotalLabel.AutoSize = true;
+            this._numTotalLabel.Location = new System.Drawing.Point(77, 52);
+            this._numTotalLabel.Name = "_numTotalLabel";
+            this._numTotalLabel.Size = new System.Drawing.Size(66, 13);
+            this._numTotalLabel.TabIndex = 4;
+            this._numTotalLabel.Text = "##TOTAL##";
             // 
             // _numDoneLabel
             // 
@@ -156,14 +138,32 @@
             this._numDoneLabel.TabIndex = 3;
             this._numDoneLabel.Text = "##DONE##";
             // 
-            // _numTotalLabel
+            // label4
             // 
-            this._numTotalLabel.AutoSize = true;
-            this._numTotalLabel.Location = new System.Drawing.Point(77, 52);
-            this._numTotalLabel.Name = "_numTotalLabel";
-            this._numTotalLabel.Size = new System.Drawing.Size(66, 13);
-            this._numTotalLabel.TabIndex = 4;
-            this._numTotalLabel.Text = "##TOTAL##";
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(3, 52);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(35, 13);
+            this.label4.TabIndex = 2;
+            this.label4.Text = "Total:";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(3, 28);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(64, 13);
+            this.label3.TabIndex = 1;
+            this.label3.Text = "Files Done:";
+            // 
+            // _progressBar
+            // 
+            this._progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this._progressBar.Location = new System.Drawing.Point(6, 80);
+            this._progressBar.Name = "_progressBar";
+            this._progressBar.Size = new System.Drawing.Size(390, 23);
+            this._progressBar.TabIndex = 0;
             // 
             // MainForm
             // 
@@ -174,8 +174,8 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this._pickOutputButton);
-            this.Controls.Add(this.textBox2);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this._outputPathTextBox);
+            this.Controls.Add(this._inputPathTextBox);
             this.Controls.Add(this._pickInputButton);
             this.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "MainForm";
@@ -190,8 +190,8 @@
         #endregion
 
         private System.Windows.Forms.Button _pickInputButton;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox _inputPathTextBox;
+        private System.Windows.Forms.TextBox _outputPathTextBox;
         private System.Windows.Forms.Button _pickOutputButton;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
