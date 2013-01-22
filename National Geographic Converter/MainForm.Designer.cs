@@ -122,21 +122,21 @@
             // 
             // _numTotalLabel
             // 
-            this._numTotalLabel.AutoSize = true;
             this._numTotalLabel.Location = new System.Drawing.Point(77, 52);
             this._numTotalLabel.Name = "_numTotalLabel";
-            this._numTotalLabel.Size = new System.Drawing.Size(66, 13);
+            this._numTotalLabel.Size = new System.Drawing.Size(87, 13);
             this._numTotalLabel.TabIndex = 4;
             this._numTotalLabel.Text = "##TOTAL##";
+            this._numTotalLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // _numDoneLabel
             // 
-            this._numDoneLabel.AutoSize = true;
             this._numDoneLabel.Location = new System.Drawing.Point(77, 28);
             this._numDoneLabel.Name = "_numDoneLabel";
-            this._numDoneLabel.Size = new System.Drawing.Size(66, 13);
+            this._numDoneLabel.Size = new System.Drawing.Size(87, 13);
             this._numDoneLabel.TabIndex = 3;
             this._numDoneLabel.Text = "##DONE##";
+            this._numDoneLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // label4
             // 

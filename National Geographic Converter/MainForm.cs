@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
 using System.IO;
-using System.Text;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace National_Geographic_Converter {
     public partial class MainForm : Form {
-        
+
         enum UIState {
             Idle,
             InputChosen,
@@ -19,14 +16,20 @@ namespace National_Geographic_Converter {
             Done
         }
 
+        private readonly object _numberDoneLock = new object();
+
         int _numberDone;
         int _totalNumber;
 
         string _inputPath;
         string _outputPath;
 
+        private readonly BackgroundWorker _worker = new BackgroundWorker();
+
         public MainForm() {
             InitializeComponent();
+
+            _worker.DoWork += Worker_DoWork;
 
             ChangeState( UIState.Idle );
         }
@@ -34,8 +37,16 @@ namespace National_Geographic_Converter {
         #region UI Properties
 
         int NumberDone {
-            get { return _numberDone; }
-            set { SetNumberDone( value ); }
+            get {
+                lock( _numberDoneLock ) {
+                    return _numberDone;
+                }
+            }
+            set {
+                lock( _numberDoneLock ) {
+                    SetNumberDone( value );
+                }
+            }
         }
 
         int TotalNumber {
@@ -66,7 +77,8 @@ namespace National_Geographic_Converter {
                 case UIState.Processing:
                     _pickOutputButton.Enabled = false;
                     _outputPathTextBox.Text = _outputPath;
-                    StartProcessing();
+
+                    _worker.RunWorkerAsync();
                     break;
                 case UIState.Done:
                 default:
@@ -80,7 +92,7 @@ namespace National_Geographic_Converter {
 
         void SetNumberDoneUnsafe( int numberDone ) {
             _numberDone = numberDone;
-            _numDoneLabel.Text = _numberDone.ToString();
+            _numDoneLabel.Text = _numberDone.ToString( "###,###,###,##0" );
             _progressBar.Value = _numberDone;
         }
 
@@ -90,7 +102,7 @@ namespace National_Geographic_Converter {
 
         void SetTotalNumberUnsafe( int totalNumber ) {
             _totalNumber = totalNumber;
-            _numTotalLabel.Text = _totalNumber.ToString("###,###,###,###");
+            _numTotalLabel.Text = _totalNumber.ToString( "###,###,###,##0" );
             _progressBar.Maximum = _totalNumber;
         }
 
@@ -124,11 +136,44 @@ namespace National_Geographic_Converter {
 
         #endregion UI Code
 
-        void StartProcessing() {
+        void Worker_DoWork( object sender, DoWorkEventArgs e ) {
             var allFiles = Directory.EnumerateFiles( _inputPath, "*.cng", SearchOption.AllDirectories ).ToArray();
 
+            NumberDone = 0;
             TotalNumber = allFiles.Length;
 
+            Parallel.ForEach(
+                allFiles,
+                originalPath => {
+                    File.WriteAllBytes(
+                    GetOutputFilePath( originalPath ),
+                    File.ReadAllBytes( originalPath ).Select( b => (byte)( b ^ 0xEF ) ).ToArray() );
+                    NumberDone++;
+                } );
+
+            ChangeState( UIState.Done );
+        }
+
+        private string GetOutputFilePath( string inputFilePath ) {
+            var components = inputFilePath.Split( new[] { Path.DirectorySeparatorChar } ).ToArray();
+
+            var eraPath = components[components.Length - 3];
+            var issuePath = components[components.Length - 2];
+            var fileName = Path.GetFileNameWithoutExtension( components[components.Length - 1] );
+
+            var fullEraPath = Path.Combine( _outputPath, eraPath );
+
+            if( !Directory.Exists( fullEraPath ) ) {
+                Directory.CreateDirectory( fullEraPath );
+            }
+
+            var fullIssuePath = Path.Combine( fullEraPath, issuePath );
+
+            if( !Directory.Exists( fullIssuePath ) ) {
+                Directory.CreateDirectory( fullIssuePath );
+            }
+
+            return Path.Combine( fullIssuePath, fileName + ".jpg" );
         }
     }
 }
