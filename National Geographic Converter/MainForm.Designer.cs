@@ -52,6 +52,7 @@
             this._pickInputButton.TabIndex = 0;
             this._pickInputButton.Text = "Pick Input...";
             this._pickInputButton.UseVisualStyleBackColor = true;
+            this._pickInputButton.Click += new System.EventHandler(this.PickInputButton_Click);
             // 
             // textBox1
             // 
@@ -59,6 +60,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox1.Location = new System.Drawing.Point(67, 12);
             this.textBox1.Name = "textBox1";
+            this.textBox1.ReadOnly = true;
             this.textBox1.Size = new System.Drawing.Size(230, 22);
             this.textBox1.TabIndex = 1;
             // 
@@ -68,6 +70,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox2.Location = new System.Drawing.Point(67, 40);
             this.textBox2.Name = "textBox2";
+            this.textBox2.ReadOnly = true;
             this.textBox2.Size = new System.Drawing.Size(230, 22);
             this.textBox2.TabIndex = 2;
             // 
@@ -80,6 +83,7 @@
             this._pickOutputButton.TabIndex = 3;
             this._pickOutputButton.Text = "Pick Output...";
             this._pickOutputButton.UseVisualStyleBackColor = true;
+            this._pickOutputButton.Click += new System.EventHandler(this.PickOutputButton_Click);
             // 
             // label1
             // 
