@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -142,8 +143,8 @@ namespace National_Geographic_Converter {
             NumberDone = 0;
             TotalNumber = allFiles.Length;
 
-            foreach( var batch in allFiles.InSetsOf( 400 ) ) {
-                var oldAndNewNames = batch.AsParallel().Select( name => new { 
+            foreach( var batch in allFiles.InSetsOf( 500 ) ) {
+                var oldAndNewNames = batch.Select( name => new { 
                         Old = name, 
                         New = GetOutputFilePath( name ) } );
 
