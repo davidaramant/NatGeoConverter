@@ -142,14 +142,31 @@ namespace National_Geographic_Converter {
             NumberDone = 0;
             TotalNumber = allFiles.Length;
 
-            Parallel.ForEach(
-                allFiles,
-                originalPath => {
-                    File.WriteAllBytes(
-                    GetOutputFilePath( originalPath ),
-                    File.ReadAllBytes( originalPath ).Select( b => (byte)( b ^ 0xEF ) ).ToArray() );
-                    NumberDone++;
-                } );
+            foreach( var batch in allFiles.InSetsOf( 100 ) ) {
+                var oldAndNewNames = batch.AsParallel().Select( name => new { 
+                        Old = name, 
+                        New = GetOutputFilePath( name ) } );
+
+                var loadedFiles =
+                    from namePair in oldAndNewNames
+                    where !File.Exists( namePair.New )
+                    let data = File.ReadAllBytes( namePair.Old )
+                    select new {
+                        OutputName = namePair.New,
+                        Data = data,
+                    };
+
+                var fixedDataFiles =
+                    loadedFiles.AsParallel().Select( loadedFile => new { 
+                        Name = loadedFile.OutputName, 
+                        Data = loadedFile.Data.Select( b => (byte)( b ^ 0xEF ) ).ToArray() } );
+
+                foreach( var fixedFile in fixedDataFiles ) {
+                    File.WriteAllBytes( fixedFile.Name, fixedFile.Data );
+                }
+
+                NumberDone += batch.Count();
+            }
 
             ChangeState( UIState.Done );
         }
