@@ -8,22 +8,24 @@ using System.Threading.Tasks;
 
 namespace DataModel {
     public sealed class NGIssue : IEnumerable<NGPage> {
-        readonly List<NGPage> _normalPages = new List<NGPage>();
+        readonly List<NGPage> _pages = new List<NGPage>();
         readonly List<NGPage> _specialPages = new List<NGPage>();
 
-        public NGIssue( IEnumerable<NGPage> pages, IEnumerable<NGPage> specialPages ) {
-            _normalPages.AddRange( pages );
-            _specialPages.AddRange( specialPages );
+        bool HasSpecialPages {
+            get { return _specialPages.Any(); }
+        }
+
+        public NGIssue( IEnumerable<NGPage> pages ) {
+            _pages.AddRange( pages.Where( p => !p.IsSpecial ) );
+            _specialPages.AddRange( pages.Where( p => p.IsSpecial ) );
         }
 
         public static NGIssue Parse( string path ) {
-            var allPages = Directory.GetFiles( path ).Select( pagePath => new NGPage( pagePath ) );
-
-            return null;
+            return new NGIssue( Directory.GetFiles( path, searchPattern: "*.jpg" ).Select( pagePath => new NGPage( pagePath ) ) );
         }
 
         public IEnumerator<NGPage> GetEnumerator() {
-            return _normalPages.Concat( _specialPages ).GetEnumerator();
+            return _pages.Concat( _specialPages ).GetEnumerator();
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() {
