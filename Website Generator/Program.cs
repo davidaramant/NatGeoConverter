@@ -1,17 +1,15 @@
-﻿using System;
+﻿using DataModel;
+using DataModel.Html;
+using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.IO;
-using System.Text;
-using System.Threading.Tasks;
-using DataModel;
+using System.Linq;
 
 namespace Website_Generator {
     class Program {
         readonly static string _basePath = Path.Combine( "G:", "National Geographic" );
         readonly static string _baseJpgPath = Path.Combine( _basePath, "JPG" );
-
+        readonly static string _baseHtmlPath = Path.Combine( _basePath, "HTML" );
 
         static void Main( string[] args ) {
             try {
@@ -21,6 +19,7 @@ namespace Website_Generator {
                 WL( e.ToString() );
             }
 
+            WL( "Done" );
             Console.ReadKey();
         }
 
@@ -37,15 +36,28 @@ namespace Website_Generator {
 
             WL( "{0} decades", decades.Length );
 
-            foreach( var decade in decades ) {
-                foreach( var issue in decade ) {
-                    foreach( var page in issue ) {
-                        if( page.Failed ) {
-                            WL( page.ToString() );
-                        }
-                    }
+            GenerateMainIndex( decades );
+
+
+
+        }
+
+        static void GenerateMainIndex( IEnumerable<NGDecade> decades ) {
+            var sw = new StringWriter();
+
+            using( var index = new HtmlWriter( sw ) ) {
+                using( var head = index.SubTag( "head" ) ) {
+                    head.Tag( "title", "National Geographic" );
+                }
+                using( var body = index.SubTag( "body" ) ) {
+                    body.Tag( "h1", "Hello" );
+                    body.Tag( "p", "World" );
                 }
             }
+
+            File.WriteAllText( Path.Combine( _basePath, "index.html" ), sw.ToString() );
         }
+
+
     }
 }
