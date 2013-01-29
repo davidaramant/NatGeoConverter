@@ -1,22 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Text;
-using System.Threading.Tasks;
+using System.Linq;
 
 namespace DataModel {
 
     public sealed class NGDecade : IEnumerable<NGIssue> {
         readonly List<NGIssue> _issues = new List<NGIssue>();
+        readonly string _name;
 
-        public NGDecade( IEnumerable<NGIssue> issues ) {
+        public string Name { get { return _name; } }
+
+        public NGDecade( IEnumerable<NGIssue> issues, string name ) {
             _issues.AddRange( issues );
+            _name = name;
         }
 
         public static NGDecade Parse( string path ) {
-            return new NGDecade( Directory.GetDirectories( path ).Select( NGIssue.Parse ) );
+            return new NGDecade( Directory.GetDirectories( path ).Select( NGIssue.Parse ), name: path );
         }
 
         public IEnumerator<NGIssue> GetEnumerator() {
