@@ -16,6 +16,8 @@ namespace DataModel {
         public bool IsSpecial { get; private set; }
         public bool Failed { get; private set; }
 
+        public string FullPath { get { return _path; } }
+
         public NGPage( string path ) {
             _path = path;
 
