@@ -22,8 +22,8 @@ namespace DataModel {
         }
 
         public NGIssue( IEnumerable<NGPage> pages, DateTime releaseDate ) {
-            _pages.AddRange( pages.Where( p => !p.IsSpecial ) );
-            _specialPages.AddRange( pages.Where( p => p.IsSpecial ) );
+            _pages.AddRange( pages.Where( p => !p.IsSpecial ).OrderBy( _ => _.FullPath ) );
+            _specialPages.AddRange( pages.Where( p => p.IsSpecial ).OrderBy( _ => _.FullPath ) );
             _releaseDate = releaseDate;
         }
 
