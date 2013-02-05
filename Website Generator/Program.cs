@@ -37,21 +37,18 @@ namespace Website_Generator {
             WL( "{0} decades", decades.Length );
 
             GenerateMainIndex( decades );
-
-
-
         }
 
         static void GenerateMainIndex( IEnumerable<NGDecade> decades ) {
             var sw = new StringWriter();
-
-            using( var index = new HtmlWriter( sw ) ) {
-                using( var head = index.SubTag( "head" ) ) {
-                    head.Tag( "title", "National Geographic" );
-                }
-                using( var body = index.SubTag( "body" ) ) {
-                    body.Tag( "h1", "Hello" );
-                    body.Tag( "p", "World" );
+            using( var index = new HtmlWriter( sw, "National Geographic" ) ) {
+                using( var previews = index.Div( className: "previews" ) ) {
+                    foreach( var decade in decades.OrderBy( _ => _.Name ) ) {
+                        using( var decadePreview = previews.Div( "previewBox" ) ) {
+                            decadePreview.WriteLine( String.Format( @"<img src=""{0}"" alt=""{1}""/>", decade.First().Cover.FullPath, decade.Name ) );
+                            decadePreview.Tag( "h2", decade.Name );
+                        }
+                    }
                 }
             }
 
