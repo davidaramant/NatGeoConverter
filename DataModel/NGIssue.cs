@@ -27,20 +27,20 @@ namespace DataModel {
             _releaseDate = releaseDate;
         }
 
-        public static NGIssue Parse( string path ) {
+        public static NGIssue Parse( string path, string basePath ) {
             var dateMatch = Regex.Match( path, @"(\d{4})(\d{2})(\d{2})", RegexOptions.Compiled );
 
             if( !dateMatch.Success ) {
                 throw new Exception( "Unknown date format: " + path );
             }
 
-            var releaseDate = new DateTime( 
+            var releaseDate = new DateTime(
                 year: Int32.Parse( dateMatch.Groups[1].Value ),
                 month: Int32.Parse( dateMatch.Groups[2].Value ),
                 day: Int32.Parse( dateMatch.Groups[3].Value ) );
 
             return new NGIssue(
-                    Directory.GetFiles( path, searchPattern: "*.jpg" ).Select( pagePath => new NGPage( pagePath ) ),
+                    Directory.GetFiles( path, searchPattern: "*.jpg" ).Select( pagePath => new NGPage( pagePath, basePath: basePath ) ),
                     releaseDate: releaseDate );
         }
 

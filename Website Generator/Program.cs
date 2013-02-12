@@ -32,7 +32,10 @@ namespace Website_Generator {
         }
 
         static void DoStuff() {
-            var decades = Directory.GetDirectories( _baseJpgPath ).Select( NGDecade.Parse ).ToArray();
+            var decades = 
+                Directory.GetDirectories( _baseJpgPath ).
+                Select( decadeDir => NGDecade.Parse( decadeDir, basePath: _basePath ) ).
+                ToArray();
 
             WL( "{0} decades", decades.Length );
 

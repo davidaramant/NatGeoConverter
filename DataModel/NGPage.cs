@@ -6,7 +6,8 @@ using System.Text.RegularExpressions;
 namespace DataModel {
     [DebuggerDisplay( "{ToString()}" )]
     public sealed class NGPage {
-        private string _path;
+        private readonly string _path;
+        private readonly string _relativePath;
 
         public int Year { get; private set; }
         public int Month { get; private set; }
@@ -18,8 +19,15 @@ namespace DataModel {
 
         public string FullPath { get { return _path; } }
 
-        public NGPage( string path ) {
+        public string RelativePath { get { return _relativePath; } }
+
+        public NGPage( string path, string basePath ) {
             _path = path;
+
+            _relativePath = 
+                Path.GetFullPath( path ).
+                Replace( Path.GetFullPath( basePath ), String.Empty ).
+                TrimStart( Path.DirectorySeparatorChar );
 
             var fileName = Path.GetFileName( path );
 

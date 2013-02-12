@@ -15,9 +15,9 @@ namespace DataModel {
             _name = name;
         }
 
-        public static NGDecade Parse( string path ) {
-            return new NGDecade( 
-                    Directory.GetDirectories( path ).Select( NGIssue.Parse ), 
+        public static NGDecade Parse( string path, string basePath ) {
+            return new NGDecade(
+                    Directory.GetDirectories( path ).Select( issueDir => NGIssue.Parse( issueDir, basePath: basePath ) ),
                     name: path.Substring( path.LastIndexOf( Path.DirectorySeparatorChar ) + 1 ) );
         }
 
