@@ -32,7 +32,7 @@ namespace Website_Generator {
         }
 
         static void DoStuff() {
-            var decades = 
+            var decades =
                 Directory.GetDirectories( _baseJpgPath ).
                 Select( decadeDir => NGDecade.Parse( decadeDir, basePath: _basePath ) ).
                 ToArray();
@@ -40,6 +40,7 @@ namespace Website_Generator {
             WL( "{0} decades", decades.Length );
 
             GenerateMainIndex( decades );
+            GenerateDecadeIndexes( decades );
         }
 
         static void GenerateMainIndex( IEnumerable<NGDecade> decades ) {
@@ -48,8 +49,10 @@ namespace Website_Generator {
                 using( var previews = index.Div( className: "previews" ) ) {
                     foreach( var decade in decades.OrderBy( _ => _.Name ) ) {
                         using( var decadePreview = previews.Div( "previewBox" ) ) {
-                            decadePreview.Img( link: decade.First().Cover.RelativePath, altText: decade.Name );
-                            decadePreview.H2( decade.Name );
+                            using( var decadeLink = decadePreview.Link( Path.Combine( "web", decade.Name, decade.Name + ".html" ) ) ) {
+                                decadeLink.Img( link: decade.First().Cover.RelativePath, altText: decade.Name );
+                                decadeLink.H2( decade.Name );
+                            }
                         }
                     }
                 }
@@ -58,6 +61,36 @@ namespace Website_Generator {
             File.WriteAllText( Path.Combine( _basePath, "index.html" ), sw.ToString(), System.Text.Encoding.UTF8 );
         }
 
+        static void GenerateDecadeIndexes( IEnumerable<NGDecade> decades ) {
+            foreach( var decade in decades ) {
 
+                var sw = new StringWriter();
+                using( var index = new HtmlWriter( sw, title: decade.Name, pathModifier: Path.Combine( "..", ".." ) ) ) {
+                    using( var previews = index.Div( className: "previews" ) ) {
+                        foreach( var issue in decade.OrderBy( _ => _.ReleaseDate ) ) {
+                            using( var issuePreview = previews.Div( "previewBox" ) ) {
+                                using( var previewLink = issuePreview.Link( Path.Combine( issue.Name, issue.Name + ".html" ) ) ) {
+                                    previewLink.Img(
+                                        link: Path.Combine( "..", "..", issue.Cover.RelativePath ),
+                                        altText: issue.Name );
+                                    previewLink.H2( issue.Name );
+                                }
+                            }
+                        }
+                    }
+                }
+
+                var path = Path.Combine( _basePath, "web", decade.Name );
+
+                if( !Directory.Exists( path ) ) {
+                    Directory.CreateDirectory( path );
+                }
+
+                File.WriteAllText(
+                    Path.Combine( path, decade.Name + ".html" ),
+                    sw.ToString(),
+                    System.Text.Encoding.UTF8 );
+            }
+        }
     }
 }

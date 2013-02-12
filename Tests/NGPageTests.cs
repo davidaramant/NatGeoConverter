@@ -7,6 +7,9 @@ namespace Tests {
         [TestCase( "NGM_1888_10_001_4.jpg", 1888, 10, "", 1, false )]
         [TestCase( "1930_01_Florida.jpg", 1930, 1, "", 0, true )]
         [TestCase( "NGM_1893_04A_001_4.jpg", 1893, 4, "A", 1, false )]
+        [TestCase( "NGM_SW_1993_11_001_4.jpg", 1993, 11, "", 1, false )]
+        [TestCase( "NGM_SE_1981_02_001_4.jpg", 1981, 02, "", 1, false )]
+        [TestCase( "NGM_1897_07_08_001_4.jpg", 1897, 07, "", 1, false )]       
         public void ShouldParseOutPageNumber( string path, int year, int month, string qualifier, int pageNumber, bool special ) {
             var page = new NGPage( path, "." );
             Assert.That( page.IsSpecial, Is.EqualTo( special ), "Did not determine if it was special." );

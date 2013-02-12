@@ -31,13 +31,13 @@ namespace DataModel {
 
             var fileName = Path.GetFileName( path );
 
-            var match = Regex.Match( fileName, @"NGM_(\d{4})_(\d{2})(\w)?_(\d{3})_4.jpg", RegexOptions.Compiled );
+            var match = Regex.Match( fileName, @"NGM_(\w{2}_)?(\d{4})_(\d{2})(\w)?_(\d{2}_)?(\d{3})_4.jpg", RegexOptions.Compiled );
 
             if( match.Success ) {
-                Year = Int32.Parse( match.Groups[1].Value );
-                Month = Int32.Parse( match.Groups[2].Value );
-                IssueQualifier = match.Groups[3].Success ? match.Groups[3].Value : String.Empty;
-                PageNumber = Int32.Parse( match.Groups[4].Value );
+                Year = Int32.Parse( match.Groups[2].Value );
+                Month = Int32.Parse( match.Groups[3].Value );
+                IssueQualifier = match.Groups[4].Success ? match.Groups[4].Value : String.Empty;
+                PageNumber = Int32.Parse( match.Groups[6].Value );
             } else {
                 IsSpecial = true;
 

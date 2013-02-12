@@ -9,14 +9,16 @@ namespace DataModel.Html {
     public sealed class HtmlWriter : ITagWriter {
         readonly StringWriter _writer;
 
-        public HtmlWriter( StringWriter writer, string title ) {
+        public HtmlWriter( StringWriter writer, string title, string pathModifier = "" ) {
             _writer = writer;
             _writer.WriteLine( @"<!DOCTYPE html>" );
             _writer.WriteLine( @"<html>" );
             using( var head = new TagWriter( parent: this, name: "head" ) ) {
                 head.WriteLine( @"<meta charset=""utf-8""/>" );
                 head.Tag( "title", title );
-                head.WriteLine( @"<link rel=""stylesheet"" type=""text/css"" href=""css/natgeo.css"" />" );
+                head.WriteLine( 
+                    String.Format( @"<link rel=""stylesheet"" type=""text/css"" href=""{0}"" />", 
+                    Path.Combine( pathModifier, "css", "natgeo.css" ) ) );
             }
             _writer.WriteLine( "<body>" );
         }
