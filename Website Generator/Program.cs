@@ -45,14 +45,14 @@ namespace Website_Generator {
                 using( var previews = index.Div( className: "previews" ) ) {
                     foreach( var decade in decades.OrderBy( _ => _.Name ) ) {
                         using( var decadePreview = previews.Div( "previewBox" ) ) {
-                            decadePreview.WriteLine( String.Format( @"<img src=""{0}"" alt=""{1}""/>", decade.First().Cover.FullPath, decade.Name ) );
-                            decadePreview.Tag( "h2", decade.Name );
+                            decadePreview.Img( link: decade.First().Cover.FullPath, altText: decade.Name );
+                            decadePreview.H2( decade.Name );
                         }
                     }
                 }
             }
 
-            File.WriteAllText( Path.Combine( _basePath, "index.html" ), sw.ToString() );
+            File.WriteAllText( Path.Combine( _basePath, "index.html" ), sw.ToString(), System.Text.Encoding.UTF8 );
         }
 
 

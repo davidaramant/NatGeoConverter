@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Html\HtmlWriter.cs" />
+    <Compile Include="Html\TagWriterExtensions.cs" />
     <Compile Include="NGDecade.cs" />
     <Compile Include="NGIssue.cs" />
     <Compile Include="NGPage.cs" />
