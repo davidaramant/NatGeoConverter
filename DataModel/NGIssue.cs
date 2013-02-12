@@ -17,6 +17,10 @@ namespace DataModel {
             get { return _pages[0]; }
         }
 
+        public string Name {
+            get { return _releaseDate.ToString( "yyyy-MM-dd" ); }
+        }
+
         bool HasSpecialPages {
             get { return _specialPages.Any(); }
         }
