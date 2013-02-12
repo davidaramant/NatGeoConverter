@@ -48,7 +48,7 @@ namespace Website_Generator {
                 using( var previews = index.Div( className: "previews" ) ) {
                     foreach( var decade in decades.OrderBy( _ => _.Name ) ) {
                         using( var decadePreview = previews.Div( "previewBox" ) ) {
-                            decadePreview.Img( link: decade.First().Cover.FullPath, altText: decade.Name );
+                            decadePreview.Img( link: decade.First().Cover.RelativePath, altText: decade.Name );
                             decadePreview.H2( decade.Name );
                         }
                     }
