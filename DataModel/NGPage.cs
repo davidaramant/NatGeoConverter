@@ -14,6 +14,29 @@ namespace DataModel {
         public string IssueQualifier { get; private set; }
         public int PageNumber { get; private set; }
 
+        public string DisplayName {
+            get {
+                if( IsSpecial ) {
+                    var stuffToRemove = new [] {
+                        @"NGM_\d{4}_\d{2}_",
+                        @"\d{4}_\d{2}_",
+                        @"NGM_SM_",
+                        @"_4.jpg",
+                    };
+
+                    var fixedName = _relativePath;
+
+                    foreach( var r in stuffToRemove ) {
+                        fixedName = Regex.Replace( fixedName, r, "" );
+                    }
+
+                    return Path.GetFileNameWithoutExtension( fixedName.Replace('_', ' ' ).TrimStart() );
+                } else {
+                    return PageNumber.ToString();
+                }
+            }
+        }
+
         public bool IsSpecial { get; private set; }
         public bool Failed { get; private set; }
 

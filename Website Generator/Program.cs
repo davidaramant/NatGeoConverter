@@ -39,8 +39,19 @@ namespace Website_Generator {
 
             WL( "{0} decades", decades.Count() );
 
+            File.WriteAllLines(
+                "specialPages.txt",
+                from d in decades
+                from i in d
+                from p in i
+                where p.IsSpecial
+                select Path.GetFileName( p.RelativePath ) + " -> " + p.DisplayName );
+
+            return;
+
             GenerateMainIndex( decades );
             GenerateDecadeIndexes( decades );
+            GeneratePageIndexes( decades );
         }
 
         private static IEnumerable<NGDecade> GenerateModel() {
@@ -144,13 +155,13 @@ namespace Website_Generator {
                 var sw = new StringWriter();
                 using( var index = new HtmlWriter( sw, title: decade.Name, pathModifier: Path.Combine( "..", ".." ) ) ) {
                     using( var previews = index.Div( className: "previews" ) ) {
-                        foreach( var issue in decade.OrderBy( _ => _.ReleaseDate ) ) {
+                        foreach( var issue in decade ) {
                             using( var issuePreview = previews.Div( "previewBox" ) ) {
                                 using( var previewLink = issuePreview.Link( Path.Combine( issue.Name, issue.Name + ".html" ) ) ) {
                                     previewLink.Img(
                                         link: Path.Combine( "..", "..", issue.Cover.RelativePath ),
-                                        altText: issue.Name );
-                                    previewLink.H2( issue.Name );
+                                        altText: issue.DisplayName );
+                                    previewLink.H2( issue.DisplayName );
                                 }
                             }
                         }
@@ -167,6 +178,42 @@ namespace Website_Generator {
                     Path.Combine( path, decade.Name + ".html" ),
                     sw.ToString(),
                     System.Text.Encoding.UTF8 );
+            }
+        }
+
+        static void GeneratePageIndexes( IEnumerable<NGDecade> decades ) {
+            var pathModifier = Path.Combine( "..", "..", ".." );
+
+            foreach( var decade in decades ) {
+                foreach( var issue in decade ) {
+                    var sw = new StringWriter();
+                    using( var index = new HtmlWriter( sw, title: issue.DisplayName, pathModifier: pathModifier ) ) {
+                        using( var previews = index.Div( className: "previews" ) ) {
+                            foreach( var page in issue ) {
+                                using( var pagePreview = previews.Div( "previewBox" ) ) {
+
+                                    using( var previewLink = pagePreview.Link( page.DisplayName + ".html" ) ) {
+                                        previewLink.Img(
+                                            link: Path.Combine( pathModifier, page.RelativePath ),
+                                            altText: page.DisplayName );
+                                        previewLink.H2( page.DisplayName );
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    var path = Path.Combine( _basePath, "web", decade.Name, issue.Name );
+
+                    if( !Directory.Exists( path ) ) {
+                        Directory.CreateDirectory( path );
+                    }
+
+                    File.WriteAllText(
+                        Path.Combine( path, issue.Name + ".html" ),
+                        sw.ToString(),
+                        System.Text.Encoding.UTF8 );
+                }
             }
         }
     }

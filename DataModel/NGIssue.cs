@@ -19,6 +19,10 @@ namespace DataModel {
             get { return _pages[0]; }
         }
 
+        public string DisplayName {
+            get { return _releaseDate.ToString( "yyyy - MM - dd" ); }
+        }
+
         public string Name {
             get { return _releaseDate.ToString( "yyyy-MM-dd" ); }
         }
@@ -63,7 +67,7 @@ namespace DataModel {
         }
 
         public override string ToString() {
-            return String.Format( "{0} {1} pages", Name, _pages.Count() );
+            return String.Format( "{0} {1} pages", DisplayName, _pages.Count() );
         }
     }
 }
