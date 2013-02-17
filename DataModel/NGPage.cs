@@ -54,7 +54,11 @@ namespace DataModel {
         }
 
         public override string ToString() {
-            return _path;
+            return _relativePath;
+        }
+
+        public string Serialize() {
+            return "page;" + _relativePath;
         }
     }
 }

@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
 namespace DataModel {
-
+    [DebuggerDisplay("{ToString()}")]
     public sealed class NGDecade : IEnumerable<NGIssue> {
         readonly List<NGIssue> _issues = new List<NGIssue>();
         readonly string _name;
@@ -27,6 +29,14 @@ namespace DataModel {
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() {
             return GetEnumerator();
+        }
+
+        public override string ToString() {
+            return String.Format( "{0} {1} issues", _name, _issues.Count() );
+        }
+
+        public string Serialize() {
+            return "decade;" + _name;
         }
     }
 }

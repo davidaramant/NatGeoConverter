@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace DataModel {
+    [DebuggerDisplay( "{ToString()}" )]
     public sealed class NGIssue : IEnumerable<NGPage> {
         readonly List<NGPage> _pages = new List<NGPage>();
         readonly List<NGPage> _specialPages = new List<NGPage>();
@@ -54,6 +56,14 @@ namespace DataModel {
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() {
             return GetEnumerator();
+        }
+
+        public string Serialize() {
+            return "issue;" + _releaseDate.ToString( "s" );
+        }
+
+        public override string ToString() {
+            return String.Format( "{0} {1} pages", Name, _pages.Count() );
         }
     }
 }

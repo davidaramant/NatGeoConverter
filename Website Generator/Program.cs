@@ -2,8 +2,10 @@
 using DataModel.Html;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 
 namespace Website_Generator {
     class Program {
@@ -32,15 +34,90 @@ namespace Website_Generator {
         }
 
         static void DoStuff() {
-            var decades =
-                Directory.GetDirectories( _baseJpgPath ).
-                Select( decadeDir => NGDecade.Parse( decadeDir, basePath: _basePath ) ).
-                ToArray();
+            //var decades = GenerateModel();
+            var decades = Deserialize( "serialized.txt" );
 
-            WL( "{0} decades", decades.Length );
+            WL( "{0} decades", decades.Count() );
 
             GenerateMainIndex( decades );
             GenerateDecadeIndexes( decades );
+        }
+
+        private static IEnumerable<NGDecade> GenerateModel() {
+            var decades =
+                Directory.GetDirectories( _baseJpgPath ).
+                Select( decadeDir => NGDecade.Parse( decadeDir, basePath: _basePath ) ).
+                OrderBy( decade => decade.Name ).
+                ToArray();
+
+            Serialize( decades, "serialized.txt" );
+
+            return decades;
+        }
+
+        private static void Serialize( IEnumerable<NGDecade> decades, string path ) {
+            using( var serialized = File.CreateText( path ) ) {
+                foreach( var decade in decades ) {
+                    serialized.WriteLine( decade.Serialize() );
+                    foreach( var issue in decade ) {
+                        serialized.WriteLine( issue.Serialize() );
+                        foreach( var page in issue ) {
+                            serialized.WriteLine( page.Serialize() );
+                        }
+                    }
+                }
+            }
+        }
+
+        private static IEnumerable<NGDecade> Deserialize( string path ) {
+            var decades = new List<NGDecade>();
+
+            string decadeName = String.Empty;
+            DateTime issueDate = DateTime.Now;
+            var issues = new List<NGIssue>();
+            var pages = new List<NGPage>();
+
+            foreach( var line in File.ReadAllLines( path ) ) {
+                var parts = line.Split( ';' );
+
+                switch( parts[0] ) {
+                    case "decade":
+                        if( pages.Any() ) {
+                            issues.Add( new NGIssue( pages, issueDate ) );
+                            pages.Clear();
+                        }
+                        if( issues.Any() ) {
+                            decades.Add( new NGDecade( issues, decadeName ) );
+                            issues.Clear();
+                        }
+
+                        decadeName = parts[1];
+                        break;
+                    case "issue":
+                        if( pages.Any() ) {
+                            issues.Add( new NGIssue( pages, issueDate ) );
+                            pages.Clear();
+                        }
+
+                        issueDate = DateTime.ParseExact( parts[1], "s", CultureInfo.InvariantCulture );
+                        break;
+                    case "page":
+                        pages.Add( new NGPage( Path.Combine( _basePath, parts[1] ), _basePath ) );
+                        break;
+                }
+
+            }
+
+            if( pages.Any() ) {
+                issues.Add( new NGIssue( pages, issueDate ) );
+                pages.Clear();
+            }
+            if( issues.Any() ) {
+                decades.Add( new NGDecade( issues, decadeName ) );
+                issues.Clear();
+            }
+
+            return decades;
         }
 
         static void GenerateMainIndex( IEnumerable<NGDecade> decades ) {
