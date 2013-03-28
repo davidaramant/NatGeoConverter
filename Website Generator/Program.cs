@@ -33,6 +33,10 @@ namespace Website_Generator {
             Console.Out.WriteLine( format, args );
         }
 
+        private static string CsvLine( params object[] columns ) {
+            return String.Join( ",", columns.Select( c => "\"" + c + "\"" ) );
+        }
+
         static void DoStuff() {
             //var decades = GenerateModel();
             var decades = Deserialize( "serialized.txt" );
@@ -40,12 +44,12 @@ namespace Website_Generator {
             WL( "{0} decades", decades.Count() );
 
             File.WriteAllLines(
-                "specialPages.txt",
+                "specialPages.csv",
+                Enumerable.Repeat( CsvLine("Issue","Relative Path", "Display Name", "Is Special"), 1 ).Concat(
                 from d in decades
                 from i in d
                 from p in i
-                where p.IsSpecial
-                select Path.GetFileName( p.RelativePath ) + " -> " + p.DisplayName );
+                select CsvLine( i.DisplayName, Path.GetFileName( p.RelativePath ), p.DisplayName, p.IsSpecial ? "true" : "" ) ) );
 
             return;
 
@@ -113,7 +117,7 @@ namespace Website_Generator {
                         issueDate = DateTime.ParseExact( parts[1], "s", CultureInfo.InvariantCulture );
                         break;
                     case "page":
-                        pages.Add( new NGPage( Path.Combine( _basePath, parts[1] ), _basePath ) );
+                        pages.Add( NGPage.Parse( Path.Combine( _basePath, parts[1] ), _basePath ) );
                         break;
                 }
 

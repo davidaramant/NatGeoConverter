@@ -50,7 +50,7 @@ namespace DataModel {
                 day: Int32.Parse( dateMatch.Groups[3].Value ) );
 
             return new NGIssue(
-                    Directory.GetFiles( path, searchPattern: "*.jpg" ).Select( pagePath => new NGPage( pagePath, basePath: basePath ) ),
+                    Directory.GetFiles( path, searchPattern: "*.jpg" ).Select( pagePath => NGPage.Parse( pagePath, basePath: basePath ) ),
                     releaseDate: releaseDate );
         }
 
