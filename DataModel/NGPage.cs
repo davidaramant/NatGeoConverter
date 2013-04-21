@@ -22,57 +22,74 @@ namespace DataModel {
 
         public static NGPage Parse( string fullPath, string basePath ) {
 
-            var relativePath =
-                Path.GetFullPath( fullPath ).
-                Replace( Path.GetFullPath( basePath ), String.Empty ).
-                TrimStart( Path.DirectorySeparatorChar );
+            try {
+                var relativePath =
+                    Path.GetFullPath( fullPath ).
+                    Replace( Path.GetFullPath( basePath ), String.Empty ).
+                    TrimStart( Path.DirectorySeparatorChar );
 
-            var fileName = Path.GetFileName( fullPath );
+                var fileName = Path.GetFileName( fullPath );
 
-            var isSpecial = !fileName.StartsWith( "NGM_" );
+                var isSpecial = !fileName.StartsWith( "NGM_" );
 
-            //"NGM_SM_1893_04_4.jpg" -> "04"
-            //"NGM_1893_04A_001_4.jpg" -> "04A_001"
-            //"NGM_SW_1993_11_001_4.jpg" -> "11_001"
+                // PROBLEM: Some pages have same page number but are A, B, C, D, etc
+                // PROBLEM: Need custom sort collection
 
-            if( !isSpecial ) {
-                fileName = Regex.Replace( fileName, @"^NGM_(\w{2}_)?(\d{4})_", "" );
-                fileName = Regex.Replace( fileName, @"_4.jpg$", "" );
+                //"NGM_SM_1893_04_4.jpg" -> "04"
+                //"NGM_1893_04A_001_4.jpg" -> "04A_001"
+                //"NGM_SW_1993_11_001_4.jpg" -> "11_001"
+                //"NGM_1892_05_051_801_4.jpg" -> "051_801"
+                //"NGM_1892_05_a4.jpg" -> "a4"
 
-                int pageNumber = 0;
-                if( fileName.Contains( "_" ) ) {
-                    var match = Regex.Match( fileName, @"\d{2}\w?_(\d{3})", RegexOptions.Compiled );
-                    pageNumber = Int32.Parse( match.Groups[1].Value );
+                if( !isSpecial ) {
+                    fileName = Regex.Replace( fileName, @"^NGM_(\w{2}_)?(\d{4})_", "" );
+                    fileName = Regex.Replace( fileName, @"_4.jpg$", "" );
+
+                    int? pageNumber = null;
+                    if( Regex.IsMatch( fileName, @"\d{2}\w?_(\d{3})" ) ) {
+                        var match = Regex.Match( fileName, @"\d{2}\w?_(\d{3})", RegexOptions.Compiled );
+                        pageNumber = Int32.Parse( match.Groups[1].Value );
+                    } else {
+                        int temp = 0;
+                        var isNumber = Int32.TryParse( fileName, out temp );
+
+                        if( !isNumber ) {
+                            isSpecial = true;
+                        } else {
+                            pageNumber = temp;
+                        }
+                    }
+
+                    return new NGPage(
+                                fullPath: fullPath,
+                                relativePath: relativePath,
+                                pageNumber: pageNumber,
+                                displayName: isSpecial ? fileName : pageNumber.ToString(),
+                                isSpecial: isSpecial );
                 } else {
-                    pageNumber = Int32.Parse( fileName );
-                }
-
-                return new NGPage(
-                            fullPath: fullPath,
-                            relativePath: relativePath,
-                            pageNumber: pageNumber,
-                            displayName: pageNumber.ToString(),
-                            isSpecial: false );
-            } else {
-                //"1930_01_Florida.jpg"
-                //"1899_10_NORTH CAROLINA TENNESSEE.jpg"
-                var stuffToRemove = new[] {
+                    //"1930_01_Florida.jpg"
+                    //"1899_10_NORTH CAROLINA TENNESSEE.jpg"
+                    var stuffToRemove = new[] {
                             @"^\d{4}_\d{2}_",
-                            @".jpg$",
+                            @"(_4)?.jpg$",
                         };
 
-                var fixedName = fileName;
+                    var fixedName = fileName;
 
-                foreach( var r in stuffToRemove ) {
-                    fixedName = Regex.Replace( fixedName, r, "" );
+                    foreach( var r in stuffToRemove ) {
+                        fixedName = Regex.Replace( fixedName, r, "" );
+                    }
+
+                    return new NGPage(
+                                fullPath: fullPath,
+                                relativePath: relativePath,
+                                pageNumber: null,
+                                displayName: fixedName.Replace( '_', ' ' ).TrimStart(),
+                                isSpecial: true );
                 }
-
-                return new NGPage(
-                            fullPath: fullPath,
-                            relativePath: relativePath,
-                            pageNumber: null,
-                            displayName: fixedName.Replace( '_', ' ' ).TrimStart(),
-                            isSpecial: true );
+            } catch {
+                Console.Out.WriteLine( "Fucked page: " + fullPath );
+                throw;
             }
         }
 

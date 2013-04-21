@@ -13,6 +13,8 @@ namespace Tests {
         [TestCase( "NGM_1888_10_063_801_4.jpg", 63, "63", false )]
         [TestCase( "1899_10_NORTH CAROLINA TENNESSEE.jpg", null, "NORTH CAROLINA TENNESSEE", true )]
         [TestCase( "NGM_SM_1893_04_4.jpg", 4, "4", false )]
+        [TestCase( "NGM_1892_05_a4.jpg", null, "a4", true )]
+        [TestCase( "NGM_1892_05_051_801_4.jpg", null, "051_801", true )]
         public void ShouldParseOutPageNumber( string path, int? pageNumber, string displayName, bool special ) {
             var page = NGPage.Parse( path, "." );
             Assert.That( page.PageNumber, Is.EqualTo( pageNumber ), "Did not figure out page number" );
