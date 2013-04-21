@@ -31,32 +31,37 @@ namespace DataModel {
 
             var isSpecial = !fileName.StartsWith( "NGM_" );
 
-            if( !isSpecial ) {
-                var match = Regex.Match( fileName, @"NGM_(\w{2}_)?(\d{4})_(\d{2})(\w)?_(\d{2}_)?(\d{3})_4.jpg", RegexOptions.Compiled );
+            //"NGM_SM_1893_04_4.jpg" -> "04"
+            //"NGM_1893_04A_001_4.jpg" -> "04A_001"
+            //"NGM_SW_1993_11_001_4.jpg" -> "11_001"
 
-                if( match.Success ) {
-                    var year = Int32.Parse( match.Groups[2].Value );
-                    var month = Int32.Parse( match.Groups[3].Value );
-                    var issueQuaifier = match.Groups[4].Success ? match.Groups[4].Value : String.Empty;
-                    var pageNumber = Int32.Parse( match.Groups[6].Value );
-                    return new NGPage( 
-                                fullPath: fullPath, 
-                                relativePath: relativePath, 
-                                pageNumber: pageNumber, 
-                                displayName: pageNumber.ToString(), 
-                                isSpecial: false );
+            if( !isSpecial ) {
+                fileName = Regex.Replace( fileName, @"^NGM_(\w{2}_)?(\d{4})_", "" );
+                fileName = Regex.Replace( fileName, @"_4.jpg$", "" );
+
+                int pageNumber = 0;
+                if( fileName.Contains( "_" ) ) {
+                    var match = Regex.Match( fileName, @"\d{2}\w?_(\d{3})", RegexOptions.Compiled );
+                    pageNumber = Int32.Parse( match.Groups[1].Value );
                 } else {
-                    throw new Exception( "failed" );
+                    pageNumber = Int32.Parse( fileName );
                 }
+
+                return new NGPage(
+                            fullPath: fullPath,
+                            relativePath: relativePath,
+                            pageNumber: pageNumber,
+                            displayName: pageNumber.ToString(),
+                            isSpecial: false );
             } else {
+                //"1930_01_Florida.jpg"
+                //"1899_10_NORTH CAROLINA TENNESSEE.jpg"
                 var stuffToRemove = new[] {
-                            @"NGM_\d{4}_\d{2}_",
-                            @"\d{4}_\d{2}_",
-                            @"NGM_SM_",
-                            @"_4.jpg",
+                            @"^\d{4}_\d{2}_",
+                            @".jpg$",
                         };
 
-                var fixedName = relativePath;
+                var fixedName = fileName;
 
                 foreach( var r in stuffToRemove ) {
                     fixedName = Regex.Replace( fixedName, r, "" );
@@ -66,8 +71,8 @@ namespace DataModel {
                             fullPath: fullPath,
                             relativePath: relativePath,
                             pageNumber: null,
-                            displayName: Path.GetFileNameWithoutExtension( fixedName.Replace( '_', ' ' ).TrimStart() ),
-                            isSpecial: false );
+                            displayName: fixedName.Replace( '_', ' ' ).TrimStart(),
+                            isSpecial: true );
             }
         }
 
