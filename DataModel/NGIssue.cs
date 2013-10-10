@@ -9,7 +9,6 @@ namespace DataModel {
     [DebuggerDisplay( "{ToString()}" )]
     public sealed class NGIssue : IEnumerable<NGPage> {
         readonly List<NGPage> _pages = new List<NGPage>();
-        readonly List<NGPage> _specialPages = new List<NGPage>();
 
         readonly DateTime _releaseDate;
 
@@ -27,13 +26,8 @@ namespace DataModel {
             get { return _releaseDate.ToString( "yyyy-MM-dd" ); }
         }
 
-        bool HasSpecialPages {
-            get { return _specialPages.Any(); }
-        }
-
         public NGIssue( IEnumerable<NGPage> pages, DateTime releaseDate ) {
-            _pages.AddRange( pages.Where( p => !p.IsSpecial ).OrderBy( _ => _.FullPath ) );
-            _specialPages.AddRange( pages.Where( p => p.IsSpecial ).OrderBy( _ => _.FullPath ) );
+            _pages.AddRange( pages.OrderBy( _ => _.RelativePath ) );
             _releaseDate = releaseDate;
         }
 
@@ -55,7 +49,7 @@ namespace DataModel {
         }
 
         public IEnumerator<NGPage> GetEnumerator() {
-            return _pages.Concat( _specialPages ).GetEnumerator();
+            return _pages.GetEnumerator();
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() {

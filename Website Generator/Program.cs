@@ -8,217 +8,214 @@ using System.Linq;
 using System.Security.Cryptography;
 
 namespace Website_Generator {
-    class Program {
-        readonly static string _basePath = Path.Combine( "G:", "National Geographic" );
-        readonly static string _baseJpgPath = Path.Combine( _basePath, "JPG" );
-        readonly static string _baseHtmlPath = Path.Combine( _basePath, "HTML" );
+	class Program {
+		readonly static string _basePath = Path.Combine( GetDrivePath(), "National Geographic" );
+		readonly static string _baseJpgPath = Path.Combine( _basePath, "JPG" );
+		readonly static string _baseHtmlPath = Path.Combine( _basePath, "HTML" );
 
-        static void Main( string[] args ) {
-            try {
-                DoStuff();
-            } catch( Exception e ) {
-                WL( new String( '-', 79 ) );
-                WL( e.ToString() );
-            }
+		static string GetDrivePath() {
+			if( Environment.OSVersion.Platform == PlatformID.Win32NT ) {
+				return "G:";
+			}
+			return Path.Combine( "/", "Volumes", "Scratch" );
+		}
 
-            WL( "Done" );
-            Console.ReadKey();
-        }
+		static void Main( string[] args ) {
+			try {
+				DoStuff();
+			} catch( Exception e ) {
+				WL( new String( '-', 79 ) );
+				WL( e.ToString() );
+			}
 
-        static void WL() {
-            Console.Out.WriteLine();
-        }
+			WL( "Done" );
+			Console.ReadKey();
+		}
 
-        static void WL( string format, params object[] args ) {
-            Console.Out.WriteLine( format, args );
-        }
+		static void WL() {
+			Console.Out.WriteLine();
+		}
 
-        private static string CsvLine( params object[] columns ) {
-            return String.Join( ",", columns.Select( c => "\"" + c + "\"" ) );
-        }
+		static void WL( string format, params object[] args ) {
+			Console.Out.WriteLine( format, args );
+		}
 
-        static void DoStuff() {
-            //var decades = GenerateModel();
-            var decades = Deserialize( "serialized.txt" );
+		private static string CsvLine( params object[] columns ) {
+			return String.Join( ",", columns.Select( c => "\"" + c + "\"" ) );
+		}
 
-            WL( "{0} decades", decades.Count() );
+		static void DoStuff() {
+			//var decades = GenerateModel();
+			var decades = Deserialize( "serialized.txt" );
 
-            File.WriteAllLines(
-                "specialPages.csv",
-                Enumerable.Repeat( CsvLine("Issue","Relative Path", "Display Name", "Is Special"), 1 ).Concat(
-                from d in decades
-                from i in d
-                from p in i
-                select CsvLine( i.DisplayName, Path.GetFileName( p.RelativePath ), p.DisplayName, p.IsSpecial ? "true" : "" ) ) );
+			WL( "{0} decades", decades.Count() );
 
-            return;
+			GenerateMainIndex( decades );
+			GenerateDecadeIndexes( decades );
+			GeneratePageIndexes( decades );
+		}
 
-            GenerateMainIndex( decades );
-            GenerateDecadeIndexes( decades );
-            GeneratePageIndexes( decades );
-        }
-
-        private static IEnumerable<NGDecade> GenerateModel() {
-            var decades =
-                Directory.GetDirectories( _baseJpgPath ).
+		private static IEnumerable<NGDecade> GenerateModel() {
+			var decades =
+				Directory.GetDirectories( _baseJpgPath ).
                 Select( decadeDir => NGDecade.Parse( decadeDir, basePath: _basePath ) ).
                 OrderBy( decade => decade.Name ).
                 ToArray();
 
-            Serialize( decades, "serialized.txt" );
+			Serialize( decades, "serialized.txt" );
 
-            return decades;
-        }
+			return decades;
+		}
 
-        private static void Serialize( IEnumerable<NGDecade> decades, string path ) {
-            using( var serialized = File.CreateText( path ) ) {
-                foreach( var decade in decades ) {
-                    serialized.WriteLine( decade.Serialize() );
-                    foreach( var issue in decade ) {
-                        serialized.WriteLine( issue.Serialize() );
-                        foreach( var page in issue ) {
-                            serialized.WriteLine( page.Serialize() );
-                        }
-                    }
-                }
-            }
-        }
+		private static void Serialize( IEnumerable<NGDecade> decades, string path ) {
+			using( var serialized = File.CreateText( path ) ) {
+				foreach( var decade in decades ) {
+					serialized.WriteLine( decade.Serialize() );
+					foreach( var issue in decade ) {
+						serialized.WriteLine( issue.Serialize() );
+						foreach( var page in issue ) {
+							serialized.WriteLine( page.Serialize() );
+						}
+					}
+				}
+			}
+		}
 
-        private static IEnumerable<NGDecade> Deserialize( string path ) {
-            var decades = new List<NGDecade>();
+		private static IEnumerable<NGDecade> Deserialize( string path ) {
+			var decades = new List<NGDecade>();
 
-            string decadeName = String.Empty;
-            DateTime issueDate = DateTime.Now;
-            var issues = new List<NGIssue>();
-            var pages = new List<NGPage>();
+			string decadeName = String.Empty;
+			DateTime issueDate = DateTime.Now;
+			var issues = new List<NGIssue>();
+			var pages = new List<NGPage>();
 
-            foreach( var line in File.ReadAllLines( path ) ) {
-                var parts = line.Split( ';' );
+			foreach( var line in File.ReadAllLines( path ) ) {
+				var parts = line.Split( ';' );
 
-                switch( parts[0] ) {
-                    case "decade":
-                        if( pages.Any() ) {
-                            issues.Add( new NGIssue( pages, issueDate ) );
-                            pages.Clear();
-                        }
-                        if( issues.Any() ) {
-                            decades.Add( new NGDecade( issues, decadeName ) );
-                            issues.Clear();
-                        }
+				switch( parts[ 0 ] ) {
+					case "decade":
+						if( pages.Any() ) {
+							issues.Add( new NGIssue( pages, issueDate ) );
+							pages.Clear();
+						}
+						if( issues.Any() ) {
+							decades.Add( new NGDecade( issues, decadeName ) );
+							issues.Clear();
+						}
 
-                        decadeName = parts[1];
-                        break;
-                    case "issue":
-                        if( pages.Any() ) {
-                            issues.Add( new NGIssue( pages, issueDate ) );
-                            pages.Clear();
-                        }
+						decadeName = parts[ 1 ];
+						break;
+					case "issue":
+						if( pages.Any() ) {
+							issues.Add( new NGIssue( pages, issueDate ) );
+							pages.Clear();
+						}
 
-                        issueDate = DateTime.ParseExact( parts[1], "s", CultureInfo.InvariantCulture );
-                        break;
-                    case "page":
-                        pages.Add( NGPage.Parse( Path.Combine( _basePath, parts[1] ), _basePath ) );
-                        break;
-                }
+						issueDate = DateTime.ParseExact( parts[ 1 ], "s", CultureInfo.InvariantCulture );
+						break;
+					case "page":
+						pages.Add( NGPage.Parse( Path.Combine( _basePath, parts[ 1 ] ), _basePath ) );
+						break;
+				}
 
-            }
+			}
 
-            if( pages.Any() ) {
-                issues.Add( new NGIssue( pages, issueDate ) );
-                pages.Clear();
-            }
-            if( issues.Any() ) {
-                decades.Add( new NGDecade( issues, decadeName ) );
-                issues.Clear();
-            }
+			if( pages.Any() ) {
+				issues.Add( new NGIssue( pages, issueDate ) );
+				pages.Clear();
+			}
+			if( issues.Any() ) {
+				decades.Add( new NGDecade( issues, decadeName ) );
+				issues.Clear();
+			}
 
-            return decades;
-        }
+			return decades;
+		}
 
-        static void GenerateMainIndex( IEnumerable<NGDecade> decades ) {
-            var sw = new StringWriter();
-            using( var index = new HtmlWriter( sw, "National Geographic" ) ) {
-                using( var previews = index.Div( className: "previews" ) ) {
-                    foreach( var decade in decades.OrderBy( _ => _.Name ) ) {
-                        using( var decadePreview = previews.Div( "previewBox" ) ) {
-                            using( var decadeLink = decadePreview.Link( Path.Combine( "web", decade.Name, decade.Name + ".html" ) ) ) {
-                                decadeLink.Img( link: decade.First().Cover.RelativePath, altText: decade.Name );
-                                decadeLink.H2( decade.Name );
-                            }
-                        }
-                    }
-                }
-            }
+		static void GenerateMainIndex( IEnumerable<NGDecade> decades ) {
+			var sw = new StringWriter();
+			using( var index = new HtmlWriter( sw, "National Geographic" ) ) {
+				using( var previews = index.Div( className: "previews" ) ) {
+					foreach( var decade in decades.OrderBy( _ => _.Name ) ) {
+						using( var decadePreview = previews.Div( "previewBox" ) ) {
+							using( var decadeLink = decadePreview.Link( Path.Combine( "web", decade.Name, decade.Name + ".html" ) ) ) {
+								decadeLink.Img( link: decade.First().Cover.RelativePath, altText: decade.Name );
+								decadeLink.H2( decade.Name );
+							}
+						}
+					}
+				}
+			}
 
-            File.WriteAllText( Path.Combine( _basePath, "index.html" ), sw.ToString(), System.Text.Encoding.UTF8 );
-        }
+			File.WriteAllText( Path.Combine( _basePath, "index.html" ), sw.ToString(), System.Text.Encoding.UTF8 );
+		}
 
-        static void GenerateDecadeIndexes( IEnumerable<NGDecade> decades ) {
-            foreach( var decade in decades ) {
+		static void GenerateDecadeIndexes( IEnumerable<NGDecade> decades ) {
+			foreach( var decade in decades ) {
 
-                var sw = new StringWriter();
-                using( var index = new HtmlWriter( sw, title: decade.Name, pathModifier: Path.Combine( "..", ".." ) ) ) {
-                    using( var previews = index.Div( className: "previews" ) ) {
-                        foreach( var issue in decade ) {
-                            using( var issuePreview = previews.Div( "previewBox" ) ) {
-                                using( var previewLink = issuePreview.Link( Path.Combine( issue.Name, issue.Name + ".html" ) ) ) {
-                                    previewLink.Img(
-                                        link: Path.Combine( "..", "..", issue.Cover.RelativePath ),
-                                        altText: issue.DisplayName );
-                                    previewLink.H2( issue.DisplayName );
-                                }
-                            }
-                        }
-                    }
-                }
+				var sw = new StringWriter();
+				using( var index = new HtmlWriter( sw, title: decade.Name, pathModifier: Path.Combine( "..", ".." ) ) ) {
+					using( var previews = index.Div( className: "previews" ) ) {
+						foreach( var issue in decade ) {
+							using( var issuePreview = previews.Div( "previewBox" ) ) {
+								using( var previewLink = issuePreview.Link( Path.Combine( issue.Name, issue.Name + ".html" ) ) ) {
+									previewLink.Img(
+										link: Path.Combine( "..", "..", issue.Cover.RelativePath ),
+										altText: issue.DisplayName );
+									previewLink.H2( issue.DisplayName );
+								}
+							}
+						}
+					}
+				}
 
-                var path = Path.Combine( _basePath, "web", decade.Name );
+				var path = Path.Combine( _basePath, "web", decade.Name );
 
-                if( !Directory.Exists( path ) ) {
-                    Directory.CreateDirectory( path );
-                }
+				if( !Directory.Exists( path ) ) {
+					Directory.CreateDirectory( path );
+				}
 
-                File.WriteAllText(
-                    Path.Combine( path, decade.Name + ".html" ),
-                    sw.ToString(),
-                    System.Text.Encoding.UTF8 );
-            }
-        }
+				File.WriteAllText(
+					Path.Combine( path, decade.Name + ".html" ),
+					sw.ToString(),
+					System.Text.Encoding.UTF8 );
+			}
+		}
 
-        static void GeneratePageIndexes( IEnumerable<NGDecade> decades ) {
-            var pathModifier = Path.Combine( "..", "..", ".." );
+		static void GeneratePageIndexes( IEnumerable<NGDecade> decades ) {
+			var pathModifier = Path.Combine( "..", "..", ".." );
 
-            foreach( var decade in decades ) {
-                foreach( var issue in decade ) {
-                    var sw = new StringWriter();
-                    using( var index = new HtmlWriter( sw, title: issue.DisplayName, pathModifier: pathModifier ) ) {
-                        using( var previews = index.Div( className: "previews" ) ) {
-                            foreach( var page in issue ) {
-                                using( var pagePreview = previews.Div( "previewBox" ) ) {
+			foreach( var decade in decades ) {
+				foreach( var issue in decade ) {
+					var sw = new StringWriter();
+					using( var index = new HtmlWriter( sw, title: issue.DisplayName, pathModifier: pathModifier ) ) {
+						using( var previews = index.Div( className: "previews" ) ) {
+							foreach( var page in issue ) {
+								using( var pagePreview = previews.Div( "previewBox" ) ) {
 
-                                    using( var previewLink = pagePreview.Link( page.DisplayName + ".html" ) ) {
-                                        previewLink.Img(
-                                            link: Path.Combine( pathModifier, page.RelativePath ),
-                                            altText: page.DisplayName );
-                                        previewLink.H2( page.DisplayName );
-                                    }
-                                }
-                            }
-                        }
-                    }
+									using( var previewLink = pagePreview.Link( page.DisplayName + ".html" ) ) {
+										previewLink.Img(
+											link: Path.Combine( pathModifier, page.RelativePath ),
+											altText: page.DisplayName );
+										previewLink.H2( page.DisplayName );
+									}
+								}
+							}
+						}
+					}
 
-                    var path = Path.Combine( _basePath, "web", decade.Name, issue.Name );
+					var path = Path.Combine( _basePath, "web", decade.Name, issue.Name );
 
-                    if( !Directory.Exists( path ) ) {
-                        Directory.CreateDirectory( path );
-                    }
+					if( !Directory.Exists( path ) ) {
+						Directory.CreateDirectory( path );
+					}
 
-                    File.WriteAllText(
-                        Path.Combine( path, issue.Name + ".html" ),
-                        sw.ToString(),
-                        System.Text.Encoding.UTF8 );
-                }
-            }
-        }
-    }
+					File.WriteAllText(
+						Path.Combine( path, issue.Name + ".html" ),
+						sw.ToString(),
+						System.Text.Encoding.UTF8 );
+				}
+			}
+		}
+	}
 }
