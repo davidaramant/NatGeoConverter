@@ -44,6 +44,7 @@ namespace Website_Generator {
 			return String.Join( ",", columns.Select( c => "\"" + c + "\"" ) );
 		}
 
+		// TODO: Getting rid of special page handling does not reliably find the cover image
 		static void DoStuff() {
 			//var decades = GenerateModel();
 			var decades = Deserialize( "serialized.txt" );
