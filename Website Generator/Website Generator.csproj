@@ -11,6 +11,8 @@
     <AssemblyName>Website Generator</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <ProductVersion>12.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -49,7 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DataModel\DataModel.csproj">
-      <Project>{03fab948-c745-4ab9-960c-3af0ff2f91b9}</Project>
+      <Project>{03FAB948-C745-4AB9-960C-3AF0FF2F91B9}</Project>
       <Name>DataModel</Name>
     </ProjectReference>
   </ItemGroup>
