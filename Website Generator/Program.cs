@@ -1,6 +1,7 @@
 ﻿using DataModel;
 using DataModel.Html;
 using System;
+using System.Drawing;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -9,7 +10,7 @@ using System.Security.Cryptography;
 
 namespace Website_Generator {
 	class Program {
-		readonly static string _basePath = Path.Combine( GetDrivePath(), "National Geographic" );
+		readonly static string _basePath = GetDrivePath();
 		readonly static string _baseJpgPath = Path.Combine( _basePath, "JPG" );
 		readonly static string _baseHtmlPath = Path.Combine( _basePath, "HTML" );
 
@@ -17,7 +18,7 @@ namespace Website_Generator {
 			if( Environment.OSVersion.Platform == PlatformID.Win32NT ) {
 				return "G:";
 			}
-			return Path.Combine( "/", "Volumes", "Scratch" );
+			return Path.Combine( "/", "Users", "davidaramant", "Web", "NatGeo" );
 		}
 
 		static void Main( string[] args ) {
@@ -51,9 +52,10 @@ namespace Website_Generator {
 
 			WL( "{0} decades", decades.Count() );
 
+			//GenerateThumbnails( decades );
 			GenerateMainIndex( decades );
-			GenerateDecadeIndexes( decades );
-			GeneratePageIndexes( decades );
+			//GenerateDecadeIndexes( decades );
+			//GeneratePageIndexes( decades );
 		}
 
 		private static IEnumerable<NGDecade> GenerateModel() {
@@ -133,8 +135,22 @@ namespace Website_Generator {
 			return decades;
 		}
 
+		static void GenerateThumbnails( IEnumerable<NGDecade> decades ) {
+			foreach( var decade in decades ) {
+				foreach( var issue in decade ) {
+					foreach( var page in issue ) {
+						var thumbPath = Path.Combine( _basePath, "thumbnails", page.RelativePath );
+
+						using( var image = Image.FromFile( page.FullPath ) ) {
+							//image.GetThumbnailImage( thumbHeight: 400, thumbWidth: 400 );
+						}
+					}
+				}
+			}
+		}
+
 		static void GenerateMainIndex( IEnumerable<NGDecade> decades ) {
-			var sw = new StringWriter();
+									var sw = new StringWriter();
 			using( var index = new HtmlWriter( sw, "National Geographic" ) ) {
 				using( var previews = index.Div( className: "previews" ) ) {
 					foreach( var decade in decades.OrderBy( _ => _.Name ) ) {
