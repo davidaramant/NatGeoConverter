@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using DataModel.Extensions;
 
 namespace DataModel {
     [DebuggerDisplay( "{ToString()}" )]
@@ -32,16 +33,18 @@ namespace DataModel {
         }
 
         public static NGIssue Parse( string path, string basePath ) {
-            var dateMatch = Regex.Match( path, @"(\d{4})(\d{2})(\d{2})", RegexOptions.Compiled );
+			DateTime releaseDate;
+			var input = path.GetLastDirectory();
 
-            if( !dateMatch.Success ) {
-                throw new Exception( "Unknown date format: " + path );
-            }
+			var success = DateTime.TryParseExact( input,
+				"yyyyMMdd",
+				System.Globalization.CultureInfo.InvariantCulture,
+				System.Globalization.DateTimeStyles.None,
+				out releaseDate );
 
-            var releaseDate = new DateTime(
-                year: Int32.Parse( dateMatch.Groups[1].Value ),
-                month: Int32.Parse( dateMatch.Groups[2].Value ),
-                day: Int32.Parse( dateMatch.Groups[3].Value ) );
+			if( !success ) {
+				throw new ArgumentException( "Unknown date format for one of the issues: " + input );
+			}		
 
             return new NGIssue(
                     Directory.GetFiles( path, searchPattern: "*.jpg" ).OrderBy( _ => _ ).Select( pagePath => NGPage.Parse( pagePath, basePath: basePath ) ),

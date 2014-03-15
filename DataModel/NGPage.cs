@@ -6,22 +6,23 @@ using DataModel.Extensions;
 namespace DataModel {
     [DebuggerDisplay( "{ToString()}" )]
     public sealed class NGPage {
-        public readonly string FullPath;
-        public readonly string RelativePath;
-		public readonly string DisplayName;
+		private readonly string _fullPath;
+		private readonly string _relativePath;
 
-        public NGPage( string fullPath, string relativePath, string displayName ) {
-            FullPath = fullPath;
-            RelativePath = relativePath;
-			DisplayName = displayName;
+		public string FullPath { get { return _fullPath; } }
+		public string RelativePath { get { return _relativePath; } }
+		public string DisplayName { get { return Path.GetFileNameWithoutExtension(RelativePath); } }
+
+		public string NormalThumbnailFullPath { get { return FullPath.Replace( "full", "thumbs"); } }
+		public string RetinaThumbnailFullPath { get { return NormalThumbnailFullPath.Replace(".jpg","@2x.jpg"); } }
+
+		public NGPage( string basePath, string fullPath ) {
+			_fullPath = fullPath;
+			_relativePath = fullPath.GetPathRelativeTo( basePath );
         }
 
         public static NGPage Parse( string fullPath, string basePath ) {
-			var relativePath = fullPath.GetPathRelativeTo( basePath );
-
-			var displayName = Path.GetFileNameWithoutExtension( relativePath );
-
-			return new NGPage( fullPath: fullPath, relativePath: relativePath, displayName:displayName );
+			return new NGPage( fullPath: fullPath, basePath: basePath );
         }
 
         public override string ToString() {
