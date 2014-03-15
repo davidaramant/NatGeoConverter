@@ -3,24 +3,27 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using DataModel.Extensions;
 
 namespace DataModel {
     [DebuggerDisplay("{ToString()}")]
     public sealed class NGDecade : IEnumerable<NGIssue> {
         readonly List<NGIssue> _issues = new List<NGIssue>();
-        readonly string _name;
 
-        public string Name { get { return _name; } }
+		readonly string _fullPath;
 
-        public NGDecade( IEnumerable<NGIssue> issues, string name ) {
+		public string DisplayName { get { return _fullPath.GetLastDirectory().Replace( "x", "0s"); } }
+		public string AbsoluteFilePath { get { return _fullPath; } }
+
+		public NGDecade( IEnumerable<NGIssue> issues, string fullPath ) {
             _issues.AddRange( issues.OrderBy( _ => _.ReleaseDate ) );
-            _name = name;
+			_fullPath = fullPath;
         }
 
         public static NGDecade Parse( string path, string basePath ) {
             return new NGDecade(
-                    Directory.GetDirectories( path ).Select( issueDir => NGIssue.Parse( issueDir, basePath: basePath ) ),
-                    name: path.Substring( path.LastIndexOf( Path.DirectorySeparatorChar ) + 1 ) );
+					issues: Directory.GetDirectories( path ).Select( issueDir => NGIssue.Parse( issueDir, basePath: basePath ) ),
+					fullPath: path );
         }
 
         public IEnumerator<NGIssue> GetEnumerator() {
@@ -32,11 +35,11 @@ namespace DataModel {
         }
 
         public override string ToString() {
-            return String.Format( "{0} {1} issues", _name, _issues.Count() );
+			return String.Format( "{0}: {1} issues", DisplayName, _issues.Count() );
         }
 
         public string Serialize() {
-            return "decade;" + _name;
+			return "decade;" + DisplayName;
         }
     }
 }
