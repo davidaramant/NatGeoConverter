@@ -15,6 +15,10 @@ namespace DataModel {
 		public string DisplayName { get { return _fullPath.GetLastDirectory().Replace( "x", "0s"); } }
 		public string AbsoluteFilePath { get { return _fullPath; } }
 
+		public string PreviewImagePath 
+		{ 
+			get { return _issues.First().Cover.NormalThumbnailUrl; }
+		}
 		public NGDecade( IEnumerable<NGIssue> issues, string fullPath ) {
             _issues.AddRange( issues.OrderBy( _ => _.ReleaseDate ) );
 			_fullPath = fullPath;

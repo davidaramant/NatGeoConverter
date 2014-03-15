@@ -16,7 +16,7 @@ namespace DataModel {
         public DateTime ReleaseDate { get { return _releaseDate; } }
 
         public NGPage Cover {
-            get { return _pages[0]; }
+			get { return _pages.First( page => Regex.IsMatch( Path.GetFileName( page.FullPath ), @"^NGM_\d{4}") ); }
         }
 
         public string DisplayName {

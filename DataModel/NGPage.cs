@@ -16,6 +16,8 @@ namespace DataModel {
 		public string NormalThumbnailFullPath { get { return FullPath.Replace( "full", "thumbs"); } }
 		public string RetinaThumbnailFullPath { get { return NormalThumbnailFullPath.Replace(".jpg","@2x.jpg"); } }
 
+		public string NormalThumbnailUrl { get { return _relativePath.Replace("full","thumbs"); } }
+
 		public NGPage( string basePath, string fullPath ) {
 			_fullPath = fullPath;
 			_relativePath = fullPath.GetPathRelativeTo( basePath );
