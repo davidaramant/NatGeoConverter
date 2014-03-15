@@ -61,7 +61,7 @@ namespace Website_Generator {
 			//WL( "Thumbnail generation took: " + timer.Elapsed );
 
 			GenerateMainIndex( decades );
-			//GenerateDecadeIndexes( decades );
+			GenerateDecadeIndexes( decades );
 			//GeneratePageIndexes( decades );
 		}
 
@@ -111,60 +111,35 @@ namespace Website_Generator {
 
 		static void GenerateMainIndex( IEnumerable<NGDecade> decades ) {
 			var sb = new StringBuilder();
-			sb.AppendLine( @"<!DOCTYPE html>
-<html lang=""en"">
-  <head>
-    <meta charset=""utf-8"">
-    <meta http-equiv=""X-UA-Compatible"" content=""IE=edge"">
-    <meta name=""viewport"" content=""width=device-width, initial-scale=1"">
-    <title>The Complete National Geographic</title>
-    <link href=""css/bootstrap.min.css"" rel=""stylesheet"">
-    <link href=""css/customizations.css"" rel=""stylesheet"">
-  </head>
-  <body>" );
-			sb.AppendLine( @"
+			sb.Append( GetHeader(depth:0,title:"The Complete National Geographic"));
+			sb.Append( GetNavBar( NamedLink.Empty( "Decades" ) ) );
 
-<div class=""navbar navbar-default navbar-fixed-top"" role=""navigation"">  
-	<div class=""container"">
-		<div class=""navbar-collapse collapse"">
-			<ul class=""nav navbar-nav"">
-				<ul class=""breadcrumb list-inline"">
-					<li class=""active"">Decades</li>
-				</ul>
-			</ul>
-		</div>
-	</div>
-</div> 
-
-
-
-<div class=""container""> ");
+			sb.Append(@"<div class=""container""> ");
 
 			foreach( var batch in decades.GetBatchesOfSize( 4 ) ) {
 				sb.AppendLine( @"<div class=""row"">" );
 				foreach( var decade in batch ) {
 					sb.AppendFormat( 
 						@"<div class=""col-md-3 col-sm-3 col-sx-3"">
-							<img src=""{1}"" class=""img-thumbnail"" alt=""Decade preview for {0}""/>
-							<h3>{0}</h3>
-						</div>", decade.DisplayName, decade.PreviewImagePath );
+							<a href=""{2}"">
+								<img src=""{1}"" class=""img-thumbnail"" alt=""Decade preview for {0}""/>
+								<h3>{0}</h3>
+							</a>
+						</div>", decade.DisplayName, decade.PreviewImagePath, decade.RelativeIndexUrl );
 				}
 				sb.AppendLine( @"</div>" );
 			}
 
 
 			sb.AppendLine(@"</div> <!-- container --> " );
-			sb.AppendLine(
-				@"<script src=""js/jquery.min.js""></script>
-			      <script src=""js/bootstrap.min.js""></script>
-			      <script src=""js/retina.min.js""></script>
-  </body>
-</html>");
+			sb.AppendLine(GetFooter(depth:0));
 
 			File.WriteAllText( Path.Combine( _basePath, "index.html" ), sb.ToString(), Encoding.UTF8 );
 		}
 
-		static string GetHeader( string pageTitle ) {
+		static string GetHeader( int depth, string title ) {
+			var modifier = Path.Combine(Enumerable.Repeat( "..", depth ).ToArray());
+
 			return String.Format(@"<!DOCTYPE html>
 <html lang=""en"">
   <head>
@@ -172,15 +147,88 @@ namespace Website_Generator {
     <meta http-equiv=""X-UA-Compatible"" content=""IE=edge"">
     <meta name=""viewport"" content=""width=device-width, initial-scale=1"">
     <title>{0}</title>
-    <link href=""css/bootstrap.min.css"" rel=""stylesheet"">
-    <link href=""css/customizations.css"" rel=""stylesheet"">
+    <link href=""{1}"" rel=""stylesheet"">
+    <link href=""{2}"" rel=""stylesheet"">
   </head>
-  <body>", pageTitle);
+  <body>", title,
+				Path.Combine(modifier,"css","bootstrap.min.css"),
+				Path.Combine(modifier,"css","customizations.css") );
+		}
+
+		sealed class NamedLink
+		{
+			private readonly string _url;
+			private readonly string _name;
+
+			public string Name { get { return _name;}}
+			public string Url { get { return _url; } }
+		
+			public bool HasUrl { get { return !String.IsNullOrWhiteSpace( Url ); } }
+
+			public NamedLink( string name, string url )
+			{
+				_name = name;
+				_url = url;
+			}
+
+			public static NamedLink Empty( string name )
+			{
+				return new NamedLink( name: name, url: null );
+			}
+		}
+
+		static string GetNavBar( params NamedLink[] links ) {
+			var sb = new StringBuilder();
+			sb.Append( 
+				@"<div class=""navbar navbar-default navbar-fixed-top"" role=""navigation"">  
+						<div class=""container"">
+							<div class=""navbar-collapse collapse"">
+								<ul class=""nav navbar-nav"">
+									<ul class=""breadcrumb list-inline"">" );
+
+			foreach( var link in links ) {
+				if( link.HasUrl ) {
+					sb.AppendFormat( @"@<li><a href=""{1}"">{0}</a></li>", link.Name, link.Url );
+				} else {
+					sb.AppendFormat( @"<li class=""active"">{0}</li>", link.Name );
+				}
+			}
+
+			sb.Append(@"
+									</ul>
+								</ul>
+							</div>
+						</div>
+					</div>" ); 
+
+			return sb.ToString();
+		}
+
+		static string GetFooter(int depth) {
+			var modifier = Path.Combine(Enumerable.Repeat( "..", depth ).ToArray());
+
+			return String.Format(
+				@"<script src=""{0}""></script>
+			      <script src=""{1}""></script>
+			      <script src=""{2}""></script>
+  </body>
+</html>",
+				Path.Combine(modifier,"js","jquery.min.js"),
+				Path.Combine(modifier, "js","bootstrap.min.js"),
+				Path.Combine(modifier, "js", "retina.min.js") );
 		}
 
 		static void GenerateDecadeIndexes( IEnumerable<NGDecade> decades ) {
 			foreach( var decade in decades ) {
+				var sb = new StringBuilder();
+				sb.Append( GetHeader( depth:1, title:"The " + decade.DisplayName ) );
+				sb.Append( GetNavBar( new NamedLink("Decades", Path.Combine("..","index.html") ), NamedLink.Empty( decade.DisplayName ) ) );
+				sb.Append( GetFooter( depth: 1 ) );
 
+				File.WriteAllText( Path.Combine( _basePath, "html", decade.IndexFileName ), sb.ToString(), Encoding.UTF8 );
+
+
+				/*
 				var sw = new StringWriter();
 				using( var index = new HtmlWriter( sw, title: decade.DisplayName, pathModifier: Path.Combine( "..", ".." ) ) ) {
 					using( var previews = index.Div( className: "previews" ) ) {
@@ -206,7 +254,7 @@ namespace Website_Generator {
 				File.WriteAllText(
 					Path.Combine( path, decade.DisplayName + ".html" ),
 					sw.ToString(),
-					System.Text.Encoding.UTF8 );
+					System.Text.Encoding.UTF8 );*/
 			}
 		}
 

@@ -15,6 +15,12 @@ namespace DataModel {
 		public string DisplayName { get { return _fullPath.GetLastDirectory().Replace( "x", "0s"); } }
 		public string AbsoluteFilePath { get { return _fullPath; } }
 
+		public string IndexFileName { get { return _fullPath.GetLastDirectory() + ".html"; } }
+
+		public string RelativeIndexUrl {
+			get {return Path.Combine( "html", IndexFileName ); }
+		}
+
 		public string PreviewImagePath 
 		{ 
 			get { return _issues.First().Cover.NormalThumbnailUrl; }
