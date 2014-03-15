@@ -59,10 +59,6 @@ namespace DataModel {
             return GetEnumerator();
         }
 
-        public string Serialize() {
-            return "issue;" + _releaseDate.ToString( "s" );
-        }
-
         public override string ToString() {
             return String.Format( "{0} {1} pages", DisplayName, _pages.Count() );
         }

@@ -36,10 +36,6 @@ namespace DataModel {
 
         public override string ToString() {
 			return String.Format( "{0}: {1} issues", DisplayName, _issues.Count() );
-        }
-
-        public string Serialize() {
-			return "decade;" + DisplayName;
-        }
+        }			
     }
 }

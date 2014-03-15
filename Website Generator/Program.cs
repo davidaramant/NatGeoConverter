@@ -7,14 +7,16 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Diagnostics;
 
 namespace Website_Generator {
 	class Program {
-		readonly static string _basePath = GetDrivePath();
-		readonly static string _baseJpgPath = Path.Combine( _basePath, "JPG" );
-		readonly static string _baseHtmlPath = Path.Combine( _basePath, "HTML" );
+		readonly static string _basePath = GetBasePath();
+		readonly static string _baseFullImagePath = Path.Combine( _basePath, "imgs", "full" );
+		readonly static string _baseThumbnailPath = Path.Combine( _basePath, "imgs", "thumbs" );
+		readonly static string _baseHtmlPath = Path.Combine( _basePath, "html" );
 
-		static string GetDrivePath() {
+		static string GetBasePath() {
 			if( Environment.OSVersion.Platform == PlatformID.Win32NT ) {
 				return "G:";
 			}
@@ -44,120 +46,76 @@ namespace Website_Generator {
 		private static string CsvLine( params object[] columns ) {
 			return String.Join( ",", columns.Select( c => "\"" + c + "\"" ) );
 		}
-
-		// TODO: Getting rid of special page handling does not reliably find the cover image
+			
 		static void DoStuff() {
-			//var decades = GenerateModel();
-			var decades = Deserialize( "serialized.txt" );
+			var timer = Stopwatch.StartNew();
+			var decades = GenerateModel();
+			WL( "Generating model took: " + timer.Elapsed );
 
 			WL( "{0} decades", decades.Count() );
 
+			timer.Restart();
 			//GenerateThumbnails( decades );
-			GenerateMainIndex( decades );
+			//WL( "Thumbnail generation took: " + timer.Elapsed );
+
+			//GenerateMainIndex( decades );
 			//GenerateDecadeIndexes( decades );
 			//GeneratePageIndexes( decades );
 		}
 
 		private static IEnumerable<NGDecade> GenerateModel() {
 			var decades =
-				Directory.GetDirectories( _baseJpgPath ).
-                Select( decadeDir => NGDecade.Parse( decadeDir, basePath: _basePath ) ).
-                OrderBy( decade => decade.Name ).
+				Directory.GetDirectories( _baseFullImagePath ).
+				Select( decadeDir => NGDecade.Parse( path:decadeDir, basePath: _basePath ) ).
+                OrderBy( decade => decade.DisplayName ).
                 ToArray();
 
-			Serialize( decades, "serialized.txt" );
-
 			return decades;
 		}
 
-		private static void Serialize( IEnumerable<NGDecade> decades, string path ) {
-			using( var serialized = File.CreateText( path ) ) {
-				foreach( var decade in decades ) {
-					serialized.WriteLine( decade.Serialize() );
-					foreach( var issue in decade ) {
-						serialized.WriteLine( issue.Serialize() );
-						foreach( var page in issue ) {
-							serialized.WriteLine( page.Serialize() );
-						}
-					}
-				}
+		static void CreatePath( string path ) {
+			var dirPart = Path.GetDirectoryName( path );
+			if( !Directory.Exists( dirPart ) ) {
+				Directory.CreateDirectory( dirPart );
 			}
-		}
-
-		private static IEnumerable<NGDecade> Deserialize( string path ) {
-			var decades = new List<NGDecade>();
-
-			string decadeName = String.Empty;
-			DateTime issueDate = DateTime.Now;
-			var issues = new List<NGIssue>();
-			var pages = new List<NGPage>();
-
-			foreach( var line in File.ReadAllLines( path ) ) {
-				var parts = line.Split( ';' );
-
-				switch( parts[ 0 ] ) {
-					case "decade":
-						if( pages.Any() ) {
-							issues.Add( new NGIssue( pages, issueDate ) );
-							pages.Clear();
-						}
-						if( issues.Any() ) {
-							decades.Add( new NGDecade( issues, decadeName ) );
-							issues.Clear();
-						}
-
-						decadeName = parts[ 1 ];
-						break;
-					case "issue":
-						if( pages.Any() ) {
-							issues.Add( new NGIssue( pages, issueDate ) );
-							pages.Clear();
-						}
-
-						issueDate = DateTime.ParseExact( parts[ 1 ], "s", CultureInfo.InvariantCulture );
-						break;
-					case "page":
-						pages.Add( NGPage.Parse( Path.Combine( _basePath, parts[ 1 ] ), _basePath ) );
-						break;
-				}
-
-			}
-
-			if( pages.Any() ) {
-				issues.Add( new NGIssue( pages, issueDate ) );
-				pages.Clear();
-			}
-			if( issues.Any() ) {
-				decades.Add( new NGDecade( issues, decadeName ) );
-				issues.Clear();
-			}
-
-			return decades;
 		}
 
 		static void GenerateThumbnails( IEnumerable<NGDecade> decades ) {
 			foreach( var decade in decades ) {
+				WL( "Decade: {0} {1}", decade.DisplayName, DateTime.Now.ToString("s") );
 				foreach( var issue in decade ) {
 					foreach( var page in issue ) {
-						var thumbPath = Path.Combine( _basePath, "thumbnails", page.RelativePath );
+						CreatePath( page.NormalThumbnailFullPath );
 
-						using( var image = Image.FromFile( page.FullPath ) ) {
-							//image.GetThumbnailImage( thumbHeight: 400, thumbWidth: 400 );
+						using( var p1 = StartGeneratingThumbnail( page.FullPath, page.NormalThumbnailFullPath, 180 ) )
+						using( var p2 = StartGeneratingThumbnail( page.FullPath, page.RetinaThumbnailFullPath, 360 ) ) {
+							p1.WaitForExit();
+							p2.WaitForExit();
 						}
 					}
 				}
 			}
+		}
+
+		static Process StartGeneratingThumbnail( string inputPath, string outputPath, int size ) {
+			var processInfo = new System.Diagnostics.ProcessStartInfo {
+				FileName = "convert",
+				Arguments = String.Format("\"{0}\" -resize {1} -quality 100% \"{2}\"", inputPath, size, outputPath ),
+				CreateNoWindow = true,
+			};
+
+			return System.Diagnostics.Process.Start( processInfo );
 		}
 
 		static void GenerateMainIndex( IEnumerable<NGDecade> decades ) {
 									var sw = new StringWriter();
 			using( var index = new HtmlWriter( sw, "National Geographic" ) ) {
 				using( var previews = index.Div( className: "previews" ) ) {
-					foreach( var decade in decades.OrderBy( _ => _.Name ) ) {
+					foreach( var decade in decades.OrderBy( _ => _.DisplayName ) ) {
 						using( var decadePreview = previews.Div( "previewBox" ) ) {
-							using( var decadeLink = decadePreview.Link( Path.Combine( "web", decade.Name, decade.Name + ".html" ) ) ) {
-								decadeLink.Img( link: decade.First().Cover.RelativePath, altText: decade.Name );
-								decadeLink.H2( decade.Name );
+							using( var decadeLink = decadePreview.Link( Path.Combine( "web", decade.DisplayName, decade.DisplayName + ".html" ) ) ) {
+								decadeLink.Img( link: decade.First().Cover.RelativePath, altText: decade.DisplayName );
+								decadeLink.H2( decade.DisplayName );
 							}
 						}
 					}
@@ -171,7 +129,7 @@ namespace Website_Generator {
 			foreach( var decade in decades ) {
 
 				var sw = new StringWriter();
-				using( var index = new HtmlWriter( sw, title: decade.Name, pathModifier: Path.Combine( "..", ".." ) ) ) {
+				using( var index = new HtmlWriter( sw, title: decade.DisplayName, pathModifier: Path.Combine( "..", ".." ) ) ) {
 					using( var previews = index.Div( className: "previews" ) ) {
 						foreach( var issue in decade ) {
 							using( var issuePreview = previews.Div( "previewBox" ) ) {
@@ -186,14 +144,14 @@ namespace Website_Generator {
 					}
 				}
 
-				var path = Path.Combine( _basePath, "web", decade.Name );
+				var path = Path.Combine( _basePath, "web", decade.DisplayName );
 
 				if( !Directory.Exists( path ) ) {
 					Directory.CreateDirectory( path );
 				}
 
 				File.WriteAllText(
-					Path.Combine( path, decade.Name + ".html" ),
+					Path.Combine( path, decade.DisplayName + ".html" ),
 					sw.ToString(),
 					System.Text.Encoding.UTF8 );
 			}
@@ -221,7 +179,7 @@ namespace Website_Generator {
 						}
 					}
 
-					var path = Path.Combine( _basePath, "web", decade.Name, issue.Name );
+					var path = Path.Combine( _basePath, "web", decade.DisplayName, issue.Name );
 
 					if( !Directory.Exists( path ) ) {
 						Directory.CreateDirectory( path );

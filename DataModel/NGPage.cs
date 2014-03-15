@@ -28,9 +28,5 @@ namespace DataModel {
         public override string ToString() {
             return RelativePath;
         }
-
-        public string Serialize() {
-            return "page;" + RelativePath;
-        }
     }
 }
