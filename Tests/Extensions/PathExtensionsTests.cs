@@ -26,6 +26,15 @@ namespace Tests.Extensions {
 			Assert.That( actualRelativePath, Is.EqualTo( relativePath ),
 			            "Did not parse out relative path." );
 		}
+
+		[TestCase("/some/path/with/stuff", "stuff")]
+		[TestCase( "lonePath", "lonePath" )]
+		[TestCase( "pathWith/slashOnEnd/", "slashOnEnd" )]
+		public void ShouldGetLastDirectoryName( string input, string expectedOutput )
+		{
+			Assert.That( input.GetLastDirectory(), Is.EqualTo( expectedOutput ),
+				"Did not get expected output." );
+		}
 	}
 }
 
