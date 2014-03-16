@@ -21,10 +21,15 @@ namespace DataModel {
 			get {return Path.Combine( "html", IndexFileName ); }
 		}
 
+		public string DirectoryName {
+			get { return _fullPath.GetLastDirectory(); }
+		}
+
 		public string PreviewImagePath 
 		{ 
 			get { return _issues.First().Cover.NormalThumbnailUrl; }
 		}
+
 		public NGDecade( IEnumerable<NGIssue> issues, string fullPath ) {
             _issues.AddRange( issues.OrderBy( _ => _.ReleaseDate ) );
 			_fullPath = fullPath;

@@ -16,7 +16,6 @@ namespace Website_Generator {
 		readonly static string _basePath = GetBasePath();
 		readonly static string _baseFullImagePath = Path.Combine( _basePath, "imgs", "full" );
 		readonly static string _baseThumbnailPath = Path.Combine( _basePath, "imgs", "thumbs" );
-		readonly static string _baseHtmlPath = Path.Combine( _basePath, "html" );
 
 		static string GetBasePath() {
 			if( Environment.OSVersion.Platform == PlatformID.Win32NT ) {
@@ -62,6 +61,7 @@ namespace Website_Generator {
 
 			//GenerateMainIndex( decades );
 			GenerateDecadeIndexes( decades );
+			GenerateIssueIndexes( decades );
 			//GeneratePageIndexes( decades );
 		}
 
@@ -238,7 +238,7 @@ namespace Website_Generator {
 								<img src=""{1}"" class=""img-thumbnail"" alt=""Preview for {0}""/>
 								<h3>{0}</h3>
 							</a>
-						</div>", issue.ReleaseDate.ToString("MMMM d"), Path.Combine("..", issue.Cover.NormalThumbnailUrl ), issue.RelativeIndexUrl );
+						</div>", issue.ShortDisplayName, Path.Combine("..", issue.Cover.NormalThumbnailUrl ), Path.Combine( decade.DirectoryName, issue.RelativeIndexUrl ) );
 						}
 						sb.AppendLine( @"</div>" );
 					}
@@ -253,11 +253,54 @@ namespace Website_Generator {
 			}
 		}
 
+		static void GenerateIssueIndexes( IEnumerable<NGDecade> decades ) {
+			foreach( var decade in decades ) {
+				foreach( var issue in decade ) {
+					var sb = new StringBuilder();
+					sb.Append( GetHeader( depth: 3, title: issue.LongDisplayName ) );
+					sb.Append( GetNavBar( 
+						new NamedLink( "Decades", Path.Combine( "..", "..", "..", "index.html" ) ), 
+						new NamedLink( decade.DisplayName, Path.Combine( "..","..", decade.IndexFileName ) ),
+						NamedLink.Empty( issue.LongDisplayName ) ) );
+
+					sb.Append(@"<div class=""container""> ");
+
+					foreach( var batch in issue.GetBatchesOfSize(4) ) {
+						sb.Append( @"<div class=""row"">" );
+						foreach( var page in batch )
+						{
+							sb.AppendFormat( 
+								@"<div class=""col-md-3 col-sm-3 col-sx-3"">
+								<a href=""{2}"">
+									<img src=""{1}"" class=""img-thumbnail"" alt=""Preview for {0}""/>
+									<h3>{0}</h3>
+								</a>
+							</div>", page.DisplayName, 
+								Path.Combine("..","..","..", page.NormalThumbnailUrl ), 
+								page.IndexName );
+						}
+						sb.AppendLine( @"</div>" );
+					}
+
+					sb.AppendLine(@"</div> <!-- container --> " );
+
+					sb.Append( GetFooter( depth: 3 ) );
+
+					var path = Path.Combine( _basePath, "html", decade.DirectoryName, issue.RelativeIndexUrl );
+
+					CreatePath( path );
+
+					File.WriteAllText( path, sb.ToString(), Encoding.UTF8 );
+				}
+			}
+		}
+
 		static void GeneratePageIndexes( IEnumerable<NGDecade> decades ) {
 			var pathModifier = Path.Combine( "..", "..", ".." );
 
 			foreach( var decade in decades ) {
 				foreach( var issue in decade ) {
+					/*
 					var sw = new StringWriter();
 					using( var index = new HtmlWriter( sw, title: issue.DisplayName, pathModifier: pathModifier ) ) {
 						using( var previews = index.Div( className: "previews" ) ) {
@@ -285,6 +328,7 @@ namespace Website_Generator {
 						Path.Combine( path, issue.Name + ".html" ),
 						sw.ToString(),
 						System.Text.Encoding.UTF8 );
+						*/
 				}
 			}
 		}

@@ -18,6 +18,8 @@ namespace DataModel {
 
 		public string NormalThumbnailUrl { get { return _relativePath.Replace("full","thumbs"); } }
 
+		public string IndexName { get { return Path.GetFileNameWithoutExtension( _relativePath ) + ".html"; } }
+
 		public NGPage( string basePath, string fullPath ) {
 			_fullPath = fullPath;
 			_relativePath = fullPath.GetPathRelativeTo( basePath );

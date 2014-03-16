@@ -7,7 +7,6 @@ using System.Text.RegularExpressions;
 using DataModel.Extensions;
 
 namespace DataModel {
-    [DebuggerDisplay( "{ToString()}" )]
     public sealed class NGIssue : IEnumerable<NGPage> {
         readonly List<NGPage> _pages = new List<NGPage>();
 
@@ -16,16 +15,27 @@ namespace DataModel {
         public DateTime ReleaseDate { get { return _releaseDate; } }
 
         public NGPage Cover {
-			get { return _pages.First( page => Regex.IsMatch( Path.GetFileName( page.FullPath ), @"^NGM_\d{4}") ); }
+			get 
+			{ 
+				try
+				{
+					return _pages.First( page => Regex.IsMatch( Path.GetFileName( page.FullPath ), @"^NGM_(\w{2}_)?\d{4}") );
+				}
+				catch {
+					Console.Out.WriteLine( "Error with {0}", _releaseDate.ToString("s") );
+					throw;
+				}
+			}
         }
 
-        public string DisplayName {
-            get { return _releaseDate.ToString( "yyyy - MM - dd" ); }
+		public string ShortDisplayName {
+			get { return _releaseDate.ToString( "MMMM d" ); }
         }
 
-        public string Name {
-            get { return _releaseDate.ToString( "yyyy-MM-dd" ); }
-        }
+		public string LongDisplayName {
+			get { return _releaseDate.ToString( "MMMM d, yyyy" ); }
+		}
+
 
 		public string DirectoryName { get { return _releaseDate.ToString( "yyyyMMdd" ); } }
 
@@ -63,10 +73,6 @@ namespace DataModel {
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() {
             return GetEnumerator();
-        }
-
-        public override string ToString() {
-            return String.Format( "{0} {1} pages", DisplayName, _pages.Count() );
         }
     }
 }
