@@ -60,7 +60,7 @@ namespace Website_Generator {
 			//GenerateThumbnails( decades );
 			//WL( "Thumbnail generation took: " + timer.Elapsed );
 
-			GenerateMainIndex( decades );
+			//GenerateMainIndex( decades );
 			GenerateDecadeIndexes( decades );
 			//GeneratePageIndexes( decades );
 		}
@@ -223,38 +223,33 @@ namespace Website_Generator {
 				var sb = new StringBuilder();
 				sb.Append( GetHeader( depth:1, title:"The " + decade.DisplayName ) );
 				sb.Append( GetNavBar( new NamedLink("Decades", Path.Combine("..","index.html") ), NamedLink.Empty( decade.DisplayName ) ) );
-				sb.Append( GetFooter( depth: 1 ) );
 
-				File.WriteAllText( Path.Combine( _basePath, "html", decade.IndexFileName ), sb.ToString(), Encoding.UTF8 );
+				sb.Append(@"<div class=""container""> ");
 
+				foreach( var yearGroup in decade.GroupBy( d => d.ReleaseDate.Year ).OrderBy( yearGroup => yearGroup.First().ReleaseDate ) ) {
+					sb.AppendFormat( @"<div class=""page-header""><h1>{0}</h1></div>", yearGroup.First().ReleaseDate.Year );
 
-				/*
-				var sw = new StringWriter();
-				using( var index = new HtmlWriter( sw, title: decade.DisplayName, pathModifier: Path.Combine( "..", ".." ) ) ) {
-					using( var previews = index.Div( className: "previews" ) ) {
-						foreach( var issue in decade ) {
-							using( var issuePreview = previews.Div( "previewBox" ) ) {
-								using( var previewLink = issuePreview.Link( Path.Combine( issue.Name, issue.Name + ".html" ) ) ) {
-									previewLink.Img(
-										link: Path.Combine( "..", "..", issue.Cover.RelativePath ),
-										altText: issue.DisplayName );
-									previewLink.H2( issue.DisplayName );
-								}
-							}
+					foreach( var batch in yearGroup.OrderBy( issue => issue.ReleaseDate ).GetBatchesOfSize( 4 ) ) {
+						sb.AppendLine( @"<div class=""row"">" );
+						foreach( var issue in batch ) {
+							sb.AppendFormat( 
+								@"<div class=""col-md-3 col-sm-3 col-sx-3"">
+							<a href=""{2}"">
+								<img src=""{1}"" class=""img-thumbnail"" alt=""Preview for {0}""/>
+								<h3>{0}</h3>
+							</a>
+						</div>", issue.ReleaseDate.ToString("MMMM d"), Path.Combine("..", issue.Cover.NormalThumbnailUrl ), issue.RelativeIndexUrl );
 						}
+						sb.AppendLine( @"</div>" );
 					}
 				}
 
-				var path = Path.Combine( _basePath, "web", decade.DisplayName );
 
-				if( !Directory.Exists( path ) ) {
-					Directory.CreateDirectory( path );
-				}
+				sb.AppendLine(@"</div> <!-- container --> " );
 
-				File.WriteAllText(
-					Path.Combine( path, decade.DisplayName + ".html" ),
-					sw.ToString(),
-					System.Text.Encoding.UTF8 );*/
+				sb.Append( GetFooter( depth: 1 ) );
+
+				File.WriteAllText( Path.Combine( _basePath, "html", decade.IndexFileName ), sb.ToString(), Encoding.UTF8 );
 			}
 		}
 

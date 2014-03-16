@@ -27,6 +27,12 @@ namespace DataModel {
             get { return _releaseDate.ToString( "yyyy-MM-dd" ); }
         }
 
+		public string DirectoryName { get { return _releaseDate.ToString( "yyyyMMdd" ); } }
+
+		public string RelativeIndexUrl {
+			get { return Path.Combine( DirectoryName, "index.html" ); }
+		}
+
         public NGIssue( IEnumerable<NGPage> pages, DateTime releaseDate ) {
             _pages.AddRange( pages.OrderBy( _ => _.RelativePath ) );
             _releaseDate = releaseDate;
