@@ -145,12 +145,11 @@ namespace Website_Generator {
 				sb.AppendLine( @"<div class=""row"">" );
 				foreach( var decade in batch ) {
 					sb.AppendFormat( 
-						@"<div class=""col-md-3 col-sm-3 col-sx-3"">
-							<a href=""{2}"">
-								<img src=""{1}"" class=""img-thumbnail"" alt=""Decade preview for {0}""/>
-								<h3>{0}</h3>
-							</a>
-						</div>", decade.DisplayName, decade.PreviewImagePath, decade.RelativeIndexUrl );
+						GetThumbnailHtml(
+							displayName: decade.DisplayName,
+							previewText: String.Format( "Decade preview for {0}", decade.DisplayName ),
+							imgUrl: decade.PreviewImagePath,
+							linkUrl: decade.RelativeIndexUrl ) );
 				}
 				sb.AppendLine( @"</div>" );
 			}
@@ -160,6 +159,18 @@ namespace Website_Generator {
 			sb.AppendLine(GetFooter(depth:0));
 
 			File.WriteAllText( Path.Combine( _basePath, "index.html" ), sb.ToString(), Encoding.UTF8 );
+		}
+
+		static string GetThumbnailHtml( string displayName, string previewText, string imgUrl, string linkUrl ) {
+			return String.Format( 
+				       @"<div class=""col-md-3 col-sm-3 col-sx-3"">
+							<div class=""well"">
+								<a href=""{3}"">
+									<img src=""{2}"" class=""img-thumbnail"" alt=""{1}""/>
+									<h3>{0}</h3>
+								</a>
+							</div>
+						</div>", displayName, previewText, imgUrl, linkUrl );
 		}
 
 		static string GetHeader( int depth, string title ) {
@@ -257,13 +268,11 @@ namespace Website_Generator {
 					foreach( var batch in yearGroup.OrderBy( issue => issue.ReleaseDate ).GetBatchesOfSize( 4 ) ) {
 						sb.AppendLine( @"<div class=""row"">" );
 						foreach( var issue in batch ) {
-							sb.AppendFormat( 
-								@"<div class=""col-md-3 col-sm-3 col-sx-3"">
-							<a href=""{2}"">
-								<img src=""{1}"" class=""img-thumbnail"" alt=""Preview for {0}""/>
-								<h3>{0}</h3>
-							</a>
-						</div>", issue.ShortDisplayName, Path.Combine("..", issue.Cover.NormalThumbnailUrl ), Path.Combine( decade.DirectoryName, issue.RelativeIndexUrl ) );
+							sb.Append( GetThumbnailHtml(
+								displayName: issue.ShortDisplayName,
+								previewText: String.Format( "Preview for {0}", issue.ShortDisplayName ),
+								imgUrl: Path.Combine("..", issue.Cover.NormalThumbnailUrl ),
+								linkUrl: Path.Combine( decade.DirectoryName, issue.RelativeIndexUrl ) ) );
 						}
 						sb.AppendLine( @"</div>" );
 					}
@@ -294,15 +303,11 @@ namespace Website_Generator {
 						sb.Append( @"<div class=""row"">" );
 						foreach( var page in batch )
 						{
-							sb.AppendFormat( 
-								@"<div class=""col-md-3 col-sm-3 col-sx-3"">
-								<a href=""{2}"">
-									<img src=""{1}"" class=""img-thumbnail"" alt=""Preview for {0}""/>
-									<h3>{0}</h3>
-								</a>
-							</div>", page.DisplayName, 
-								Path.Combine("..","..","..", page.NormalThumbnailUrl ), 
-								page.IndexName );
+							sb.Append( GetThumbnailHtml(
+								displayName: page.DisplayName,
+								previewText: String.Format( "Preview for {0}", page.DisplayName ),
+								imgUrl: Path.Combine("..","..","..", page.NormalThumbnailUrl ),
+								linkUrl: page.IndexName ) );
 						}
 						sb.AppendLine( @"</div>" );
 					}
