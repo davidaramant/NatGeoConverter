@@ -164,12 +164,16 @@ namespace Website_Generator {
 		static string GetThumbnailHtml( string displayName, string previewText, string imgUrl, string linkUrl ) {
 			return String.Format( 
 				       @"<div class=""col-md-3 col-sm-3 col-sx-3"">
-							<div class=""well"">
-								<a href=""{3}"">
-									<img src=""{2}"" class=""img-thumbnail"" alt=""{1}""/>
-									<h3>{0}</h3>
-								</a>
-							</div>
+							<a href=""{3}"">
+								<div class=""panel panel-default"">
+									<div class=""panel-heading"">
+										<h3 class=""panel-title"">{0}</h3>
+									</div>
+									<div class=""panel-body"">
+										<img src=""{2}"" class=""img-thumbnail"" alt=""{1}""/>
+									</div>
+								</div>
+							</a>
 						</div>", displayName, previewText, imgUrl, linkUrl );
 		}
 
@@ -316,7 +320,7 @@ namespace Website_Generator {
 				sb.Append(@"<div class=""container""> ");
 
 				foreach( var yearGroup in decade.GroupBy( d => d.ReleaseDate.Year ).OrderBy( yearGroup => yearGroup.First().ReleaseDate ) ) {
-					sb.AppendFormat( @"<div class=""panel panel-default""><div class=""panel-heading""><h1 class=""pabel-title"">{0}</h1></div><div class=""panel-body"">", 
+					sb.AppendFormat( @"<div class=""panel panel-primary""><div class=""panel-heading""><h2 class=""pabel-title"">{0}</h2></div><div class=""panel-body"">", 
 						yearGroup.First().ReleaseDate.Year );
 
 					foreach( var batch in yearGroup.OrderBy( issue => issue.ReleaseDate ).GetBatchesOfSize( 4 ) ) {
