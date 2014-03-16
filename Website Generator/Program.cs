@@ -26,7 +26,7 @@ namespace Website_Generator {
 
 		static void Main( string[] args ) {
 			try {
-				DoStuff();
+				DoStuff(args);
 			} catch( Exception e ) {
 				WL( new String( '-', 79 ) );
 				WL( e.ToString() );
@@ -48,7 +48,12 @@ namespace Website_Generator {
 			return String.Join( ",", columns.Select( c => "\"" + c + "\"" ) );
 		}
 			
-		static void DoStuff() {
+		static void DoStuff(string[] args) {
+			//var startDecade = args[ 0 ];
+			//var endDecade = args[ 1 ];
+
+			//WL( "Start: {0} End: {1}", startDecade, endDecade );
+
 			var timer = Stopwatch.StartNew();
 			var decades = GenerateModel();
 			WL( "Generating model took: " + timer.Elapsed );
@@ -56,10 +61,10 @@ namespace Website_Generator {
 						WL( "{0} decades", decades.Count() );
 
 			timer.Restart();
-			//GenerateThumbnails( decades );
+			//GenerateThumbnails( decades, startDecade, endDecade );
 			//WL( "Thumbnail generation took: " + timer.Elapsed );
 
-			//GenerateMainIndex( decades );
+			GenerateMainIndex( decades );
 			GenerateDecadeIndexes( decades );
 			GenerateIssueIndexes( decades );
 			//GeneratePageIndexes( decades );
@@ -82,15 +87,35 @@ namespace Website_Generator {
 			}
 		}
 
-		static void GenerateThumbnails( IEnumerable<NGDecade> decades ) {
+		static IEnumerable<NGDecade> GetSubSet( IEnumerable<NGDecade> decades, string startDecade, string endDecade ) {
+			bool foundStart = false;
 			foreach( var decade in decades ) {
+				if( !foundStart ) {
+					if( decade.DisplayName == startDecade ) {
+						foundStart = true;
+						yield return decade;
+					}
+				} else {
+					yield return decade;
+
+					if( decade.DisplayName == endDecade ) {
+						yield break;
+					}
+				}
+			}
+		}
+
+		static void GenerateThumbnails( IEnumerable<NGDecade> decades, string startDecade, string endDecade ) {
+			var subSet = GetSubSet( decades, startDecade, endDecade );
+
+			foreach( var decade in subSet ) {
 				WL( "Decade: {0} {1}", decade.DisplayName, DateTime.Now.ToString("s") );
 				foreach( var issue in decade ) {
 					foreach( var page in issue ) {
 						CreatePath( page.NormalThumbnailFullPath );
 
-						using( var p1 = StartGeneratingThumbnail( page.FullPath, page.NormalThumbnailFullPath, 180 ) )
-						using( var p2 = StartGeneratingThumbnail( page.FullPath, page.RetinaThumbnailFullPath, 360 ) ) {
+						using( var p1 = StartGeneratingThumbnail( page.FullPath, page.NormalThumbnailFullPath, 180, 260 ) )
+						using( var p2 = StartGeneratingThumbnail( page.FullPath, page.RetinaThumbnailFullPath, 360, 520 ) ) {
 							p1.WaitForExit();
 							p2.WaitForExit();
 						}
@@ -99,10 +124,10 @@ namespace Website_Generator {
 			}
 		}
 
-		static Process StartGeneratingThumbnail( string inputPath, string outputPath, int size ) {
+		static Process StartGeneratingThumbnail( string inputPath, string outputPath, int xSize, int ySize ) {
 			var processInfo = new System.Diagnostics.ProcessStartInfo {
 				FileName = "convert",
-				Arguments = String.Format("\"{0}\" -resize {1} -quality 100% \"{2}\"", inputPath, size, outputPath ),
+				Arguments = String.Format("\"{0}\" -resize {1}x{2} -quality 100% \"{3}\"", inputPath, xSize, ySize, outputPath ),
 				CreateNoWindow = true,
 			};
 
@@ -188,7 +213,7 @@ namespace Website_Generator {
 
 			foreach( var link in links ) {
 				if( link.HasUrl ) {
-					sb.AppendFormat( @"@<li><a href=""{1}"">{0}</a></li>", link.Name, link.Url );
+					sb.AppendFormat( @"<li><a href=""{1}"">{0}</a></li>", link.Name, link.Url );
 				} else {
 					sb.AppendFormat( @"<li class=""active"">{0}</li>", link.Name );
 				}
