@@ -33,7 +33,6 @@ namespace Website_Generator {
 			}
 
 			WL( "Done" );
-			Console.ReadKey();
 		}
 
 		static void WL() {
@@ -65,9 +64,10 @@ namespace Website_Generator {
 			//WL( "Thumbnail generation took: " + timer.Elapsed );
 
 			//GenerateMainIndex( decades );
-			GenerateDecadeIndexes( decades );
+			//GenerateDecadeIndexes( decades );
 			//GenerateIssueIndexes( decades );
-			//GeneratePageIndexes( decades );
+			GeneratePageIndexes( decades );
+			WL( "HTML generation took: " + timer.Elapsed );
 		}
 
 		private static IEnumerable<NGDecade> GenerateModel() {
@@ -240,18 +240,71 @@ namespace Website_Generator {
 			return sb.ToString();
 		}
 
-		static string GetFooter(int depth) {
+		static string GetNavBarWithButtons( NamedLink previous, NamedLink next, params NamedLink[] links ) {
+			var sb = new StringBuilder();
+			sb.Append( 
+				@"<div class=""navbar navbar-default navbar-fixed-top"" role=""navigation"">  
+						<div class=""container"">
+							<div class=""navbar-collapse collapse"">
+								<ul class=""nav navbar-nav"">
+									<ul class=""breadcrumb list-inline"">" );
+
+			foreach( var link in links ) {
+				if( link.HasUrl ) {
+					sb.AppendFormat( @"<li><a href=""{1}"">{0}</a></li>", link.Name, link.Url );
+				} else {
+					sb.AppendFormat( @"<li class=""active"">{0}</li>", link.Name );
+				}
+			}
+
+			sb.AppendFormat(@"</ul>
+								</ul>
+								<div class=""nav navbar-right"">
+									<div class=""btn-group"">
+  										{0}
+  										{1}
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>", 
+				CreateNavButton(left:true,link:previous),
+				CreateNavButton(left:false,link:next)); 
+
+			return sb.ToString();
+		}
+
+		static string CreateNavButton( bool left, NamedLink link ) {
+			var direction = left ? "left" : "right";
+			if( link == null ) {
+				return String.Format( 
+					@"<button class=""btn navbar-btn btn-disabled""><span class=""glyphicon glyphicon-chevron-{0}""/></button>", 
+					direction );
+			} else {
+				return String.Format( 
+					@"<a class=""btn navbar-btn btn-primary"" href=""{1}""><span class=""glyphicon glyphicon-chevron-{0}""/></a>", 
+					direction, link.Url );
+			}
+		}
+
+		static string GetFooter(int depth, bool retinaUpscale = true ) {
 			var modifier = Path.Combine(Enumerable.Repeat( "..", depth ).ToArray());
 
-			return String.Format(
-				@"<script src=""{0}""></script>
-			      <script src=""{1}""></script>
-			      <script src=""{2}""></script>
-  </body>
-</html>",
-				Path.Combine(modifier,"js","jquery.min.js"),
-				Path.Combine(modifier, "js","bootstrap.min.js"),
-				Path.Combine(modifier, "js", "retina.min.js") );
+			var javascriptFiles = new List<string> {
+				"jquery.min.js",
+				"bootstrap.min.js",
+			};
+			if( retinaUpscale ) {
+				javascriptFiles.Add( "retina.min.js" );
+			}
+
+			var footer = new StringBuilder();
+			foreach( var file in javascriptFiles ) {
+				footer.AppendFormat( @"<script src=""{0}""></script>",
+					Path.Combine( modifier, "js", file ) );
+			}
+			footer.Append( @"</body></html>" );
+			return footer.ToString();
 		}
 
 		static void GenerateDecadeIndexes( IEnumerable<NGDecade> decades ) {
@@ -332,37 +385,45 @@ namespace Website_Generator {
 
 			foreach( var decade in decades ) {
 				foreach( var issue in decade ) {
-					/*
-					var sw = new StringWriter();
-					using( var index = new HtmlWriter( sw, title: issue.DisplayName, pathModifier: pathModifier ) ) {
-						using( var previews = index.Div( className: "previews" ) ) {
-							foreach( var page in issue ) {
-								using( var pagePreview = previews.Div( "previewBox" ) ) {
+					for( int pageIndex = 0; pageIndex < issue.Count; pageIndex++ )
+					{
+						NGPage previousPage = (pageIndex == 0) ? null : issue[ pageIndex - 1 ];
+						NGPage nextPage = (pageIndex == (issue.Count - 1)) ? null : issue[ pageIndex + 1 ];
 
-									using( var previewLink = pagePreview.Link( page.DisplayName + ".html" ) ) {
-										previewLink.Img(
-											link: Path.Combine( pathModifier, page.RelativePath ),
-											altText: page.DisplayName );
-										previewLink.H2( page.DisplayName );
-									}
-								}
-							}
-						}
-					}
+						var currentPage = issue[ pageIndex ];
 
-					var path = Path.Combine( _basePath, "web", decade.DisplayName, issue.Name );
+						var sb = new StringBuilder();
+						sb.Append( GetHeader( depth: 3, title: currentPage.DisplayName ) );
+						sb.Append( GetNavBarWithButtons(
+							previous:MakeLinkToPage(previousPage),
+							next:MakeLinkToPage(nextPage),
+							links:new[]{
+							new NamedLink( "Decades", Path.Combine( "..", "..", "..", "index.html" ) ), 
+							new NamedLink( decade.DisplayName, Path.Combine( "..","..", decade.IndexFileName ) ),
+							new NamedLink( issue.LongDisplayName, issue.IndexFileName ),
+								NamedLink.Empty( currentPage.DisplayName )} ) );
+						sb.Append(@"<div class=""container""> ");
 
-					if( !Directory.Exists( path ) ) {
-						Directory.CreateDirectory( path );
-					}
+						sb.AppendFormat( @"<img src=""{0}"" alt=""{1}"" class=""img-responsive img-rounded""/>",
+							Path.Combine("..","..","..",currentPage.RelativePath), currentPage.DisplayName );
 
-					File.WriteAllText(
-						Path.Combine( path, issue.Name + ".html" ),
-						sw.ToString(),
-						System.Text.Encoding.UTF8 );
-						*/
-				}
-			}
+						sb.AppendLine(@"</div> <!-- container --> " );
+
+						sb.Append( GetFooter( depth: 3, retinaUpscale:false ) );
+
+						var path = Path.Combine( _basePath, "html", decade.DirectoryName, issue.DirectoryName, currentPage.IndexName );
+
+						File.WriteAllText( path, sb.ToString(), Encoding.UTF8 );
+					} // page
+				} // issue
+			} // decade
+		}
+
+		static NamedLink MakeLinkToPage( NGPage page )
+		{
+			if( page == null )
+				return null;
+			return new NamedLink( name: page.DisplayName, url: page.IndexName );
 		}
 	}
 }

@@ -10,6 +10,11 @@ namespace DataModel {
     public sealed class NGIssue : IEnumerable<NGPage> {
         readonly List<NGPage> _pages = new List<NGPage>();
 
+		public int Count { get { return _pages.Count; } }
+		public NGPage this[int index] {
+			get { return _pages[ index ]; }
+		}
+
         readonly DateTime _releaseDate;
 
         public DateTime ReleaseDate { get { return _releaseDate; } }
@@ -29,7 +34,7 @@ namespace DataModel {
         }
 
 		public string ShortDisplayName {
-			get { return _releaseDate.ToString( "MMMM d" ); }
+			get { return _releaseDate.ToString( "MMM d" ); }
         }
 
 		public string LongDisplayName {
@@ -40,7 +45,11 @@ namespace DataModel {
 		public string DirectoryName { get { return _releaseDate.ToString( "yyyyMMdd" ); } }
 
 		public string RelativeIndexUrl {
-			get { return Path.Combine( DirectoryName, "index.html" ); }
+			get { return Path.Combine( DirectoryName, IndexFileName ); }
+		}
+
+		public string IndexFileName { 
+			get { return "index.html"; }
 		}
 
         public NGIssue( IEnumerable<NGPage> pages, DateTime releaseDate ) {
@@ -63,7 +72,7 @@ namespace DataModel {
 			}		
 
             return new NGIssue(
-                    Directory.GetFiles( path, searchPattern: "*.jpg" ).OrderBy( _ => _ ).Select( pagePath => NGPage.Parse( pagePath, basePath: basePath ) ),
+				Directory.GetFiles( path, searchPattern: "*.jpg" ).OrderBy( _ => _ ).Select( (pagePath,index) => NGPage.Parse( pagePath, basePath: basePath, index:index ) ),
                     releaseDate: releaseDate );
         }
 

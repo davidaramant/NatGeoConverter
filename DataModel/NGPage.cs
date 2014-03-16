@@ -9,9 +9,11 @@ namespace DataModel {
 		private readonly string _fullPath;
 		private readonly string _relativePath;
 
+		private readonly string _displayName;
+
 		public string FullPath { get { return _fullPath; } }
 		public string RelativePath { get { return _relativePath; } }
-		public string DisplayName { get { return Path.GetFileNameWithoutExtension(RelativePath); } }
+		public string DisplayName { get { return _displayName; } }
 
 		public string NormalThumbnailFullPath { get { return FullPath.Replace( "full", "thumbs"); } }
 		public string RetinaThumbnailFullPath { get { return NormalThumbnailFullPath.Replace(".jpg","@2x.jpg"); } }
@@ -20,13 +22,15 @@ namespace DataModel {
 
 		public string IndexName { get { return Path.GetFileNameWithoutExtension( _relativePath ) + ".html"; } }
 
-		public NGPage( string basePath, string fullPath ) {
+		public NGPage( string basePath, string fullPath, int index ) {
 			_fullPath = fullPath;
 			_relativePath = fullPath.GetPathRelativeTo( basePath );
+
+			_displayName = "Page " + (index + 1);
         }
 
-        public static NGPage Parse( string fullPath, string basePath ) {
-			return new NGPage( fullPath: fullPath, basePath: basePath );
+		public static NGPage Parse( string fullPath, string basePath, int index ) {
+			return new NGPage( fullPath: fullPath, basePath: basePath, index:index );
         }
 
         public override string ToString() {
