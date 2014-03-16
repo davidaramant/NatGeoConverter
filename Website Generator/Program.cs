@@ -64,9 +64,9 @@ namespace Website_Generator {
 			//GenerateThumbnails( decades, startDecade, endDecade );
 			//WL( "Thumbnail generation took: " + timer.Elapsed );
 
-			GenerateMainIndex( decades );
+			//GenerateMainIndex( decades );
 			GenerateDecadeIndexes( decades );
-			GenerateIssueIndexes( decades );
+			//GenerateIssueIndexes( decades );
 			//GeneratePageIndexes( decades );
 		}
 
@@ -263,7 +263,8 @@ namespace Website_Generator {
 				sb.Append(@"<div class=""container""> ");
 
 				foreach( var yearGroup in decade.GroupBy( d => d.ReleaseDate.Year ).OrderBy( yearGroup => yearGroup.First().ReleaseDate ) ) {
-					sb.AppendFormat( @"<div class=""page-header""><h1>{0}</h1></div>", yearGroup.First().ReleaseDate.Year );
+					sb.AppendFormat( @"<div class=""panel panel-default""><div class=""panel-heading""><h1 class=""pabel-title"">{0}</h1></div><div class=""panel-body"">", 
+						yearGroup.First().ReleaseDate.Year );
 
 					foreach( var batch in yearGroup.OrderBy( issue => issue.ReleaseDate ).GetBatchesOfSize( 4 ) ) {
 						sb.AppendLine( @"<div class=""row"">" );
@@ -274,8 +275,9 @@ namespace Website_Generator {
 								imgUrl: Path.Combine("..", issue.Cover.NormalThumbnailUrl ),
 								linkUrl: Path.Combine( decade.DirectoryName, issue.RelativeIndexUrl ) ) );
 						}
-						sb.AppendLine( @"</div>" );
+						sb.AppendLine( @"</div>" ); // row
 					}
+					sb.AppendLine( @"</div></div>" ); // panel body, panel
 				}
 
 
