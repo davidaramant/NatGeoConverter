@@ -63,9 +63,9 @@ namespace Website_Generator {
 			//GenerateThumbnails( decades, startDecade, endDecade );
 			//WL( "Thumbnail generation took: " + timer.Elapsed );
 
-			//GenerateMainIndex( decades );
-			//GenerateDecadeIndexes( decades );
-			//GenerateIssueIndexes( decades );
+			GenerateMainIndex( decades );
+			GenerateDecadeIndexes( decades );
+			GenerateIssueIndexes( decades );
 			GeneratePageIndexes( decades );
 			WL( "HTML generation took: " + timer.Elapsed );
 		}
@@ -310,7 +310,7 @@ namespace Website_Generator {
 		static void GenerateDecadeIndexes( IEnumerable<NGDecade> decades ) {
 			foreach( var decade in decades ) {
 				var sb = new StringBuilder();
-				sb.Append( GetHeader( depth:1, title:"The " + decade.DisplayName ) );
+				sb.Append( GetHeader( depth:1, title:"NatGeo: The " + decade.DisplayName ) );
 				sb.Append( GetNavBar( new NamedLink("Decades", Path.Combine("..","index.html") ), NamedLink.Empty( decade.DisplayName ) ) );
 
 				sb.Append(@"<div class=""container""> ");
@@ -346,7 +346,7 @@ namespace Website_Generator {
 			foreach( var decade in decades ) {
 				foreach( var issue in decade ) {
 					var sb = new StringBuilder();
-					sb.Append( GetHeader( depth: 3, title: issue.LongDisplayName ) );
+					sb.Append( GetHeader( depth: 3, title: "NatGeo: " + issue.LongDisplayName ) );
 					sb.Append( GetNavBar( 
 						new NamedLink( "Decades", Path.Combine( "..", "..", "..", "index.html" ) ), 
 						new NamedLink( decade.DisplayName, Path.Combine( "..","..", decade.IndexFileName ) ),
@@ -393,7 +393,7 @@ namespace Website_Generator {
 						var currentPage = issue[ pageIndex ];
 
 						var sb = new StringBuilder();
-						sb.Append( GetHeader( depth: 3, title: currentPage.DisplayName ) );
+						sb.Append( GetHeader( depth: 3, title: String.Format( "NatGeo: {0} - {1}",issue.LongDisplayName,currentPage.DisplayName ) ));
 						sb.Append( GetNavBarWithButtons(
 							previous:MakeLinkToPage(previousPage),
 							next:MakeLinkToPage(nextPage),
