@@ -63,9 +63,9 @@ namespace Website_Generator {
 			//GenerateThumbnails( decades, startDecade, endDecade );
 			//WL( "Thumbnail generation took: " + timer.Elapsed );
 
-			GenerateMainIndex( decades );
-			GenerateDecadeIndexes( decades );
-			GenerateIssueIndexes( decades );
+			//GenerateMainIndex( decades );
+			//GenerateDecadeIndexes( decades );
+			//GenerateIssueIndexes( decades );
 			GeneratePageIndexes( decades );
 			WL( "HTML generation took: " + timer.Elapsed );
 		}
@@ -195,7 +195,7 @@ namespace Website_Generator {
 				Path.Combine(modifier,"css","bootstrap.min.css"),
 				Path.Combine(modifier,"css","customizations.css"),
 				Path.Combine(modifier,"favicon.ico"),
-				smallerBodyPadding ? @"style:""padding-top: 60px;""" : String.Empty);
+				smallerBodyPadding ? @"style=""padding-top: 60px;""" : String.Empty);
 		}
 
 		sealed class NamedLink
