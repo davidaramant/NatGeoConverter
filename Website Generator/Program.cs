@@ -414,7 +414,7 @@ namespace Website_Generator {
 								NamedLink.Empty( String.Format( "{0} of {1}", currentPage.DisplayName, issue.Count ) )} ) );
 						sb.Append(@"<div class=""container-fluid"" style=""padding: 0;""> ");
 
-						sb.AppendFormat( @"<img src=""{0}"" alt=""{1}"" style=""width: 100%;""/>",
+						sb.AppendFormat( @"<img src=""{0}"" alt=""{1}"" class=""img-responsive""/>",
 							Path.Combine("..","..","..",currentPage.RelativePath), currentPage.DisplayName );
 
 						sb.AppendLine(@"</div>" );
