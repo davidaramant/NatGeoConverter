@@ -170,7 +170,7 @@ namespace Website_Generator {
 										<h3 class=""panel-title"">{0}</h3>
 									</div>
 									<div class=""panel-body"">
-										<img src=""{2}"" class=""img-thumbnail"" alt=""{1}""/>
+										<img src=""{2}"" class=""img-thumbnail center-block"" alt=""{1}""/>
 									</div>
 								</div>
 							</a>
@@ -186,13 +186,16 @@ namespace Website_Generator {
     <meta charset=""utf-8"">
     <meta http-equiv=""X-UA-Compatible"" content=""IE=edge"">
     <meta name=""viewport"" content=""width=device-width, initial-scale=1"">
+	<meta name=""apple-mobile-web-app-capable"" content=""yes"">
     <title>{0}</title>
     <link href=""{1}"" rel=""stylesheet"">
     <link href=""{2}"" rel=""stylesheet"">
+	<link rel=""shortcut icon"" href=""{3}"">
   </head>
   <body>", title,
 				Path.Combine(modifier,"css","bootstrap.min.css"),
-				Path.Combine(modifier,"css","customizations.css") );
+				Path.Combine(modifier,"css","customizations.css"),
+				Path.Combine(modifier,"favicon.ico"));
 		}
 
 		sealed class NamedLink
@@ -405,7 +408,7 @@ namespace Website_Generator {
 							new NamedLink( "Decades", Path.Combine( "..", "..", "..", "index.html" ) ), 
 							new NamedLink( decade.DisplayName, Path.Combine( "..","..", decade.IndexFileName ) ),
 							new NamedLink( issue.LongDisplayName, issue.IndexFileName ),
-								NamedLink.Empty( currentPage.DisplayName )} ) );
+								NamedLink.Empty( String.Format( "{0} of {1}", currentPage.DisplayName, issue.Count ) )} ) );
 						sb.Append(@"<div class=""container""> ");
 
 						sb.AppendFormat( @"<img src=""{0}"" alt=""{1}"" class=""img-responsive img-rounded""/>",
