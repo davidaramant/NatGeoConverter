@@ -177,7 +177,7 @@ namespace Website_Generator {
 						</div>", displayName, previewText, imgUrl, linkUrl );
 		}
 
-		static string GetHeader( int depth, string title ) {
+		static string GetHeader( int depth, string title, bool smallerBodyPadding = false ) {
 			var modifier = Path.Combine(Enumerable.Repeat( "..", depth ).ToArray());
 
 			return String.Format(@"<!DOCTYPE html>
@@ -186,16 +186,16 @@ namespace Website_Generator {
     <meta charset=""utf-8"">
     <meta http-equiv=""X-UA-Compatible"" content=""IE=edge"">
     <meta name=""viewport"" content=""width=device-width, initial-scale=1"">
-	<meta name=""apple-mobile-web-app-capable"" content=""yes"">
     <title>{0}</title>
     <link href=""{1}"" rel=""stylesheet"">
     <link href=""{2}"" rel=""stylesheet"">
 	<link rel=""shortcut icon"" href=""{3}"">
   </head>
-  <body>", title,
+  <body {4}>", title,
 				Path.Combine(modifier,"css","bootstrap.min.css"),
 				Path.Combine(modifier,"css","customizations.css"),
-				Path.Combine(modifier,"favicon.ico"));
+				Path.Combine(modifier,"favicon.ico"),
+				smallerBodyPadding ? @"style:""padding-top: 60px;""" : String.Empty);
 		}
 
 		sealed class NamedLink
@@ -400,7 +400,10 @@ namespace Website_Generator {
 						var currentPage = issue[ pageIndex ];
 
 						var sb = new StringBuilder();
-						sb.Append( GetHeader( depth: 3, title: String.Format( "NatGeo: {0} - {1}",issue.LongDisplayName,currentPage.DisplayName ) ));
+						sb.Append( GetHeader( 
+									depth: 3, 
+									title: String.Format( "NatGeo: {0} - {1}",issue.LongDisplayName,currentPage.DisplayName ), 
+									smallerBodyPadding:true ));
 						sb.Append( GetNavBarWithButtons(
 							previous:MakeLinkToPage(previousPage),
 							next:MakeLinkToPage(nextPage),
@@ -409,12 +412,12 @@ namespace Website_Generator {
 							new NamedLink( decade.DisplayName, Path.Combine( "..","..", decade.IndexFileName ) ),
 							new NamedLink( issue.LongDisplayName, issue.IndexFileName ),
 								NamedLink.Empty( String.Format( "{0} of {1}", currentPage.DisplayName, issue.Count ) )} ) );
-						sb.Append(@"<div class=""container""> ");
+						sb.Append(@"<div class=""container-fluid"" style=""padding: 0;""> ");
 
-						sb.AppendFormat( @"<img src=""{0}"" alt=""{1}"" class=""img-responsive img-rounded""/>",
+						sb.AppendFormat( @"<img src=""{0}"" alt=""{1}"" style=""width: 100%;""/>",
 							Path.Combine("..","..","..",currentPage.RelativePath), currentPage.DisplayName );
 
-						sb.AppendLine(@"</div> <!-- container --> " );
+						sb.AppendLine(@"</div>" );
 
 						sb.Append( GetFooter( depth: 3, retinaUpscale:false ) );
 
