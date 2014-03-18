@@ -287,11 +287,11 @@ namespace Website_Generator {
 			var direction = left ? "left" : "right";
 			if( link == null ) {
 				return String.Format( 
-					@"<button class=""btn navbar-btn btn-primary"" disabled=""disabled"">&nbsp;<span class=""glyphicon glyphicon-chevron-{0}""/>&nbsp;</button>", 
+					@"<button class=""btn navbar-btn btn-primary btn-page"" disabled=""disabled""><span class=""glyphicon glyphicon-chevron-{0}""/></button>", 
 					direction );
 			} else {
 				return String.Format( 
-					@"<a class=""btn navbar-btn btn-primary"" href=""{1}"">&nbsp;<span class=""glyphicon glyphicon-chevron-{0}""/>&nbsp;</a>", 
+					@"<a class=""btn navbar-btn btn-primary btn-page"" href=""{1}""><span class=""glyphicon glyphicon-chevron-{0}""/></a>", 
 					direction, link.Url );
 			}
 		}
