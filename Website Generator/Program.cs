@@ -269,7 +269,9 @@ namespace Website_Generator {
 								<div class=""nav navbar-right"">
 									<div class=""btn-group"">
   										{0}
-  										{1}
+										<button class=""btn navbar-btn btn-primary"" onClick=""toggleHorizontal();""><span class=""glyphicon glyphicon glyphicon-resize-horizontal""/></button>
+										<button class=""btn navbar-btn btn-primary"" onClick=""toggleVertical();""><span class=""glyphicon glyphicon glyphicon-resize-vertical""/></button>  										
+										{1}
 									</div>
 								</div>
 							</div>
@@ -277,7 +279,7 @@ namespace Website_Generator {
 					</div>", 
 				CreateNavButton(left:true,link:previous),
 				CreateNavButton(left:false,link:next)); 
-
+				
 			return sb.ToString();
 		}
 
@@ -285,16 +287,16 @@ namespace Website_Generator {
 			var direction = left ? "left" : "right";
 			if( link == null ) {
 				return String.Format( 
-					@"<button class=""btn navbar-btn btn-disabled""><span class=""glyphicon glyphicon-chevron-{0}""/></button>", 
+					@"<button class=""btn navbar-btn btn-primary"" disabled=""disabled"">&nbsp;<span class=""glyphicon glyphicon-chevron-{0}""/>&nbsp;</button>", 
 					direction );
 			} else {
 				return String.Format( 
-					@"<a class=""btn navbar-btn btn-primary"" href=""{1}""><span class=""glyphicon glyphicon-chevron-{0}""/></a>", 
+					@"<a class=""btn navbar-btn btn-primary"" href=""{1}"">&nbsp;<span class=""glyphicon glyphicon-chevron-{0}""/>&nbsp;</a>", 
 					direction, link.Url );
 			}
 		}
 
-		static string GetFooter(int depth, bool retinaUpscale = true ) {
+		static string GetFooter(int depth, bool retinaUpscale = true, bool imageSizeToggles = false ) {
 			var modifier = Path.Combine(Enumerable.Repeat( "..", depth ).ToArray());
 
 			var javascriptFiles = new List<string> {
@@ -303,6 +305,9 @@ namespace Website_Generator {
 			};
 			if( retinaUpscale ) {
 				javascriptFiles.Add( "retina.min.js" );
+			}
+			if( imageSizeToggles ) {
+				javascriptFiles.Add( "imageFitToggles.js" );
 			}
 
 			var footer = new StringBuilder();
@@ -414,12 +419,12 @@ namespace Website_Generator {
 								NamedLink.Empty( String.Format( "{0} of {1}", currentPage.DisplayName, issue.Count ) )} ) );
 						sb.Append(@"<div class=""container-fluid"" style=""padding: 0;""> ");
 
-						sb.AppendFormat( @"<img src=""{0}"" alt=""{1}"" class=""img-responsive""/>",
+						sb.AppendFormat( @"<img id=""pageScan"" src=""{0}"" alt=""{1}"" class=""img-responsive center-block""/>",
 							Path.Combine("..","..","..",currentPage.RelativePath), currentPage.DisplayName );
 
 						sb.AppendLine(@"</div>" );
 
-						sb.Append( GetFooter( depth: 3, retinaUpscale:false ) );
+						sb.Append( GetFooter( depth: 3, retinaUpscale:false, imageSizeToggles:true ) );
 
 						var path = Path.Combine( _basePath, "html", decade.DirectoryName, issue.DirectoryName, currentPage.IndexName );
 
