@@ -57,6 +57,10 @@
       <Project>{03FAB948-C745-4AB9-960C-3AF0FF2F91B9}</Project>
       <Name>DataModel</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Utilities\Utilities.csproj">
+      <Project>{29661BB8-97B0-4462-A443-0CFFCBE3C1BE}</Project>
+      <Name>Utilities</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

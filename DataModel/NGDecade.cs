@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using DataModel.Extensions;
+using Utilities.Extensions;
 
 namespace DataModel {
     [DebuggerDisplay("{ToString()}")]

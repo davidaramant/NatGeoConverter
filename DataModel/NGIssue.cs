@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using DataModel.Extensions;
+using Utilities.Extensions;
 
 namespace DataModel {
     public sealed class NGIssue : IEnumerable<NGPage> {

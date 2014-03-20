@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System;
 
-namespace DataModel.Extensions {
+namespace Utilities.Extensions {
 	public static class EnumerableExtensions {
 		public static IEnumerable<IEnumerable<T>> GetBatchesOfSize<T>(this IEnumerable<T> source, int size) {
 			if( size <= 0 ) {

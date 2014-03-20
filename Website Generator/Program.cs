@@ -1,5 +1,4 @@
 ﻿using DataModel;
-using DataModel.Html;
 using System;
 using System.Drawing;
 using System.Collections.Generic;
@@ -9,7 +8,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Diagnostics;
 using System.Text;
-using DataModel.Extensions;
+using Utilities.Extensions;
 
 namespace Website_Generator {
 	class Program {

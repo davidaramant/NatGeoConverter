@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 
-namespace DataModel.Extensions {
+namespace Utilities.Extensions {
 	public static class PathExtensions {
 		public static string GetPathRelativeTo( this string fullPath, string basePath )
 		{

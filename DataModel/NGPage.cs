@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using DataModel.Extensions;
+using Utilities.Extensions;
 
 namespace DataModel {
     [DebuggerDisplay( "{ToString()}" )]
