@@ -5,21 +5,21 @@ using System.Linq;
 using DataModel.Database;
 using SQLite;
 using Utilities.PathExtensions;
+using Utilities;
 
 namespace DataModelLoader {
 	class MainClass {
 		public static void Main( string[] args ) {
-			var baseImgPath = Path.Combine( "/", "Users", "davidaramant", "Web", "NatGeo", "imgs", "full" );
-			var dbPath = Path.Combine( "/", "Users", "davidaramant", "Web", "NatGeo", "data", "imgDatabase.sqlite" );
+			var config = new ProjectConfig( baseDir: Path.Combine( "/", "Users", "davidaramant", "Web", "NatGeo" ) );
 
 			var timer = System.Diagnostics.Stopwatch.StartNew();
 
-			PopulateDatabase( baseImgPath: baseImgPath, dbPath: dbPath );
+			PopulateDatabase( baseImgPath: config.BaseFullImageDir, dbPath: config.DatabasePath );
 
 			Console.Out.WriteLine( "Generating model took: {0}", timer.Elapsed );
 			timer.Reset();
 
-			CheckDatabase( dbPath: dbPath );
+			CheckDatabase( dbPath: config.DatabasePath );
 
 			Console.Out.WriteLine( "Accessing DB took: {0}", timer.Elapsed );
 		}
@@ -47,11 +47,7 @@ namespace DataModelLoader {
 					var decadeId = db.Insert( new Decade { DirectoryName = decadeDir.GetLastDirectory() } );
 					Console.Out.WriteLine( "Decade: {0}", decadeDir.GetLastDirectory() );
 
-					var issueDirs = Directory.GetDirectories( decadeDir ).OrderBy( name => name ).ToArray();
-
-					int issueNum = 1;
-					foreach( var issueDir in issueDirs ) {
-						Console.Out.WriteLine( "Issue: {0}/{1}", issueNum++, issueDirs.Length );
+					foreach( var issueDir in Directory.GetDirectories( decadeDir ).OrderBy( name => name ) ) {
 						var issueId = db.Insert( 
 							new Issue { DecadeId = decadeId, ReleaseDate = ParseIssueDirIntoDate( issueDir ) } );
 
