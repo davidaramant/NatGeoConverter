@@ -2,8 +2,8 @@ using System;
 using System.IO;
 using System.Linq;
 
-namespace Utilities.Extensions {
-	public static class PathExtensions {
+namespace Utilities.PathExtensions {
+	public static class Extensions {
 		public static string GetPathRelativeTo( this string fullPath, string basePath )
 		{
 			return Path.GetFullPath( fullPath ).

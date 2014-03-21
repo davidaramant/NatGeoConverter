@@ -8,7 +8,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Diagnostics;
 using System.Text;
-using Utilities.Extensions;
+using Utilities.EnumerableExtensions;
 
 namespace Website_Generator {
 	class Program {
@@ -51,6 +51,17 @@ namespace Website_Generator {
 			//var endDecade = args[ 1 ];
 
 			//WL( "Start: {0} End: {1}", startDecade, endDecade );
+
+			var allJpgs = Directory.GetFiles( _baseFullImagePath, "*.jpg", SearchOption.AllDirectories ).Select( Path.GetFileName );
+			var longestName = String.Empty;
+			foreach( var jpg in allJpgs ) {
+				if( jpg.Length > longestName.Length ) {
+					longestName = jpg;
+				}
+			}
+			WL( "{0} ({1})", longestName, longestName.Length );
+			return;
+
 
 			var timer = Stopwatch.StartNew();
 			var decades = GenerateModel();

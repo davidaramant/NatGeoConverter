@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using NUnit.Framework;
 
-using Utilities.Extensions;
+using Utilities.PathExtensions;
 
 namespace Tests.Extensions {
 	[TestFixture]

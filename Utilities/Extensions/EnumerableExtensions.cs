@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System;
 
-namespace Utilities.Extensions {
-	public static class EnumerableExtensions {
+namespace Utilities.EnumerableExtensions {
+	public static class Extensions {
 		public static IEnumerable<IEnumerable<T>> GetBatchesOfSize<T>(this IEnumerable<T> source, int size) {
 			if( size <= 0 ) {
 				throw new ArgumentOutOfRangeException( "size", "Must be greater than zero." );
