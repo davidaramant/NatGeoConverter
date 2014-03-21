@@ -212,8 +212,8 @@ namespace Website_Generator {
 								<div class=""nav navbar-right"">
 									<div class=""btn-group"">
   										{0}
-										<button class=""btn navbar-btn btn-primary"" onClick=""toggleHorizontal();""><span class=""glyphicon glyphicon glyphicon-resize-horizontal""/></button>
-										<button class=""btn navbar-btn btn-primary"" onClick=""toggleVertical();""><span class=""glyphicon glyphicon glyphicon-resize-vertical""/></button>  										
+										<button class=""btn navbar-btn btn-default"" onClick=""toggleHorizontal();""><span class=""glyphicon glyphicon glyphicon-resize-horizontal""/></button>
+										<button class=""btn navbar-btn btn-default"" onClick=""toggleVertical();""><span class=""glyphicon glyphicon glyphicon-resize-vertical""/></button>  										
 										{1}
 									</div>
 								</div>
@@ -230,11 +230,11 @@ namespace Website_Generator {
 			var direction = left ? "left" : "right";
 			if( link == null ) {
 				return String.Format( 
-					@"<button class=""btn navbar-btn btn-primary btn-page"" disabled=""disabled""><span class=""glyphicon glyphicon-chevron-{0}""/></button>", 
+					@"<button class=""btn navbar-btn btn-default btn-page"" disabled=""disabled""><span class=""glyphicon glyphicon-chevron-{0}""/></button>", 
 					direction );
 			} else {
 				return String.Format( 
-					@"<a class=""btn navbar-btn btn-primary btn-page"" href=""{1}""><span class=""glyphicon glyphicon-chevron-{0}""/></a>", 
+					@"<a class=""btn navbar-btn btn-default btn-page"" href=""{1}""><span class=""glyphicon glyphicon-chevron-{0}""/></a>", 
 					direction, link.Url );
 			}
 		}
