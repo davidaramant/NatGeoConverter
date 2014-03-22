@@ -150,7 +150,7 @@ namespace Website_Generator {
   <body {4}>", title,
 				Path.Combine( modifier, "css", "bootstrap.min.css" ),
 				Path.Combine( modifier, "css", "customizations.css" ),
-				Path.Combine( modifier, "favicon.ico" ),
+				Path.Combine( modifier, "favicon_v3.ico" ),
 				smallerBodyPadding ? @"style=""padding-top: 60px;""" : String.Empty );
 		}
 
@@ -250,16 +250,13 @@ namespace Website_Generator {
 			}
 		}
 
-		static string GetFooter( int depth, bool retinaUpscale = true, bool imageSizeToggles = false ) {
+		static string GetFooter( int depth, bool imageSizeToggles = false ) {
 			var modifier = Path.Combine( Enumerable.Repeat( "..", depth ).ToArray() );
 
 			var javascriptFiles = new List<string> {
 				"jquery.min.js",
 				"bootstrap.min.js",
 			};
-			if( retinaUpscale ) {
-				javascriptFiles.Add( "retina.min.js" );
-			}
 			if( imageSizeToggles ) {
 				javascriptFiles.Add( "imageFitToggles.js" );
 			}
@@ -378,7 +375,7 @@ namespace Website_Generator {
 
 						sb.AppendLine( @"</div>" );
 
-						sb.Append( GetFooter( depth: 3, retinaUpscale: false, imageSizeToggles: true ) );
+						sb.Append( GetFooter( depth: 3, imageSizeToggles: true ) );
 
 						var path = Path.Combine( _basePath, "html", decade.DirectoryName, issue.DirectoryName, currentPage.IndexName );
 
