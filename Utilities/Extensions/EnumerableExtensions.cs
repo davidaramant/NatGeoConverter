@@ -24,6 +24,52 @@ namespace Utilities.EnumerableExtensions {
 			}
 			while (++i < size && source.MoveNext());
 		}
+
+		public static T ElementWithMax<T>( this IEnumerable<T> sequence, Func<T,int> selector )
+		{
+			if( sequence == null ) {
+				throw new ArgumentNullException( "sequence" );
+			}
+			if( selector == null ) {
+				throw new ArgumentNullException( "selector" );
+			}
+
+			var maxElement = default(T);
+			var max = Int32.MinValue;
+
+			foreach( var element in sequence ) {
+				var value = selector( element );
+				if( value >= max ) {
+					max = value;
+					maxElement = element;
+				}
+			}
+
+			return maxElement;
+		}
+
+		public static T ElementWithMin<T>( this IEnumerable<T> sequence, Func<T,int> selector )
+		{
+			if( sequence == null ) {
+				throw new ArgumentNullException( "sequence" );
+			}
+			if( selector == null ) {
+				throw new ArgumentNullException( "selector" );
+			}
+
+			var minElement = default(T);
+			var min = Int32.MaxValue;
+
+			foreach( var element in sequence ) {
+				var value = selector( element );
+				if( value <= min ) {
+					min = value;
+					minElement = element;
+				}
+			}
+
+			return minElement;
+		}
 	}
 }
 
