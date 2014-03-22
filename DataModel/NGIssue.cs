@@ -24,7 +24,7 @@ namespace DataModel {
 			{ 
 				try
 				{
-					return _pages.First( page => Regex.IsMatch( Path.GetFileName( page.FullPath ), @"^NGM_(\w{2}_)?\d{4}") );
+					return _pages.First( page => Regex.IsMatch( page.IndexName, @"^NGM_(\w{2}_)?\d{4}") );
 				}
 				catch {
 					Console.Out.WriteLine( "Error with {0}", _releaseDate.ToString("s") );
@@ -53,27 +53,8 @@ namespace DataModel {
 		}
 
         public NGIssue( IEnumerable<NGPage> pages, DateTime releaseDate ) {
-            _pages.AddRange( pages.OrderBy( _ => _.RelativePath ) );
+			_pages.AddRange( pages.OrderBy( _ => _.Number ) );
             _releaseDate = releaseDate;
-        }
-
-        public static NGIssue Parse( string path, string basePath ) {
-			DateTime releaseDate;
-			var input = path.GetLastDirectory();
-
-			var success = DateTime.TryParseExact( input,
-				"yyyyMMdd",
-				System.Globalization.CultureInfo.InvariantCulture,
-				System.Globalization.DateTimeStyles.None,
-				out releaseDate );
-
-			if( !success ) {
-				throw new ArgumentException( "Unknown date format for one of the issues: " + input );
-			}		
-
-            return new NGIssue(
-				Directory.GetFiles( path, searchPattern: "*.jpg" ).OrderBy( _ => _ ).Select( (pagePath,index) => NGPage.Parse( pagePath, basePath: basePath, index:index ) ),
-                    releaseDate: releaseDate );
         }
 
         public IEnumerator<NGPage> GetEnumerator() {

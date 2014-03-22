@@ -81,13 +81,7 @@ namespace Website_Generator {
 		}
 
 		private static IEnumerable<NGDecade> GenerateModel() {
-			var decades =
-				Directory.GetDirectories( _baseFullImagePath ).
-				Select( decadeDir => NGDecade.Parse( path: decadeDir, basePath: _basePath ) ).
-                OrderBy( decade => decade.DisplayName ).
-                ToArray();
-
-			return decades;
+			return Enumerable.Empty<NGDecade>();
 		}
 
 		static void GenerateMainIndex( IEnumerable<NGDecade> decades ) {
@@ -289,7 +283,7 @@ namespace Website_Generator {
 							sb.Append( GetThumbnailHtml(
 								displayName: issue.ShortDisplayName,
 								previewText: String.Format( "Preview for {0}", issue.ShortDisplayName ),
-								imgUrl: Path.Combine( "..", issue.Cover.NormalThumbnailUrl ),
+								imgUrl: Path.Combine( "..", issue.Cover.RelativeThumbnailUrl ),
 								linkUrl: Path.Combine( decade.DirectoryName, issue.RelativeIndexUrl ) ) );
 						}
 						sb.AppendLine( @"</div>" ); // row
@@ -324,7 +318,7 @@ namespace Website_Generator {
 							sb.Append( GetThumbnailHtml(
 								displayName: page.DisplayName,
 								previewText: String.Format( "Preview for {0}", page.DisplayName ),
-								imgUrl: Path.Combine( "..", "..", "..", page.NormalThumbnailUrl ),
+								imgUrl: Path.Combine( "..", "..", "..", page.RelativeThumbnailUrl ),
 								linkUrl: page.IndexName ) );
 						}
 						sb.AppendLine( @"</div>" );
@@ -371,7 +365,7 @@ namespace Website_Generator {
 						sb.Append( @"<div class=""container-fluid"" style=""padding: 0;""> " );
 
 						sb.AppendFormat( @"<img id=""pageScan"" src=""{0}"" alt=""{1}"" class=""img-responsive center-block""/>",
-							Path.Combine( "..", "..", "..", currentPage.RelativePath ), currentPage.DisplayName );
+							Path.Combine( "..", "..", "..", currentPage.RelativeFullUrl ), currentPage.DisplayName );
 
 						sb.AppendLine( @"</div>" );
 

@@ -50,6 +50,9 @@
     <Compile Include="Database\SQLite.cs" />
     <Compile Include="Database\DBModel.cs" />
     <Compile Include="NGCollection.cs" />
+    <Compile Include="IDecade.cs" />
+    <Compile Include="IIssue.cs" />
+    <Compile Include="IPage.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

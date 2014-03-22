@@ -2,39 +2,62 @@
 using System.Diagnostics;
 using System.IO;
 using Utilities.PathExtensions;
+using System.Drawing;
+using Utilities;
 
 namespace DataModel {
-    [DebuggerDisplay( "{ToString()}" )]
-    public sealed class NGPage {
-		private readonly string _fullPath;
-		private readonly string _relativePath;
-
+	[DebuggerDisplay( "{ToString()}" )]
+	public sealed class NGPage : IPage {
+		private readonly string _fileName;
+		private readonly int _number;
 		private readonly string _displayName;
+		private readonly string _relativeFullUrl;
+		private readonly string _relativeThumbnailUrl;
+		private readonly Size _fullSize;
+		private readonly Size _thumbnailSize;
 
-		public string FullPath { get { return _fullPath; } }
-		public string RelativePath { get { return _relativePath; } }
+		public int Number { get { return _number; } }
+
 		public string DisplayName { get { return _displayName; } }
 
-		public string NormalThumbnailFullPath { get { return FullPath.Replace( "full", "thumbs"); } }
-		public string RetinaThumbnailFullPath { get { return NormalThumbnailFullPath.Replace(".jpg","@2x.jpg"); } }
+		public string IndexName { get { return Path.GetFileNameWithoutExtension( _fileName ) + ".html"; } }
 
-		public string NormalThumbnailUrl { get { return _relativePath.Replace("full","thumbs"); } }
+		public string RelativeFullUrl {
+			get { return _relativeFullUrl; }
+		}
 
-		public string IndexName { get { return Path.GetFileNameWithoutExtension( _relativePath ) + ".html"; } }
+		public string RelativeThumbnailUrl {
+			get { return _relativeThumbnailUrl; }
+		}
 
-		public NGPage( string basePath, string fullPath, int index ) {
-			_fullPath = fullPath;
-			_relativePath = fullPath.GetPathRelativeTo( basePath );
+		public Size FullSize {
+			get { return _fullSize; }
+		}
 
-			_displayName = "Page " + (index + 1);
-        }
+		public Size ThumbnailDisplaySize {
+			get { return _thumbnailSize; }
+		}
 
-		public static NGPage Parse( string fullPath, string basePath, int index ) {
-			return new NGPage( fullPath: fullPath, basePath: basePath, index:index );
-        }
+		public NGPage( 
+			IProjectConfig config, 
+			string decadeDir,
+			string issueDir, 
+			string fileName, 
+			int pageNumber,
+			Size fullSize,
+			Size thumbnailSize ) {
+			_fileName = fileName;
+			_number = pageNumber;
+			_displayName = "Page " + pageNumber;
+			_relativeFullUrl = Path.Combine( config.RelativeFullImageDir, decadeDir, issueDir, fileName );
+			_relativeThumbnailUrl = Path.Combine( config.RelativeThumbnailImageDir, decadeDir, issueDir, fileName );
+			_fullSize = fullSize;
+			_thumbnailSize = thumbnailSize;
 
-        public override string ToString() {
-            return RelativePath;
-        }
-    }
+		}
+
+		public override string ToString() {
+			return RelativeFullUrl;
+		}
+	}
 }

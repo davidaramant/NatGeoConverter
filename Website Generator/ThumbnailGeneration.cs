@@ -30,11 +30,10 @@ namespace Website_Generator {
 				Console.Out.WriteLine( "Decade: {0} {1}", decade.DisplayName, DateTime.Now.ToString( "s" ) );
 				foreach( var issue in decade ) {
 					foreach( var page in issue ) {
-						Utility.CreatePath( page.NormalThumbnailFullPath );
+						throw new NotImplementedException( "Fix up these paths using IProjectConfig" );
+						Utility.CreatePath( "thumbnail full path" );
 
-						using( var p1 = StartGeneratingThumbnail( page.FullPath, page.NormalThumbnailFullPath, 180, 260 ) )
-						using( var p2 = StartGeneratingThumbnail( page.FullPath, page.RetinaThumbnailFullPath, 360, 520 ) ) {
-							p1.WaitForExit();
+						using( var p2 = StartGeneratingThumbnail( "fullPath", "thumbnailpath", 360, 520 ) ) {
 							p2.WaitForExit();
 						}
 					}
