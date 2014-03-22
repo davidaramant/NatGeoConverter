@@ -63,7 +63,8 @@ namespace DataModelLoader {
 								var thumbSize = ImageSizeLoader.GetJpegImageSize( GetThumbnailPath( config, decadeName, issueDirName, fileName));
 								return new Page 
 								{ 
-									IssueId = issueId, 
+									IssueId = issueId,
+									DecadeId = decadeId,
 									FileName = fileName,
 									FullImageWidth = fullSize.Width,
 									FullImageHeight = fullSize.Height,
