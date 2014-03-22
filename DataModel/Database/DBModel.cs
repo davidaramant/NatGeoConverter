@@ -24,5 +24,9 @@ namespace DataModel.Database {
 		public string FileName { get; set;}
 		[Indexed]
 		public int IssueId { get; set; }
+		public int FullImageWidth { get; set; }
+		public int FullImageHeight { get; set; }
+		public int ThumbnailImageWidth { get; set; }
+		public int ThumbnailImageHeight { get; set; }
 	}
 }

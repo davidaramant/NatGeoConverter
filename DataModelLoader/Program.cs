@@ -6,6 +6,7 @@ using DataModel.Database;
 using SQLite;
 using Utilities.PathExtensions;
 using Utilities;
+using System.Drawing;
 
 namespace DataModelLoader {
 	class MainClass {
@@ -14,7 +15,7 @@ namespace DataModelLoader {
 
 			var timer = System.Diagnostics.Stopwatch.StartNew();
 
-			PopulateDatabase( baseImgPath: config.BaseFullImageDir, dbPath: config.DatabasePath );
+			PopulateDatabase( config );
 
 			Console.Out.WriteLine( "Generating model took: {0}", timer.Elapsed );
 			timer.Reset();
@@ -33,8 +34,8 @@ namespace DataModelLoader {
 			}
 		}
 
-		private static void PopulateDatabase( string baseImgPath, string dbPath ) {
-			using( var db = new SQLiteConnection( databasePath: dbPath ) ) {
+		private static void PopulateDatabase( IProjectConfig config ) {
+			using( var db = new SQLiteConnection( databasePath: config.DatabasePath ) ) {
 				db.DropTable<Decade>();
 				db.DropTable<Issue>();
 				db.DropTable<Page>();
@@ -43,18 +44,33 @@ namespace DataModelLoader {
 				db.CreateTable<Issue>();
 				db.CreateTable<Page>();
 
-				foreach( var decadeDir in Directory.GetDirectories( baseImgPath ).OrderBy( name => name ) ) {
-					var decadeId = db.Insert( new Decade { DirectoryName = decadeDir.GetLastDirectory() } );
-					Console.Out.WriteLine( "Decade: {0}", decadeDir.GetLastDirectory() );
+				foreach( var decadeDir in Directory.GetDirectories( config.BaseFullImageDir ).OrderBy( name => name ) ) {
+					var decadeName = decadeDir.GetLastDirectory();
+					var decadeId = db.Insert( new Decade { DirectoryName = decadeName } );
+					Console.Out.WriteLine( "Decade: {0}", decadeName );
 
 					foreach( var issueDir in Directory.GetDirectories( decadeDir ).OrderBy( name => name ) ) {
+						var issueDirName = issueDir.GetLastDirectory();
 						var issueId = db.Insert( 
-							new Issue { DecadeId = decadeId, ReleaseDate = ParseIssueDirIntoDate( issueDir ) } );
+							new Issue { DecadeId = decadeId, ReleaseDate = ParseIssueDirIntoDate( issueDirName ) } );
 
 						var allPages = 
-							Directory.GetFiles( issueDir ).
+							Directory.GetFiles( issueDir, "*.jpg", SearchOption.TopDirectoryOnly ).
 							OrderBy( name => name ).
-							Select( name => new Page { IssueId = issueId, FileName = Path.GetFileName( name ) } );
+							Select( fullImagePath =>{
+								var fileName = Path.GetFileName( fullImagePath );
+								var fullSize = ImageSizeLoader.GetJpegImageSize( fullImagePath );
+								var thumbSize = ImageSizeLoader.GetJpegImageSize( GetThumbnailPath( config, decadeName, issueDirName, fileName));
+								return new Page 
+								{ 
+									IssueId = issueId, 
+									FileName = fileName,
+									FullImageWidth = fullSize.Width,
+									FullImageHeight = fullSize.Height,
+									ThumbnailImageWidth = thumbSize.Width,
+									ThumbnailImageHeight = thumbSize.Height,
+								}; 
+							} );
 
 						db.InsertAll( allPages );
 					}
@@ -62,16 +78,24 @@ namespace DataModelLoader {
 			}
 		}
 
-		private static DateTime ParseIssueDirIntoDate( string fullIssuePath ) {
+		private static string GetThumbnailPath( IProjectConfig config, string decadeDir, string issueDir, string imgFileName )
+		{
+			return Path.Combine( config.BaseThumbnailImageDir,
+				decadeDir,
+				issueDir,
+				Path.GetFileNameWithoutExtension( imgFileName ) + "@2x.jpg");
+		}
+
+		private static DateTime ParseIssueDirIntoDate( string issueDirName ) {
 			DateTime releaseDate;
-			var success = DateTime.TryParseExact( fullIssuePath.GetLastDirectory(),
+			var success = DateTime.TryParseExact( issueDirName,
 				              "yyyyMMdd",
 				              System.Globalization.CultureInfo.InvariantCulture,
 				              System.Globalization.DateTimeStyles.None,
 				              out releaseDate );
 
 			if( !success ) {
-				throw new ArgumentException( "Unknown date format for one of the issues: " + fullIssuePath );
+				throw new ArgumentException( "Unknown date format for one of the issues: " + issueDirName );
 			}
 			return releaseDate;
 		}

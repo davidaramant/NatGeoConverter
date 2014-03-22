@@ -31,6 +31,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -39,6 +40,7 @@
     <Compile Include="RelativeFilePath.cs" />
     <Compile Include="IProjectConfig.cs" />
     <Compile Include="ProjectConfig.cs" />
+    <Compile Include="ImageSizeLoader.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
