@@ -44,12 +44,12 @@ namespace DataModelLoader {
 				db.CreateTable<Issue>();
 				db.CreateTable<Page>();
 
-				foreach( var decadeDir in Directory.GetDirectories( config.BaseFullImageDir ).OrderBy( name => name ) ) {
+				foreach( var decadeDir in Directory.GetDirectories( config.BaseFullImageDir ) ) {
 					var decadeName = decadeDir.GetLastDirectory();
 					var decadeId = db.Insert( new Decade { DirectoryName = decadeName } );
 					Console.Out.WriteLine( "Decade: {0}", decadeName );
 
-					foreach( var issueDir in Directory.GetDirectories( decadeDir ).OrderBy( name => name ) ) {
+					foreach( var issueDir in Directory.GetDirectories( decadeDir ) ) {
 						var issueDirName = issueDir.GetLastDirectory();
 						var issueId = db.Insert( 
 							new Issue { DecadeId = decadeId, ReleaseDate = ParseIssueDirIntoDate( issueDirName ) } );
@@ -57,13 +57,14 @@ namespace DataModelLoader {
 						var allPages = 
 							Directory.GetFiles( issueDir, "*.jpg", SearchOption.TopDirectoryOnly ).
 							OrderBy( name => name ).
-							Select( fullImagePath =>{
+							Select( (fullImagePath,index) =>{
 								var fileName = Path.GetFileName( fullImagePath );
 								var fullSize = ImageSizeLoader.GetJpegImageSize( fullImagePath );
 								var thumbSize = ImageSizeLoader.GetJpegImageSize( GetThumbnailPath( config, decadeName, issueDirName, fileName));
 								return new Page 
 								{ 
 									IssueId = issueId,
+									Number = index + 1,
 									DecadeId = decadeId,
 									FileName = fileName,
 									FullImageWidth = fullSize.Width,
@@ -84,7 +85,7 @@ namespace DataModelLoader {
 			return Path.Combine( config.BaseThumbnailImageDir,
 				decadeDir,
 				issueDir,
-				Path.GetFileNameWithoutExtension( imgFileName ) + "@2x.jpg");
+				Path.GetFileName( imgFileName ) );
 		}
 
 		private static DateTime ParseIssueDirIntoDate( string issueDirName ) {

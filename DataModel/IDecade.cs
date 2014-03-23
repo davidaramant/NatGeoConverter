@@ -1,11 +1,7 @@
-﻿using System.Collections.Generic;
-using Utilities;
-
-namespace DataModel {
-	public interface IDecade : IEnumerable<IIssue> {
+﻿namespace DataModel {
+	public interface IDecade {
+		string DirectoryName { get; }
 		string DisplayName { get; }
 		string IndexFileName { get; }
-		string RelativeIndexPath { get; }
-		IPage PreviewPage { get; }
 	}
 }

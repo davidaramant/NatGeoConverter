@@ -7,7 +7,7 @@ using Utilities;
 
 namespace DataModel {
 	[DebuggerDisplay( "{ToString()}" )]
-	public sealed class NGPage : IPage {
+	public sealed class NGPage {
 		private readonly string _fileName;
 		private readonly int _number;
 		private readonly string _displayName;

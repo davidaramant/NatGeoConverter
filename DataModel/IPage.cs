@@ -1,15 +1,20 @@
-﻿using System.Drawing;
-
-namespace DataModel {
+﻿namespace DataModel {
 	public interface IPage {
 		int Number { get; }
 		string DisplayName { get; }
 		string IndexName { get; }
+		string FileName { get; }
 
-		string RelativeFullUrl { get; }
-		string RelativeThumbnailUrl { get; }
+		int IssueId { get; }
+		int DecadeId { get; }
 
-		Size FullSize { get; }
-		Size ThumbnailDisplaySize { get; }	
+		int FullImageWidth { get; }
+		int FullImageHeight { get; }
+
+		int ThumbnailImageWidth { get; }
+		int ThumbnailImageHeight { get; }
+
+		int ThumbnailImageDisplayWidth { get; }
+		int ThumbnailImageDisplayHeight { get; }
 	}
 }
