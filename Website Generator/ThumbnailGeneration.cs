@@ -19,10 +19,13 @@ namespace Website_Generator {
 			const int batchSize = 1000;
 			var numBatches = (allJpgs.Length / batchSize) + 1;
 
-			Out.WL( "Total # images: {0}", allJpgs.Length );
+			var startTime = DateTime.Now;
+			Out.WL( "Total # images: {0}\tStart Time: {1}", allJpgs.Length, startTime);
 
+			var batchTimer = new Stopwatch();
 			foreach( var batch in allJpgs.GetBatchesOfSize( batchSize ).Select( (paths,index)=>new{Images = paths, Number = index + 1 } )) {
-				timer.Reset();
+				batchTimer.Reset();
+				batchTimer.Start();
 				Out.WL( "Batch {0}/{1}", batch.Number, numBatches );
 				foreach( var fullImagePath in batch.Images ) {
 					var thumbPath = ConvertFullPathToThumbnailPath( config, fullImagePath );
@@ -33,7 +36,9 @@ namespace Website_Generator {
 						p.WaitForExit();
 					}
 				}
-				Out.WL( "Done with batch, took: {0}", timer.Elapsed );
+				Out.WL( "Done with batch, took: {0}\tEstimated done: {1}", 
+					batchTimer.Elapsed, 
+					startTime + TimeSpan.FromTicks( numBatches*batchTimer.ElapsedTicks ) );
 			}
 		}
 
