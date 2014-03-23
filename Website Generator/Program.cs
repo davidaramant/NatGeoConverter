@@ -144,7 +144,7 @@ namespace Website_Generator {
   <body {4}>", title,
 				Path.Combine( modifier, "css", "bootstrap.min.css" ),
 				Path.Combine( modifier, "css", "customizations.css" ),
-				Path.Combine( modifier, "favicon_v3.ico" ),
+				Path.Combine( modifier, "favicon_v04.ico" ),
 				smallerBodyPadding ? @"style=""padding-top: 60px;""" : String.Empty );
 		}
 
