@@ -70,6 +70,47 @@ namespace Utilities.EnumerableExtensions {
 
 			return minElement;
 		}
+
+		public sealed class ElementContext<T> where T : class
+		{
+			public readonly T Previous;
+			public readonly T Current;
+			public readonly T Next;
+
+			public ElementContext( T previous, T current, T next )
+			{
+				Previous = previous;
+				Current = current;
+				Next = next;
+			}
+		}
+
+		public static IEnumerable<ElementContext<T>> WithContext<T>( this IEnumerable<T> sequence ) where T : class{
+			if( sequence == null ) {
+				throw new ArgumentNullException( "sequence" );
+			}
+			return WithContextWorker( sequence );
+		}
+
+		private static IEnumerable<ElementContext<T>> WithContextWorker<T>( this IEnumerable<T> sequence ) where T : class{
+			T previous = default(T);
+			T current = default(T);
+			T next = default(T);
+
+			bool skippedFirst = false;
+			foreach( var element in sequence ) {
+				previous = current;
+				current = next;
+				next = element;
+
+				if( skippedFirst ) {
+					yield return new ElementContext<T>( previous, current, next );
+				}
+				skippedFirst = true;
+			}
+
+			yield return new ElementContext<T>( previous: current, current: next, next: default(T) );
+		}
 	}
 }
 
