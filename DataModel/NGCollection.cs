@@ -14,14 +14,41 @@ namespace DataModel {
 			_config = config;
 		}
 
-		private SQLiteConnection Open()
-		{
+		private SQLiteConnection Open() {
 			return new SQLiteConnection( _config.DatabasePath );
 		}
 
-		public IEnumerable<NGDecade> GetAllDecades() {
-			var dbDecades = new List<Decade>();
-			return null;
+		public IEnumerable<IDecade> GetAllDecades() {
+			var decades = new List<Decade>();
+			using( var db = Open() ) {
+				decades.AddRange( db.Table<Decade>().OrderBy( d => d.DisplayName ) );
+			}
+
+			return decades;
+		}
+
+		public IEnumerable<IIssue> GetAllIssues() {
+			var issues = new List<Issue>();
+			using( var db = Open() ) {
+				issues.AddRange( db.Table<Issue>().OrderBy( i => i.ReleaseDate ) );
+			}
+			return issues;
+		}
+
+		public IEnumerable<IIssue> GetAllIssuesInDecade( IDecade decade ) {
+			var issues = new List<Issue>();
+			using( var db = Open() ) {
+				issues.AddRange( db.Table<Issue>().Where( i => i.DecadeId == decade.Id ).OrderBy( i => i.ReleaseDate ) );
+			}
+			return issues;
+		}
+
+		public IEnumerable<IPage> GetAllPagesInIssue( IIssue issue ) {
+			var pages = new List<Page>();
+			using( var db = Open() ) {
+				pages.AddRange( db.Table<Page>().Where( p => p.IssueId == issue.Id ).OrderBy( p => p.Number ) );
+			}
+			return pages;
 		}
 	}
 }

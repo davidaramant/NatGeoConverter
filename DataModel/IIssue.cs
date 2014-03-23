@@ -2,6 +2,7 @@
 
 namespace DataModel {
 	public interface IIssue  {
+		int Id { get; }
 		DateTime ReleaseDate { get; }
 		int DecadeId { get; }
 		string ShortDisplayName { get; }
