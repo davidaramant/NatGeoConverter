@@ -16,7 +16,7 @@ namespace Website_Generator {
 			var allJpgs = Directory.GetFiles( config.BaseFullImageDir, "*.jpg", SearchOption.AllDirectories );
 			Out.WL( "Reading all paths took: {0}", timer.Elapsed );
 
-			const int batchSize = 10000;
+			const int batchSize = 1000;
 			var numBatches = (allJpgs.Length / batchSize) + 1;
 
 			Out.WL( "Total # images: {0}", allJpgs.Length );
@@ -29,8 +29,8 @@ namespace Website_Generator {
 
 					Utility.CreatePath( thumbPath );
 
-					using( var p2 = StartGeneratingThumbnail( fullImagePath, thumbPath, config.ThumbnailSize ) ) {
-						p2.WaitForExit();
+					using( var p = StartGeneratingThumbnail( fullImagePath, thumbPath, config.ThumbnailSize ) ) {
+						p.WaitForExit();
 					}
 				}
 				Out.WL( "Done with batch, took: {0}", timer.Elapsed );
@@ -38,11 +38,14 @@ namespace Website_Generator {
 		}
 
 		static Process StartGeneratingThumbnail( string inputPath, string outputPath, Size maxSize ) {
+			var arguments = String.Format( "\"{0}\" -resize {1}x{2} -quality 50% \"{3}\"", 
+				                inputPath, maxSize.Width, maxSize.Height, outputPath );
+
 			var processInfo = new System.Diagnostics.ProcessStartInfo {
-				FileName = "convert",
-				Arguments = String.Format( "\"{0}\" -resize {1}x{2} -quality 50% \"{3}\"", 
-					inputPath, maxSize.Width, maxSize.Height, outputPath ),
+				FileName = "/usr/local/bin/convert",
+				Arguments = arguments,
 				CreateNoWindow = true,
+				UseShellExecute = false,
 			};
 
 			return System.Diagnostics.Process.Start( processInfo );
