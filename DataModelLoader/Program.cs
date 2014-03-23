@@ -46,13 +46,14 @@ namespace DataModelLoader {
 
 				foreach( var decadeDir in Directory.GetDirectories( config.BaseFullImageDir ) ) {
 					var decadeName = decadeDir.GetLastDirectory();
-					var decadeId = db.Insert( new Decade { DirectoryName = decadeName } );
+					var decade = new Decade { DirectoryName = decadeName };
+					db.Insert( decade );
 					Console.Out.WriteLine( "Decade: {0}", decadeName );
 
 					foreach( var issueDir in Directory.GetDirectories( decadeDir ) ) {
 						var issueDirName = issueDir.GetLastDirectory();
-						var issueId = db.Insert( 
-							new Issue { DecadeId = decadeId, ReleaseDate = ParseIssueDirIntoDate( issueDirName ) } );
+						var issue = new Issue { DecadeId = decade.Id, ReleaseDate = ParseIssueDirIntoDate( issueDirName ) };
+						db.Insert( issue );
 
 						var allPages = 
 							Directory.GetFiles( issueDir, "*.jpg", SearchOption.TopDirectoryOnly ).
@@ -63,9 +64,9 @@ namespace DataModelLoader {
 								var thumbSize = ImageSizeLoader.GetJpegImageSize( GetThumbnailPath( config, decadeName, issueDirName, fileName));
 								return new Page 
 								{ 
-									IssueId = issueId,
+									IssueId = issue.Id,
 									Number = index + 1,
-									DecadeId = decadeId,
+									DecadeId = decade.Id,
 									FileName = fileName,
 									FullImageWidth = fullSize.Width,
 									FullImageHeight = fullSize.Height,
