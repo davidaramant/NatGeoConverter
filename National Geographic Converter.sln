@@ -45,7 +45,7 @@ Global
 		{95D597A3-5E98-4968-95F5-9DC9D3B88DF3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = DataModelLoader\DataModelLoader.csproj
+		StartupItem = Website Generator\Website Generator.csproj
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

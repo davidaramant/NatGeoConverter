@@ -2,53 +2,56 @@
 using DataModel;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
+using Utilities;
+using System.IO;
+using Utilities.PathExtensions;
+using Utilities.EnumerableExtensions;
+using System.Linq;
 
 namespace Website_Generator {
 	public static class ThumbnailGeneration {
-		static IEnumerable<NGDecade> GetSubSet( IEnumerable<NGDecade> decades, string startDecade, string endDecade ) {
-			bool foundStart = false;
-			foreach( var decade in decades ) {
-				if( !foundStart ) {
-					if( decade.DisplayName == startDecade ) {
-						foundStart = true;
-						yield return decade;
-					}
-				} else {
-					yield return decade;
+		public static void GenerateThumbnails( IProjectConfig config ) {
+			var timer = Stopwatch.StartNew();
+			var allJpgs = Directory.GetFiles( config.BaseFullImageDir, "*.jpg", SearchOption.AllDirectories );
+			Out.WL( "Reading all paths took: {0}", timer.Elapsed );
 
-					if( decade.DisplayName == endDecade ) {
-						yield break;
+			const int batchSize = 10000;
+			var numBatches = (allJpgs.Length / batchSize) + 1;
+
+			Out.WL( "Total # images: {0}", allJpgs.Length );
+
+			foreach( var batch in allJpgs.GetBatchesOfSize( batchSize ).Select( (paths,index)=>new{Images = paths, Number = index + 1 } )) {
+				timer.Reset();
+				Out.WL( "Batch {0}/{1}", batch.Number, numBatches );
+				foreach( var fullImagePath in batch.Images ) {
+					var thumbPath = ConvertFullPathToThumbnailPath( config, fullImagePath );
+
+					Utility.CreatePath( thumbPath );
+
+					using( var p2 = StartGeneratingThumbnail( fullImagePath, thumbPath, config.ThumbnailSize ) ) {
+						p2.WaitForExit();
 					}
 				}
+				Out.WL( "Done with batch, took: {0}", timer.Elapsed );
 			}
 		}
 
-		public static void GenerateThumbnails( IEnumerable<NGDecade> decades, string startDecade, string endDecade ) {
-			var subSet = GetSubSet( decades, startDecade, endDecade );
-
-			foreach( var decade in subSet ) {
-				Console.Out.WriteLine( "Decade: {0} {1}", decade.DisplayName, DateTime.Now.ToString( "s" ) );
-				foreach( var issue in decade ) {
-					foreach( var page in issue ) {
-						throw new NotImplementedException( "Fix up these paths using IProjectConfig" );
-						Utility.CreatePath( "thumbnail full path" );
-
-						using( var p2 = StartGeneratingThumbnail( "fullPath", "thumbnailpath", 360, 520 ) ) {
-							p2.WaitForExit();
-						}
-					}
-				}
-			}
-		}
-
-		static Process StartGeneratingThumbnail( string inputPath, string outputPath, int xSize, int ySize ) {
+		static Process StartGeneratingThumbnail( string inputPath, string outputPath, Size maxSize ) {
 			var processInfo = new System.Diagnostics.ProcessStartInfo {
 				FileName = "convert",
-				Arguments = String.Format( "\"{0}\" -resize {1}x{2} -quality 100% \"{3}\"", inputPath, xSize, ySize, outputPath ),
+				Arguments = String.Format( "\"{0}\" -resize {1}x{2} -quality 50% \"{3}\"", 
+					inputPath, maxSize.Width, maxSize.Height, outputPath ),
 				CreateNoWindow = true,
 			};
 
 			return System.Diagnostics.Process.Start( processInfo );
+		}
+
+		static string ConvertFullPathToThumbnailPath( IProjectConfig config, string fullImagePath )
+		{
+			var relativePath = fullImagePath.GetPathRelativeTo( config.BaseFullImageDir );
+			return Path.Combine( config.BaseThumbnailImageDir, relativePath );
 		}
 	}
 }

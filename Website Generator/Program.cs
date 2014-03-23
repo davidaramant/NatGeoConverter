@@ -9,6 +9,7 @@ using System.Security.Cryptography;
 using System.Diagnostics;
 using System.Text;
 using Utilities.EnumerableExtensions;
+using Utilities;
 
 namespace Website_Generator {
 	class Program {
@@ -27,57 +28,33 @@ namespace Website_Generator {
 			try {
 				DoStuff( args );
 			} catch( Exception e ) {
-				WL( new String( '-', 79 ) );
-				WL( e.ToString() );
+				Out.WL( new String( '-', 79 ) );
+				Out.WL( e.ToString() );
 			}
 
-			WL( "Done" );
-		}
-
-		static void WL() {
-			Console.Out.WriteLine();
-		}
-
-		static void WL( string format, params object[] args ) {
-			Console.Out.WriteLine( format, args );
-		}
-
-		private static string CsvLine( params object[] columns ) {
-			return String.Join( ",", columns.Select( c => "\"" + c + "\"" ) );
+			Out.WL( "Done" );
 		}
 
 		static void DoStuff( string[] args ) {
-			//var startDecade = args[ 0 ];
-			//var endDecade = args[ 1 ];
+			var config = new ProjectConfig( baseDir: Path.Combine( "/", "Users", "davidaramant", "Web", "NatGeo" ) );
 
-			//WL( "Start: {0} End: {1}", startDecade, endDecade );
-
-			var allJpgs = Directory.GetFiles( _baseFullImagePath, "*.jpg", SearchOption.AllDirectories ).Select( Path.GetFileName );
-			var longestName = String.Empty;
-			foreach( var jpg in allJpgs ) {
-				if( jpg.Length > longestName.Length ) {
-					longestName = jpg;
-				}
-			}
-			WL( "{0} ({1})", longestName, longestName.Length );
+			ThumbnailGeneration.GenerateThumbnails( config );
 			return;
 
 
 			var timer = Stopwatch.StartNew();
 			var decades = GenerateModel();
-			WL( "Generating model took: " + timer.Elapsed );
+			Out.WL( "Generating model took: " + timer.Elapsed );
 
-			WL( "{0} decades", decades.Count() );
+			Out.WL( "{0} decades", decades.Count() );
 
 			timer.Restart();
-			//GenerateThumbnails( decades, startDecade, endDecade );
-			//WL( "Thumbnail generation took: " + timer.Elapsed );
 
 			//GenerateMainIndex( decades );
 			//GenerateDecadeIndexes( decades );
 			//GenerateIssueIndexes( decades );
 			GeneratePageIndexes( decades );
-			WL( "HTML generation took: " + timer.Elapsed );
+			Out.WL( "HTML generation took: " + timer.Elapsed );
 		}
 
 		private static IEnumerable<NGDecade> GenerateModel() {

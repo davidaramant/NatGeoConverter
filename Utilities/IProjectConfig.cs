@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 
 namespace Utilities {
 	public interface IProjectConfig {
@@ -12,5 +13,7 @@ namespace Utilities {
 		string RelativeFullImageDir { get;}
 		string RelativeThumbnailImageDir { get; }
 		string RelativeHtmlDir { get; }
+
+		Size ThumbnailSize { get; }
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Drawing;
 
 namespace Utilities {
 	public class ProjectConfig : IProjectConfig {
@@ -29,6 +30,8 @@ namespace Utilities {
 		public string RelativeFullImageDir { get { return Path.Combine( "imgs", "full" ); } }
 
 		public string RelativeThumbnailImageDir  { get { return Path.Combine( "imgs", "thumbs" ); } }
+
+		public Size ThumbnailSize { get { return new Size( 360, 520 ); } } 
 
 		public ProjectConfig( string baseDir ) {
 			_baseDir = baseDir;
