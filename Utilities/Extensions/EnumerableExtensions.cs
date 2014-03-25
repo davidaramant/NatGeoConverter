@@ -4,11 +4,15 @@ using System;
 
 namespace Utilities.EnumerableExtensions {
 	public static class Extensions {
-		public static IEnumerable<IEnumerable<T>> GetBatchesOfSize<T>(this IEnumerable<T> source, int size) {
+		public static IEnumerable<IEnumerable<T>> InBatchesOf<T>(this IEnumerable<T> source, int size) {
 			if( size <= 0 ) {
 				throw new ArgumentOutOfRangeException( "size", "Must be greater than zero." );
 			}
 
+			return BatchesWorker( source, size );
+		}
+
+		static IEnumerable<IEnumerable<T>> BatchesWorker<T>( IEnumerable<T> source, int size ) {
 			using( IEnumerator<T> enumerator = source.GetEnumerator() ) {
 				while( enumerator.MoveNext() ) {
 					yield return TakeIEnumerator( enumerator, size );

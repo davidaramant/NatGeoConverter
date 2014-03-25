@@ -21,7 +21,7 @@ namespace DataModel {
 		public IEnumerable<IDecade> GetAllDecades() {
 			var decades = new List<Decade>();
 			using( var db = Open() ) {
-				decades.AddRange( db.Table<Decade>().OrderBy( d => d.DisplayName ) );
+				decades.AddRange( db.Table<Decade>().OrderBy( d => d.DirectoryName ) );
 			}
 
 			return decades;

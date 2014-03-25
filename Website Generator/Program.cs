@@ -13,17 +13,6 @@ using Utilities;
 
 namespace Website_Generator {
 	class Program {
-		readonly static string _basePath = GetBasePath();
-		readonly static string _baseFullImagePath = Path.Combine( _basePath, "imgs", "full" );
-		readonly static string _baseThumbnailPath = Path.Combine( _basePath, "imgs", "thumbs" );
-
-		static string GetBasePath() {
-			if( Environment.OSVersion.Platform == PlatformID.Win32NT ) {
-				return "G:";
-			}
-			return Path.Combine( "/", "Users", "davidaramant", "Web", "NatGeo" );
-		}
-
 		static void Main( string[] args ) {
 			try {
 				DoStuff( args );
@@ -38,41 +27,37 @@ namespace Website_Generator {
 		static void DoStuff( string[] args ) {
 			var config = new ProjectConfig( baseDir: Path.Combine( "/", "Users", "davidaramant", "Web", "NatGeo" ) );
 
+			var model = new NGCollection( config );
 			var timer = Stopwatch.StartNew();
-			var decades = GenerateModel();
-			Out.WL( "Generating model took: " + timer.Elapsed );
 
-			Out.WL( "{0} decades", decades.Count() );
-
-			timer.Restart();
-
-			//GenerateMainIndex( decades );
+			GenerateMainIndex( config, model );
 			//GenerateDecadeIndexes( decades );
 			//GenerateIssueIndexes( decades );
-			GeneratePageIndexes( decades );
+			//GeneratePageIndexes( decades );
 			Out.WL( "HTML generation took: " + timer.Elapsed );
 		}
 
-		private static IEnumerable<NGDecade> GenerateModel() {
-			return Enumerable.Empty<NGDecade>();
-		}
-
-		static void GenerateMainIndex( IEnumerable<NGDecade> decades ) {
+		static void GenerateMainIndex( IProjectConfig config, NGCollection ngColletion ) {
 			var sb = new StringBuilder();
 			sb.Append( GetHeader( depth: 0, title: "The Complete National Geographic" ) );
 			sb.Append( GetNavBar( NamedLink.Empty( "Decades" ) ) );
 
 			sb.Append( @"<div class=""container""> " );
 
-			foreach( var batch in decades.GetBatchesOfSize( 4 ) ) {
+			foreach( var batch in ngColletion.GetAllDecades().InBatchesOf( 4 ) ) {
 				sb.AppendLine( @"<div class=""row"">" );
 				foreach( var decade in batch ) {
+					var firstIssue = ngColletion.GetAllIssuesInDecade( decade ).First();
+					var coverPage = ngColletion.GetAllPagesInIssue( firstIssue ).First( p => p.FileName.StartsWith("NGM_") );
+
 					sb.AppendFormat( 
 						GetThumbnailHtml(
 							displayName: decade.DisplayName,
 							previewText: String.Format( "Decade preview for {0}", decade.DisplayName ),
-							imgUrl: decade.PreviewImagePath,
-							linkUrl: decade.RelativeIndexUrl ) );
+							imgUrl: Path.Combine( config.RelativeThumbnailImageDir, decade.DirectoryName, firstIssue.DirectoryName, coverPage.FileName ),
+							linkUrl: Path.Combine( decade.DirectoryName, decade.IndexFileName ),
+							width: coverPage.ThumbnailImageDisplayWidth,
+							height: coverPage.ThumbnailImageDisplayHeight ) );
 				}
 				sb.AppendLine( @"</div>" );
 			}
@@ -81,10 +66,10 @@ namespace Website_Generator {
 			sb.AppendLine( @"</div> <!-- container --> " );
 			sb.AppendLine( GetFooter( depth: 0 ) );
 
-			File.WriteAllText( Path.Combine( _basePath, "index.html" ), sb.ToString(), Encoding.UTF8 );
+			File.WriteAllText( Path.Combine( config.BaseDir, "index.html" ), sb.ToString(), Encoding.UTF8 );
 		}
 
-		static string GetThumbnailHtml( string displayName, string previewText, string imgUrl, string linkUrl ) {
+		static string GetThumbnailHtml( string displayName, string previewText, string imgUrl, string linkUrl, int width, int height ) {
 			return String.Format( 
 				@"<div class=""col-md-3 col-sm-3 col-sx-3"">
 							<a href=""{3}"">
@@ -93,11 +78,11 @@ namespace Website_Generator {
 										<h3 class=""panel-title"">{0}</h3>
 									</div>
 									<div class=""panel-body"">
-										<img src=""{2}"" class=""img-thumbnail center-block"" alt=""{1}""/>
+										<img src=""{2}"" width=""{4}"" height=""{5}"" class=""img-thumbnail center-block"" alt=""{1}""/>
 									</div>
 								</div>
 							</a>
-						</div>", displayName, previewText, imgUrl, linkUrl );
+						</div>", displayName, previewText, imgUrl, linkUrl, width, height );
 		}
 
 		static string GetHeader( int depth, string title, bool smallerBodyPadding = false ) {
@@ -237,6 +222,7 @@ namespace Website_Generator {
 			return footer.ToString();
 		}
 
+		/*
 		static void GenerateDecadeIndexes( IEnumerable<NGDecade> decades ) {
 			foreach( var decade in decades ) {
 				var sb = new StringBuilder();
@@ -250,7 +236,7 @@ namespace Website_Generator {
 					sb.AppendFormat( @"<div class=""panel panel-primary""><div class=""panel-heading""><h2 class=""pabel-title"">{0}</h2></div><div class=""panel-body"">", 
 						yearGroup.First().ReleaseDate.Year );
 
-					foreach( var batch in yearGroup.OrderBy( issue => issue.ReleaseDate ).GetBatchesOfSize( 4 ) ) {
+					foreach( var batch in yearGroup.OrderBy( issue => issue.ReleaseDate ).InBatchesOf( 4 ) ) {
 						sb.AppendLine( @"<div class=""row"">" );
 						foreach( var issue in batch ) {
 							sb.Append( GetThumbnailHtml(
@@ -272,7 +258,9 @@ namespace Website_Generator {
 				File.WriteAllText( Path.Combine( _basePath, "html", decade.IndexFileName ), sb.ToString(), Encoding.UTF8 );
 			}
 		}
+		*/
 
+		/*
 		static void GenerateIssueIndexes( IEnumerable<NGDecade> decades ) {
 			foreach( var decade in decades ) {
 				foreach( var issue in decade ) {
@@ -285,7 +273,7 @@ namespace Website_Generator {
 
 					sb.Append( @"<div class=""container""> " );
 
-					foreach( var batch in issue.GetBatchesOfSize(4) ) {
+					foreach( var batch in issue.InBatchesOf(4) ) {
 						sb.Append( @"<div class=""row"">" );
 						foreach( var page in batch ) {
 							sb.Append( GetThumbnailHtml(
@@ -309,7 +297,9 @@ namespace Website_Generator {
 				}
 			}
 		}
+		*/
 
+		/*
 		static void GeneratePageIndexes( IEnumerable<NGDecade> decades ) {
 			var pathModifier = Path.Combine( "..", "..", ".." );
 
@@ -351,6 +341,7 @@ namespace Website_Generator {
 				} // issue
 			} // decade
 		}
+		*/
 
 		static NamedLink MakeLinkToPage( NGPage page ) {
 			if( page == null )

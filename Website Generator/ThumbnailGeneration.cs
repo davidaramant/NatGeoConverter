@@ -23,7 +23,7 @@ namespace Website_Generator {
 			Out.WL( "Total # images: {0}\tStart Time: {1}", allJpgs.Length, startTime);
 
 			var batchTimer = new Stopwatch();
-			foreach( var batch in allJpgs.GetBatchesOfSize( batchSize ).Select( (paths,index)=>new{Images = paths, Number = index + 1 } )) {
+			foreach( var batch in allJpgs.InBatchesOf( batchSize ).Select( (paths,index)=>new{Images = paths, Number = index + 1 } )) {
 				batchTimer.Reset();
 				batchTimer.Start();
 				Out.WL( "Batch {0}/{1}", batch.Number, numBatches );
