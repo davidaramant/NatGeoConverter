@@ -38,10 +38,6 @@ namespace Website_Generator {
 		static void DoStuff( string[] args ) {
 			var config = new ProjectConfig( baseDir: Path.Combine( "/", "Users", "davidaramant", "Web", "NatGeo" ) );
 
-			ThumbnailGeneration.GenerateThumbnails( config );
-			return;
-
-
 			var timer = Stopwatch.StartNew();
 			var decades = GenerateModel();
 			Out.WL( "Generating model took: " + timer.Elapsed );

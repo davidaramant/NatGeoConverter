@@ -44,7 +44,7 @@ namespace DataModelLoader {
 				db.CreateTable<Issue>();
 				db.CreateTable<Page>();
 
-				foreach( var decadeDir in Directory.GetDirectories( config.BaseFullImageDir ) ) {
+				foreach( var decadeDir in Directory.GetDirectories( config.AbsoluteFullImageDir ) ) {
 					var decadeName = decadeDir.GetLastDirectory();
 					var decade = new Decade { DirectoryName = decadeName };
 					db.Insert( decade );
@@ -83,7 +83,7 @@ namespace DataModelLoader {
 
 		private static string GetThumbnailPath( IProjectConfig config, string decadeDir, string issueDir, string imgFileName )
 		{
-			return Path.Combine( config.BaseThumbnailImageDir,
+			return Path.Combine( config.AbsoluteThumbnailImageDir,
 				decadeDir,
 				issueDir,
 				Path.GetFileName( imgFileName ) );

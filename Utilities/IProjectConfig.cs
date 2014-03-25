@@ -6,9 +6,9 @@ namespace Utilities {
 		string DatabasePath { get; }
 		string BaseDir { get; }
 
-		string BaseFullImageDir { get; }
-		string BaseThumbnailImageDir { get; }
-		string BaseHtmlDir { get; }
+		string AbsoluteFullImageDir { get; }
+		string AbsoluteThumbnailImageDir { get; }
+		string AbsoluteHtmlDir { get; }
 
 		string RelativeFullImageDir { get;}
 		string RelativeThumbnailImageDir { get; }

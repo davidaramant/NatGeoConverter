@@ -6,22 +6,22 @@ namespace Utilities {
 		private readonly string _baseDir;
 
 		public string DatabasePath {
-			get { return Path.Combine( BaseDir, "data", "imgDatabase.sqlite" ); }
+			get { return Path.Combine( BaseDir, "data", "imgDatabase.sqlite3" ); }
 		}
 
 		public string BaseDir {
 			get { return _baseDir; }
 		}
 
-		public string BaseFullImageDir {
+		public string AbsoluteFullImageDir {
 			get { return Path.Combine( BaseDir, RelativeFullImageDir ); }
 		}
 
-		public string BaseThumbnailImageDir {
+		public string AbsoluteThumbnailImageDir {
 			get { return Path.Combine( BaseDir, RelativeThumbnailImageDir ); }
 		}
 
-		public string BaseHtmlDir {
+		public string AbsoluteHtmlDir {
 			get { return Path.Combine( BaseDir, RelativeHtmlDir ); }
 		}
 

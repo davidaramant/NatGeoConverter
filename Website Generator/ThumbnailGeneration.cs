@@ -13,7 +13,7 @@ namespace Website_Generator {
 	public static class ThumbnailGeneration {
 		public static void GenerateThumbnails( IProjectConfig config ) {
 			var timer = Stopwatch.StartNew();
-			var allJpgs = Directory.GetFiles( config.BaseFullImageDir, "*.jpg", SearchOption.AllDirectories );
+			var allJpgs = Directory.GetFiles( config.AbsoluteFullImageDir, "*.jpg", SearchOption.AllDirectories );
 			Out.WL( "Reading all paths took: {0}", timer.Elapsed );
 
 			const int batchSize = 1000;
@@ -58,8 +58,8 @@ namespace Website_Generator {
 
 		static string ConvertFullPathToThumbnailPath( IProjectConfig config, string fullImagePath )
 		{
-			var relativePath = fullImagePath.GetPathRelativeTo( config.BaseFullImageDir );
-			return Path.Combine( config.BaseThumbnailImageDir, relativePath );
+			var relativePath = fullImagePath.GetPathRelativeTo( config.AbsoluteFullImageDir );
+			return Path.Combine( config.AbsoluteThumbnailImageDir, relativePath );
 		}
 	}
 }
