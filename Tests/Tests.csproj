@@ -48,6 +48,7 @@
     <Compile Include="Extensions\PathExtensionsTests.cs" />
     <Compile Include="Extensions\ElementWithMinOrMaxTests.cs" />
     <Compile Include="Extensions\WithContextTests.cs" />
+    <Compile Include="UriPathTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DataModel\DataModel.csproj">
