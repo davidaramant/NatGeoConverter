@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 
 namespace Utilities {
 	public static class UriPath {
@@ -14,6 +15,11 @@ namespace Utilities {
 			}
 
 			return url;
+		}
+
+		public static string CombineWithDepth( int depth, params string[] components )
+		{
+			return Combine( Enumerable.Repeat("..",depth).Concat( components ).ToArray() );
 		}
 	}
 }
