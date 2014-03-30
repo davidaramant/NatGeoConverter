@@ -30,6 +30,7 @@ namespace Website_Generator {
 			var model = new NGCollection( config );
 			var timer = Stopwatch.StartNew();
 
+
 			GenerateMainIndex( config, model );
 			//GenerateDecadeIndexes( decades );
 			//GenerateIssueIndexes( decades );
@@ -37,7 +38,18 @@ namespace Website_Generator {
 			Out.WL( "HTML generation took: " + timer.Elapsed );
 		}
 
-		static void GenerateMainIndex( IProjectConfig config, NGCollection ngColletion ) {
+		static void GenerateMainIndex( IProjectConfig config, NGCollection ngCollection ) {
+			var template = new SiteLayout() { 
+				Model = new SiteLayoutModel( pageTitle: "The Complete National Geographic", depth: 0 ) 
+			};
+
+			File.WriteAllText( 
+				Path.Combine( config.BaseDir, "index.html" ), 
+				template.GenerateString(), 
+				Encoding.UTF8 );
+		}
+
+		static void GenerateMainIndexOLD( IProjectConfig config, NGCollection ngColletion ) {
 			var sb = new StringBuilder();
 			sb.Append( GetHeader( depth: 0, title: "The Complete National Geographic" ) );
 			sb.Append( GetNavBar( NamedLink.Empty( "Decades" ) ) );
@@ -48,13 +60,16 @@ namespace Website_Generator {
 				sb.AppendLine( @"<div class=""row"">" );
 				foreach( var decade in batch ) {
 					var firstIssue = ngColletion.GetAllIssuesInDecade( decade ).First();
-					var coverPage = ngColletion.GetAllPagesInIssue( firstIssue ).First( p => p.FileName.StartsWith("NGM_") );
+					var coverPage = ngColletion.GetAllPagesInIssue( firstIssue ).First( p => p.FileName.StartsWith( "NGM_" ) );
 
 					sb.AppendFormat( 
 						GetThumbnailHtml(
 							displayName: decade.DisplayName,
 							previewText: String.Format( "Decade preview for {0}", decade.DisplayName ),
-							imgUrl: Path.Combine( config.RelativeThumbnailImageDir, decade.DirectoryName, firstIssue.DirectoryName, coverPage.FileName ),
+							imgUrl: Path.Combine( config.RelativeThumbnailImageDir,
+								decade.DirectoryName,
+								firstIssue.DirectoryName,
+								coverPage.FileName ),
 							linkUrl: Path.Combine( decade.DirectoryName, decade.IndexFileName ),
 							width: coverPage.ThumbnailImageDisplayWidth,
 							height: coverPage.ThumbnailImageDisplayHeight ) );
@@ -69,7 +84,12 @@ namespace Website_Generator {
 			File.WriteAllText( Path.Combine( config.BaseDir, "index.html" ), sb.ToString(), Encoding.UTF8 );
 		}
 
-		static string GetThumbnailHtml( string displayName, string previewText, string imgUrl, string linkUrl, int width, int height ) {
+		static string GetThumbnailHtml( string displayName,
+		                                string previewText,
+		                                string imgUrl,
+		                                string linkUrl,
+		                                int width,
+		                                int height ) {
 			return String.Format( 
 				@"<div class=""col-md-3 col-sm-3 col-sx-3"">
 							<a href=""{3}"">
@@ -221,7 +241,6 @@ namespace Website_Generator {
 			footer.Append( @"</body></html>" );
 			return footer.ToString();
 		}
-
 		/*
 		static void GenerateDecadeIndexes( IEnumerable<NGDecade> decades ) {
 			foreach( var decade in decades ) {
@@ -259,7 +278,6 @@ namespace Website_Generator {
 			}
 		}
 		*/
-
 		/*
 		static void GenerateIssueIndexes( IEnumerable<NGDecade> decades ) {
 			foreach( var decade in decades ) {
@@ -298,7 +316,6 @@ namespace Website_Generator {
 			}
 		}
 		*/
-
 		/*
 		static void GeneratePageIndexes( IEnumerable<NGDecade> decades ) {
 			var pathModifier = Path.Combine( "..", "..", ".." );
@@ -342,7 +359,6 @@ namespace Website_Generator {
 			} // decade
 		}
 		*/
-
 		static NamedLink MakeLinkToPage( NGPage page ) {
 			if( page == null )
 				return null;

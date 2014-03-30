@@ -1,0 +1,20 @@
+﻿@model SiteLayoutModel
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>@Model.PageTitle</title>
+@foreach( var cssUrl in Model.GetCssUrls() ) {
+	<link href="@cssUrl" rel="stylesheet"/>
+}
+	<link rel="shortcut icon" href="@Model.IconUrl"/>
+  </head>
+  <body>
+  	@Model.RenderBody()
+@foreach( var jsUrl in Model.GetJSUrls() ) {
+	<script src="@jsUrl"></script>
+}
+  </body>
+ </html>
