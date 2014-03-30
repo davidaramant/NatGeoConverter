@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Utilities;
-using System.Web;
-using System.Web.Mvc;
 
 namespace Website_Generator {
 	public class SiteLayoutModel {
@@ -11,9 +9,8 @@ namespace Website_Generator {
 
 		public string PageTitle{ get; private set; }
 
-		public string IconUrl 
-		{ 
-			get { return UriPath.CombineWithDepth(_depth,"favicon_v04.ico"); } 
+		public string IconUrl { 
+			get { return UriPath.CombineWithDepth( _depth, "favicon_v04.ico" ); } 
 		}
 
 		public IEnumerable<string> GetCssUrls() {
@@ -40,15 +37,12 @@ namespace Website_Generator {
 			_depth = depth;
 		}
 
-		public Action<System.IO.TextWriter> RenderBody()
-		{
+		public Action<System.IO.TextWriter> RenderBody() {
 			return RenderUnescapedHtml( @"<h1>Hello World</h1>" );
 		}
-
 		// Gross hack due to what the Xamarin generated model for a Razor template looks like when not using ASP.NET
-		protected Action<System.IO.TextWriter> RenderUnescapedHtml( string html )
-		{
-			return new Action<System.IO.TextWriter>( writer => writer.Write( html ));
+		protected Action<System.IO.TextWriter> RenderUnescapedHtml( string html ) {
+			return new Action<System.IO.TextWriter>( writer => writer.Write( html ) );
 		}
 	}
 }
