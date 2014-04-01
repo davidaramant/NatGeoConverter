@@ -105,7 +105,18 @@ WriteAttribute ("href", " href=\"", "\""
 #line hidden
 , false)
 );
-WriteLiteral("/>\n  </head>\n  <body>\n");
+WriteLiteral("/>\n  </head>\n  <body");
+
+WriteAttribute ("class", " class=\"", "\""
+
+#line 14 "SiteLayout.cshtml"
+, Tuple.Create<string,object,bool> ("", Model.BodyClass
+
+#line default
+#line hidden
+, false)
+);
+WriteLiteral(">\n");
 
 WriteLiteral("  \t");
 

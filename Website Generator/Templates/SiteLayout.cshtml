@@ -11,7 +11,7 @@
 }
 	<link rel="shortcut icon" href="@Model.IconUrl"/>
   </head>
-  <body>
+  <body class="@Model.BodyClass">
   	@Model.RenderBody()
 @foreach( var jsUrl in Model.GetJSUrls() ) {
 	<script src="@jsUrl"></script>

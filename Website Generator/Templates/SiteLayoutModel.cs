@@ -20,6 +20,8 @@ namespace Website_Generator {
 			}.Select( name => UriPath.CombineWithDepth( _depth, "css", name ) );
 		}
 
+		public string BodyClass { get { return null; } }
+
 		public IEnumerable<string> GetJSUrls() {
 			var javascriptFiles = new List<string> {
 				"jquery.min.js",
