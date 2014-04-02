@@ -12,6 +12,50 @@
 	<link rel="shortcut icon" href="@Model.IconUrl"/>
   </head>
   <body class="@Model.BodyClass">
+  	<div class="navbar navbar-default navbar-fixed-top" role="navigation">  
+		<div class="container">
+			<div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav">
+					<ul class="breadcrumb list-inline">
+				@foreach( var link in Model.GetBreadcrumbParts() ) {
+					if( link.HasUrl ) {
+						<li><a href="@link.Url">@link.Name</a></li>
+					} else {
+						<li class="active">@link.Name</li>
+					}
+				}
+					</ul>
+				</ul>
+				<div class="nav navbar-right">
+					<div class="btn-group">
+						@if( Model.Previous != null )
+						{
+							<a class="btn navbar-btn btn-default btn-page" href="@Model.Previous.Url">
+								<span class="glyphicon glyphicon-chevron-left"/>
+							</a>
+						} else {
+							<button class="btn navbar-btn btn-default btn-page" disabled="disabled">
+								<span class="glyphicon glyphicon-chevron-left"/>
+							</button>
+						}
+						<button class="btn navbar-btn btn-default" disabled="@Model.AllowResizeText" onClick="toggleHorizontal();"><span class="glyphicon glyphicon glyphicon-resize-horizontal"/></button>
+						<button class="btn navbar-btn btn-default" disabled="@Model.AllowResizeText" onClick="toggleVertical();"><span class="glyphicon glyphicon glyphicon-resize-vertical"/></button>  										
+						@if( Model.Next != null )
+						{
+							<a class="btn navbar-btn btn-default btn-page" href="@Model.Next.Url">
+								<span class="glyphicon glyphicon-chevron-right"/>
+							</a>
+						} else {
+							<button class="btn navbar-btn btn-default btn-page" disabled="disabled">
+								<span class="glyphicon glyphicon-chevron-right"/>
+							</button>
+						}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
   	@Model.RenderBody()
 @foreach( var jsUrl in Model.GetJSUrls() ) {
 	<script src="@jsUrl"></script>

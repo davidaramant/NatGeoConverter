@@ -22,6 +22,19 @@ namespace Website_Generator {
 
 		public string BodyClass { get { return null; } }
 
+		public IEnumerable<NamedLink> GetBreadcrumbParts() {
+			yield return new NamedLink( "Link", "http://google.com" );
+			yield return NamedLink.Empty( "Decades" );
+		}
+
+		public NamedLink Previous { get { return new NamedLink("Nowhere", "http://google.com"); } }
+
+		public NamedLink Next { get { return new NamedLink("Nowhere", "http://google.com"); } }
+
+		public bool AllowResize { get { return false; } }
+
+		public string AllowResizeText { get { return AllowResize ? (string)null : "disabled"; } }
+
 		public IEnumerable<string> GetJSUrls() {
 			var javascriptFiles = new List<string> {
 				"jquery.min.js",
