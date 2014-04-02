@@ -126,26 +126,6 @@ namespace Website_Generator {
 				smallerBodyPadding ? @"style=""padding-top: 60px;""" : String.Empty );
 		}
 
-		sealed class NamedLink {
-			private readonly string _url;
-			private readonly string _name;
-
-			public string Name { get { return _name; } }
-
-			public string Url { get { return _url; } }
-
-			public bool HasUrl { get { return !String.IsNullOrWhiteSpace( Url ); } }
-
-			public NamedLink( string name, string url ) {
-				_name = name;
-				_url = url;
-			}
-
-			public static NamedLink Empty( string name ) {
-				return new NamedLink( name: name, url: null );
-			}
-		}
-
 		static string GetNavBar( params NamedLink[] links ) {
 			var sb = new StringBuilder();
 			sb.Append( 
