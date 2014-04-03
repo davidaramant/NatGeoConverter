@@ -52,12 +52,20 @@
       <DependentUpon>SiteLayout.cshtml</DependentUpon>
     </Compile>
     <Compile Include="Templates\SiteLayoutModel.cs" />
+    <Compile Include="Templates\Thumbnail.cs">
+      <DependentUpon>Thumbnail.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Templates\ThumbnailModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="Templates\SiteLayout.cshtml">
       <Generator>RazorTemplatePreprocessor</Generator>
       <LastGenOutput>SiteLayout.cs</LastGenOutput>
+    </None>
+    <None Include="Templates\Thumbnail.cshtml">
+      <Generator>RazorTemplatePreprocessor</Generator>
+      <LastGenOutput>Thumbnail.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>
