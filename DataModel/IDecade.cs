@@ -4,5 +4,7 @@
 		string DirectoryName { get; }
 		string DisplayName { get; }
 		string IndexFileName { get; }
+
+		IPage PreviewPage { get; }
 	}
 }

@@ -56,6 +56,11 @@
       <DependentUpon>Thumbnail.cshtml</DependentUpon>
     </Compile>
     <Compile Include="Templates\ThumbnailModel.cs" />
+    <Compile Include="Templates\MainIndexBody.cs">
+      <DependentUpon>MainIndexBody.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Templates\MainIndexBodyModel.cs" />
+    <Compile Include="Templates\BaseModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -66,6 +71,10 @@
     <None Include="Templates\Thumbnail.cshtml">
       <Generator>RazorTemplatePreprocessor</Generator>
       <LastGenOutput>Thumbnail.cs</LastGenOutput>
+    </None>
+    <None Include="Templates\MainIndexBody.cshtml">
+      <Generator>RazorTemplatePreprocessor</Generator>
+      <LastGenOutput>MainIndexBody.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>

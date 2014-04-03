@@ -14,12 +14,19 @@ namespace DataModel.Database {
 
 		#endregion Database
 
+		[Ignore]
 		public string DisplayName {
 			get { return DirectoryName.Replace( "x", "0s" ); }
 		}
 
+		[Ignore]
 		public string IndexFileName {
 			get { return DirectoryName + ".html"; }
+		}
+
+		[Ignore]
+		public IPage PreviewPage {
+			get { throw new NotImplementedException( "Add PreviewPage to Decade model" ); }
 		}
 	}
 
@@ -54,6 +61,11 @@ namespace DataModel.Database {
 		[Ignore]
 		public string DirectoryName {
 			get { return ReleaseDate.ToString( "yyyyMMdd" ); }
+		}
+
+		[Ignore]
+		public IPage CoverPage {
+			get { throw new NotImplementedException( "Add CoverPage to Issue model" ); }
 		}
 	}
 
@@ -102,6 +114,18 @@ namespace DataModel.Database {
 		[Ignore]
 		public int ThumbnailImageDisplayHeight {
 			get { return ThumbnailImageHeight / 2; }
+		}
+
+		public string DecadeDirName {
+			get {
+				throw new NotImplementedException();
+			}
+		}
+
+		public string IssueDirName {
+			get {
+				throw new NotImplementedException();
+			}
 		}
 	}
 }

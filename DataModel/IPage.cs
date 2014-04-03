@@ -6,6 +6,9 @@
 		string IndexName { get; }
 		string FileName { get; }
 
+		string DecadeDirName { get; }
+		string IssueDirName { get; }
+
 		int IssueId { get; }
 		int DecadeId { get; }
 

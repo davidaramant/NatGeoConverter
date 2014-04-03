@@ -1,0 +1,21 @@
+﻿@model MainIndexBodyModel
+@using Utilities.EnumerableExtensions
+@using System.IO;
+<div class="container">
+@foreach( var batch in Model.GetDecades().InBatchesOf( 4 ) ) {
+	<div class="row">
+	@foreach( var decade in batch ) {
+		@Model.RenderThumbnail(
+		    linkUrl: Path.Combine( decade.DirectoryName, decade.IndexFileName ),
+			description: decade.DisplayName,
+			imgUrl: Path.Combine( Model.Config.RelativeThumbnailImageDir,
+					decade.DirectoryName,
+					decade.PreviewPage.IssueDirName,
+					decade.PreviewPage.FileName ),
+			imgWidth: decade.PreviewPage.ThumbnailImageDisplayWidth,
+			imgHeight: decade.PreviewPage.ThumbnailImageDisplayHeight,
+			imgAltText:String.Format( "Decade preview for {0}", decade.DisplayName ) );
+	}
+	</div>
+}
+</div>

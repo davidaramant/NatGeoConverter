@@ -4,7 +4,7 @@ using System.Linq;
 using Utilities;
 
 namespace Website_Generator {
-	public class SiteLayoutModel {
+	public sealed class SiteLayoutModel : BaseModel {
 		readonly int _depth;
 
 		public string PageTitle{ get; private set; }
@@ -47,17 +47,13 @@ namespace Website_Generator {
 			return javascriptFiles.Select( name => UriPath.CombineWithDepth( _depth, "js", name ) );
 		}
 
-		public SiteLayoutModel( string pageTitle, int depth ) {
+		public SiteLayoutModel( IProjectConfig config, string pageTitle, int depth ) : base(config) {
 			PageTitle = pageTitle;
 			_depth = depth;
 		}
 
 		public Action<System.IO.TextWriter> RenderBody() {
 			return RenderUnescapedHtml( @"<h1>Hello World</h1>" );
-		}
-		// Gross hack due to what the Xamarin generated model for a Razor template looks like when not using ASP.NET
-		protected Action<System.IO.TextWriter> RenderUnescapedHtml( string html ) {
-			return new Action<System.IO.TextWriter>( writer => writer.Write( html ) );
 		}
 	}
 }

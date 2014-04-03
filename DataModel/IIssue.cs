@@ -9,5 +9,7 @@ namespace DataModel {
 		string LongDisplayName { get; }
 		string IndexFileName { get; }
 		string DirectoryName { get; }
+
+		IPage CoverPage { get; }
 	}
 }
