@@ -61,6 +61,7 @@
     </Compile>
     <Compile Include="Templates\MainIndexBodyModel.cs" />
     <Compile Include="Templates\BaseModel.cs" />
+    <Compile Include="Templates\IBodyModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

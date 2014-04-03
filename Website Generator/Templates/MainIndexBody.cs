@@ -87,14 +87,14 @@ Write(Model.RenderThumbnail(
 					decade.PreviewPage.FileName ),
 			imgWidth: decade.PreviewPage.ThumbnailImageDisplayWidth,
 			imgHeight: decade.PreviewPage.ThumbnailImageDisplayHeight,
-			imgAltText:String.Format( "Decade preview for {0}", decade.DisplayName ) ));
+			imgAltText: String.Format( "Decade preview for {0}", decade.DisplayName ) ));
 
 
 #line default
 #line hidden
 
 #line 17 "MainIndexBody.cshtml"
-                                                                             ;
+                                                                              ;
 	}
 
 

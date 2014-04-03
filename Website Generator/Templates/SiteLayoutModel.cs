@@ -6,6 +6,7 @@ using Utilities;
 namespace Website_Generator {
 	public sealed class SiteLayoutModel : BaseModel {
 		readonly int _depth;
+		readonly IBodyModel _bodyModel;
 
 		public string PageTitle{ get; private set; }
 
@@ -23,15 +24,14 @@ namespace Website_Generator {
 		public string BodyClass { get { return null; } }
 
 		public IEnumerable<NamedLink> GetBreadcrumbParts() {
-			yield return new NamedLink( "Link", "http://google.com" );
-			yield return NamedLink.Empty( "Decades" );
+			throw new NotImplementedException( "Figure out how to do breadcrumbs" );
 		}
 
-		public NamedLink Previous { get { return new NamedLink("Nowhere", "http://google.com"); } }
+		public NamedLink Previous { get { throw new NotImplementedException("Pass in Previous"); } }
 
-		public NamedLink Next { get { return new NamedLink("Nowhere", "http://google.com"); } }
+		public NamedLink Next { get { throw new NotImplementedException("Pass in Next"); } }
 
-		public bool AllowResize { get { return false; } }
+		public bool AllowResize { get { throw new NotImplementedException("Pass in AllowResize"); } }
 
 		public string AllowResizeText { get { return AllowResize ? (string)null : "disabled"; } }
 
@@ -40,6 +40,7 @@ namespace Website_Generator {
 				"jquery.min.js",
 				"bootstrap.min.js",
 			};
+			throw new NotImplementedException( "Add optional JS files to BodyModel" );
 			if( false ) {
 				javascriptFiles.Add( "imageFitToggles.js" );
 			}
@@ -47,13 +48,14 @@ namespace Website_Generator {
 			return javascriptFiles.Select( name => UriPath.CombineWithDepth( _depth, "js", name ) );
 		}
 
-		public SiteLayoutModel( IProjectConfig config, string pageTitle, int depth ) : base(config) {
+		public SiteLayoutModel( IProjectConfig config, string pageTitle, int depth, IBodyModel bodyModel ) : base(config) {
 			PageTitle = pageTitle;
 			_depth = depth;
+			_bodyModel = bodyModel;
 		}
 
 		public Action<System.IO.TextWriter> RenderBody() {
-			return RenderUnescapedHtml( @"<h1>Hello World</h1>" );
+			return RenderUnescapedHtml( _bodyModel.GetBody() );
 		}
 	}
 }

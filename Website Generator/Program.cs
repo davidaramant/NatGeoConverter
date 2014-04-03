@@ -40,7 +40,11 @@ namespace Website_Generator {
 
 		static void GenerateMainIndex( IProjectConfig config, NGCollection ngCollection ) {
 			var template = new SiteLayout() { 
-				Model = new SiteLayoutModel( config:config, pageTitle: "The Complete National Geographic", depth: 0 ) 
+				Model = new SiteLayoutModel( 
+							config: config, 
+							pageTitle: "The Complete National Geographic", 
+							depth: 0, 
+							bodyModel: new MainIndexBodyModel( config, ngCollection ) ) 
 			};
 
 			File.WriteAllText( 

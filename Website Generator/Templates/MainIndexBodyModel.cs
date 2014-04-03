@@ -4,12 +4,20 @@ using DataModel;
 using Utilities;
 
 namespace Website_Generator {
-	public sealed class MainIndexBodyModel : BaseModel {
+	public sealed class MainIndexBodyModel : BaseModel, IBodyModel {
+		private readonly NGCollection _ngCollection;
+
 		public IEnumerable<IDecade> GetDecades() {
-			yield break;
+			return _ngCollection.GetAllDecades();
 		}
 
-		public MainIndexBodyModel( IProjectConfig config ) : base(config) {
+		public MainIndexBodyModel( IProjectConfig config, NGCollection ngCollection ) : base( config ) {
+			_ngCollection = ngCollection;
+		}
+
+		public string GetBody() {
+			var template = new MainIndexBody() { Model = this };
+			return template.GenerateString();
 		}
 	}
 }
