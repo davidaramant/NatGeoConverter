@@ -19,6 +19,20 @@ namespace Website_Generator {
 			var template = new MainIndexBody() { Model = this };
 			return template.GenerateString();
 		}
+
+		public string BodyClass { get { return null; } }
+
+		public IEnumerable<NamedLink> GetBreadcrumbParts() {
+			yield return NamedLink.Empty( "Decade" );
+		}
+
+		public NamedLink Previous { get { return null; } }
+
+		public NamedLink Next { get { return null; } }
+
+		public bool AllowResize { get { return false; } }
+
+		public string AllowResizeText { get { return AllowResize ? (string)null : "disabled"; } }
 	}
 }
 

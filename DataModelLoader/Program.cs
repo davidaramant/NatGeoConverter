@@ -7,6 +7,7 @@ using SQLite;
 using Utilities.PathExtensions;
 using Utilities;
 using System.Drawing;
+using System.Text.RegularExpressions;
 
 namespace DataModelLoader {
 	class MainClass {
@@ -50,6 +51,8 @@ namespace DataModelLoader {
 					db.Insert( decade );
 					Console.Out.WriteLine( "Decade: {0}", decadeName );
 
+					bool firstIssue = true;
+
 					foreach( var issueDir in Directory.GetDirectories( decadeDir ) ) {
 						var issueDirName = issueDir.GetLastDirectory();
 						var issue = new Issue { DecadeId = decade.Id, ReleaseDate = ParseIssueDirIntoDate( issueDirName ) };
@@ -58,31 +61,40 @@ namespace DataModelLoader {
 						var allPages = 
 							Directory.GetFiles( issueDir, "*.jpg", SearchOption.TopDirectoryOnly ).
 							OrderBy( name => name ).
-							Select( (fullImagePath,index) =>{
+							Select( (fullImagePath, index ) => {
 								var fileName = Path.GetFileName( fullImagePath );
 								var fullSize = ImageSizeLoader.GetJpegImageSize( fullImagePath );
-								var thumbSize = ImageSizeLoader.GetJpegImageSize( GetThumbnailPath( config, decadeName, issueDirName, fileName));
-								return new Page 
-								{ 
+								var thumbSize = ImageSizeLoader.GetJpegImageSize( GetThumbnailPath( config, decadeName, issueDirName, fileName ) );
+								return new Page { 
 									IssueId = issue.Id,
 									Number = index + 1,
-									DecadeId = decade.Id,
 									FileName = fileName,
 									FullImageWidth = fullSize.Width,
 									FullImageHeight = fullSize.Height,
 									ThumbnailImageWidth = thumbSize.Width,
 									ThumbnailImageHeight = thumbSize.Height,
 								}; 
-							} );
+							} ).ToList();
 
 						db.InsertAll( allPages );
+
+						issue.CoverPageId = allPages.First( page => Regex.IsMatch( page.IndexName, @"^NGM_(\w{2}_)?\d{4}" ) ).Id;
+						db.Update( issue );
+
+						if( firstIssue ) {
+							firstIssue = false;
+							decade.PreviewPageId = issue.CoverPageId;
+							db.Update( decade );
+						}
 					}
 				}
 			}
 		}
 
-		private static string GetThumbnailPath( IProjectConfig config, string decadeDir, string issueDir, string imgFileName )
-		{
+		private static string GetThumbnailPath( IProjectConfig config,
+		                                        string decadeDir,
+		                                        string issueDir,
+		                                        string imgFileName ) {
 			return Path.Combine( config.AbsoluteThumbnailImageDir,
 				decadeDir,
 				issueDir,

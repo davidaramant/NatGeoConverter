@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Utilities;
 using System.IO;
 using Utilities.EnumerableExtensions;
+using System.Linq;
 
 namespace DataModel {
 	public class NGCollection {
@@ -22,6 +23,11 @@ namespace DataModel {
 			var decades = new List<Decade>();
 			using( var db = Open() ) {
 				decades.AddRange( db.Table<Decade>().OrderBy( d => d.DirectoryName ) );
+				foreach( var decade in decades ) {
+					var previewPage = db.Query<Page> ("select * from Page where Id = ?", decade.PreviewPageId ).First();
+					previewPage.Issue = db.Query<Issue>( "select * from Issue where Id = ?", previewPage.IssueId ).First();
+					decade.PreviewPage = previewPage;
+				}
 			}
 
 			return decades;

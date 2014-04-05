@@ -21,32 +21,20 @@ namespace Website_Generator {
 			}.Select( name => UriPath.CombineWithDepth( _depth, "css", name ) );
 		}
 
-		public string BodyClass { get { return null; } }
-
-		public IEnumerable<NamedLink> GetBreadcrumbParts() {
-			throw new NotImplementedException( "Figure out how to do breadcrumbs" );
-		}
-
-		public NamedLink Previous { get { throw new NotImplementedException("Pass in Previous"); } }
-
-		public NamedLink Next { get { throw new NotImplementedException("Pass in Next"); } }
-
-		public bool AllowResize { get { throw new NotImplementedException("Pass in AllowResize"); } }
-
-		public string AllowResizeText { get { return AllowResize ? (string)null : "disabled"; } }
-
 		public IEnumerable<string> GetJSUrls() {
 			var javascriptFiles = new List<string> {
 				"jquery.min.js",
 				"bootstrap.min.js",
 			};
-			throw new NotImplementedException( "Add optional JS files to BodyModel" );
+			// TODO: Add optional JS files to BodyModel
 			if( false ) {
 				javascriptFiles.Add( "imageFitToggles.js" );
 			}
 
 			return javascriptFiles.Select( name => UriPath.CombineWithDepth( _depth, "js", name ) );
 		}
+
+		public IBodyModel Body { get { return _bodyModel; } }
 
 		public SiteLayoutModel( IProjectConfig config, string pageTitle, int depth, IBodyModel bodyModel ) : base(config) {
 			PageTitle = pageTitle;

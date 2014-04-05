@@ -12,6 +12,9 @@ namespace DataModel.Database {
 		[MaxLength( 4 )]
 		public string DirectoryName { get; set; }
 
+		[Indexed]
+		public int PreviewPageId { get; set; }
+
 		#endregion Database
 
 		[Ignore]
@@ -25,9 +28,7 @@ namespace DataModel.Database {
 		}
 
 		[Ignore]
-		public IPage PreviewPage {
-			get { throw new NotImplementedException( "Add PreviewPage to Decade model" ); }
-		}
+		public IPage PreviewPage { get; set; }
 	}
 
 	public sealed class Issue : IIssue {
@@ -41,7 +42,13 @@ namespace DataModel.Database {
 		[Indexed]
 		public int DecadeId { get; set; }
 
+		[Indexed]
+		public int CoverPageId { get; set; }
+
 		#endregion Database
+
+		[Ignore]
+		public IDecade Decade { get; set; }
 
 		[Ignore]
 		public string ShortDisplayName {
@@ -64,9 +71,7 @@ namespace DataModel.Database {
 		}
 
 		[Ignore]
-		public IPage CoverPage {
-			get { throw new NotImplementedException( "Add CoverPage to Issue model" ); }
-		}
+		public IPage CoverPage { get; set; }
 	}
 
 	public sealed class Page : IPage {
@@ -82,9 +87,6 @@ namespace DataModel.Database {
 
 		[Indexed]
 		public int IssueId { get; set; }
-
-		[Indexed]
-		public int DecadeId { get; set; }
 
 		public int FullImageWidth { get; set; }
 
@@ -116,16 +118,13 @@ namespace DataModel.Database {
 			get { return ThumbnailImageHeight / 2; }
 		}
 
-		public string DecadeDirName {
-			get {
-				throw new NotImplementedException();
-			}
-		}
+		[Ignore]
+		public string DecadeDirName { get; set; }
 
-		public string IssueDirName {
-			get {
-				throw new NotImplementedException();
-			}
-		}
+		[Ignore]
+		public string IssueDirName { get; set; }
+
+		[Ignore]
+		public IIssue Issue { get; set; }
 	}
 }

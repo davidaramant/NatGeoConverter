@@ -47,9 +47,11 @@ namespace Website_Generator {
 							bodyModel: new MainIndexBodyModel( config, ngCollection ) ) 
 			};
 
+			var fileContents = template.GenerateString();
+
 			File.WriteAllText( 
 				Path.Combine( config.BaseDir, "index.html" ), 
-				template.GenerateString(), 
+				fileContents, 
 				Encoding.UTF8 );
 		}
 

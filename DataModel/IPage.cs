@@ -6,11 +6,8 @@
 		string IndexName { get; }
 		string FileName { get; }
 
-		string DecadeDirName { get; }
-		string IssueDirName { get; }
-
 		int IssueId { get; }
-		int DecadeId { get; }
+		IIssue Issue { get; }
 
 		int FullImageWidth { get; }
 		int FullImageHeight { get; }

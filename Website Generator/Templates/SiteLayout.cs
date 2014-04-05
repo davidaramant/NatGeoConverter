@@ -116,7 +116,7 @@ WriteLiteral("/>\n\t</head>\n\t<body");
 WriteAttribute ("class", " class=\"", "\""
 
 #line 14 "SiteLayout.cshtml"
-, Tuple.Create<string,object,bool> ("", Model.BodyClass
+, Tuple.Create<string,object,bool> ("", Model.Body.BodyClass
 
 #line default
 #line hidden
@@ -154,7 +154,7 @@ WriteLiteral(">\n");
 #line hidden
 
 #line 20 "SiteLayout.cshtml"
-     foreach( var link in Model.GetBreadcrumbParts() ) {
+     foreach( var link in Model.Body.GetBreadcrumbParts() ) {
 					if( link.HasUrl ) {
 
 
@@ -230,7 +230,7 @@ WriteLiteral(">\n");
 #line hidden
 
 #line 31 "SiteLayout.cshtml"
-      if( Model.Previous != null )
+      if( Model.Body.Previous != null )
 					{
 
 
@@ -243,7 +243,7 @@ WriteLiteral(" class=\"btn navbar-btn btn-default btn-page\"");
 WriteAttribute ("href", " href=\"", "\""
 
 #line 33 "SiteLayout.cshtml"
-                    , Tuple.Create<string,object,bool> ("", Model.Previous.Url
+                    , Tuple.Create<string,object,bool> ("", Model.Body.Previous.Url
 
 #line default
 #line hidden
@@ -288,7 +288,7 @@ WriteLiteral(" class=\"btn navbar-btn btn-default\"");
 WriteAttribute ("disabled", " disabled=\"", "\""
 
 #line 41 "SiteLayout.cshtml"
-                    , Tuple.Create<string,object,bool> ("", Model.AllowResizeText
+                    , Tuple.Create<string,object,bool> ("", Model.Body.AllowResizeText
 
 #line default
 #line hidden
@@ -307,7 +307,7 @@ WriteLiteral(" class=\"btn navbar-btn btn-default\"");
 WriteAttribute ("disabled", " disabled=\"", "\""
 
 #line 44 "SiteLayout.cshtml"
-                    , Tuple.Create<string,object,bool> ("", Model.AllowResizeText
+                    , Tuple.Create<string,object,bool> ("", Model.Body.AllowResizeText
 
 #line default
 #line hidden
@@ -329,7 +329,7 @@ WriteLiteral("/>\n\t\t\t\t\t\t</button>  \t\t\t\t\t\t\t\t\t\t\n");
 #line hidden
 
 #line 47 "SiteLayout.cshtml"
-      if( Model.Next != null )
+      if( Model.Body.Next != null )
 					{
 
 
@@ -342,7 +342,7 @@ WriteLiteral(" class=\"btn navbar-btn btn-default btn-page\"");
 WriteAttribute ("href", " href=\"", "\""
 
 #line 49 "SiteLayout.cshtml"
-                    , Tuple.Create<string,object,bool> ("", Model.Next.Url
+                    , Tuple.Create<string,object,bool> ("", Model.Body.Next.Url
 
 #line default
 #line hidden

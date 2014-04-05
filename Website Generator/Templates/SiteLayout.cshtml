@@ -11,13 +11,13 @@
 	}
 		<link rel="shortcut icon" href="@Model.IconUrl"/>
 	</head>
-	<body class="@Model.BodyClass">
+	<body class="@Model.Body.BodyClass">
   	<div class="navbar navbar-default navbar-fixed-top" role="navigation">  
 		<div class="container">
 			<div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav">
 					<ul class="breadcrumb list-inline">
-				@foreach( var link in Model.GetBreadcrumbParts() ) {
+				@foreach( var link in Model.Body.GetBreadcrumbParts() ) {
 					if( link.HasUrl ) {
 						<li><a href="@link.Url">@link.Name</a></li>
 					} else {
@@ -28,9 +28,9 @@
 				</ul>
 				<div class="nav navbar-right">
 					<div class="btn-group">
-					@if( Model.Previous != null )
+					@if( Model.Body.Previous != null )
 					{
-						<a class="btn navbar-btn btn-default btn-page" href="@Model.Previous.Url">
+						<a class="btn navbar-btn btn-default btn-page" href="@Model.Body.Previous.Url">
 							<span class="glyphicon glyphicon-chevron-left"/>
 						</a>
 					} else {
@@ -38,15 +38,15 @@
 							<span class="glyphicon glyphicon-chevron-left"/>
 						</button>
 					}
-						<button class="btn navbar-btn btn-default" disabled="@Model.AllowResizeText" onClick="toggleHorizontal();">
+						<button class="btn navbar-btn btn-default" disabled="@Model.Body.AllowResizeText" onClick="toggleHorizontal();">
 							<span class="glyphicon glyphicon-resize-horizontal"/>
 						</button>
-						<button class="btn navbar-btn btn-default" disabled="@Model.AllowResizeText" onClick="toggleVertical();">
+						<button class="btn navbar-btn btn-default" disabled="@Model.Body.AllowResizeText" onClick="toggleVertical();">
 							<span class="glyphicon glyphicon-resize-vertical"/>
 						</button>  										
-					@if( Model.Next != null )
+					@if( Model.Body.Next != null )
 					{
-						<a class="btn navbar-btn btn-default btn-page" href="@Model.Next.Url">
+						<a class="btn navbar-btn btn-default btn-page" href="@Model.Body.Next.Url">
 							<span class="glyphicon glyphicon-chevron-right"/>
 						</a>
 					} else {

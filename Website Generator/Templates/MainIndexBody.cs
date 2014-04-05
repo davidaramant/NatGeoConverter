@@ -83,7 +83,7 @@ Write(Model.RenderThumbnail(
 			description: decade.DisplayName,
 			imgUrl: Path.Combine( Model.Config.RelativeThumbnailImageDir,
 					decade.DirectoryName,
-					decade.PreviewPage.IssueDirName,
+					decade.PreviewPage.Issue.DirectoryName,
 					decade.PreviewPage.FileName ),
 			imgWidth: decade.PreviewPage.ThumbnailImageDisplayWidth,
 			imgHeight: decade.PreviewPage.ThumbnailImageDisplayHeight,
