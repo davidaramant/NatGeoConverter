@@ -1,0 +1,30 @@
+﻿@model DecadeBodyModel
+@using Utilities.EnumerableExtensions
+@using System.IO;
+@using Website_Generator.Models
+<div class="container">
+@foreach( var yearGroup in Model.GetIssues().GroupBy( d => d.ReleaseDate.Year ).OrderBy( yearGroup => yearGroup.First().ReleaseDate ) ) {
+	<div class="panel panel-primary">
+		<div class="panel-heading"><h2 class="pabel-title">@yearGroup.First().ReleaseDate.Year</h2></div><div class="panel-body"> 
+		@foreach( var batch in yearGroup.OrderBy( issue => issue.ReleaseDate ).InBatchesOf( 4 ) ) {
+			<div class="row">
+			@foreach( var issue in batch ) {
+				@Model.RenderThumbnail(
+					linkUrl: Path.Combine( Model.Decade.DirectoryName, issue.DirectoryName, issue.IndexFileName ),
+					description: issue.ShortDisplayName,
+					imgUrl: Path.Combine( 
+									"..", 
+									Model.Config.RelativeThumbnailImageDir, 
+									Model.Decade.DirectoryName, 
+									issue.DirectoryName, 
+									issue.CoverPage.FileName ),
+					imgWidth: issue.CoverPage.ThumbnailImageDisplayWidth,
+					imgHeight: issue.CoverPage.ThumbnailImageDisplayHeight,
+					imgAltText: String.Format( "Preview for {0}", issue.ShortDisplayName ) );
+			}
+			</div>
+		}
+		</div>
+	</div> @* panel body, panel*@
+}
+</div>

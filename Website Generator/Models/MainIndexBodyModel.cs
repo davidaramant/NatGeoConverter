@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using DataModel;
 using Utilities;
 
-namespace Website_Generator {
+namespace Website_Generator.Models {
 	public sealed class MainIndexBodyModel : BaseModel, IBodyModel {
 		private readonly NGCollection _ngCollection;
 
@@ -23,7 +23,7 @@ namespace Website_Generator {
 		public string BodyClass { get { return null; } }
 
 		public IEnumerable<NamedLink> GetBreadcrumbParts() {
-			yield return NamedLink.Empty( "Decade" );
+			yield return NamedLink.Empty( "Decades" );
 		}
 
 		public NamedLink Previous { get { return null; } }

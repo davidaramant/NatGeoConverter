@@ -2,7 +2,7 @@
 using System.IO;
 using Utilities;
 
-namespace Website_Generator {
+namespace Website_Generator.Models {
 	public abstract class BaseModel {
 		public IProjectConfig Config { get; private set; }
 

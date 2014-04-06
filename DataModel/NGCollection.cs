@@ -19,32 +19,30 @@ namespace DataModel {
 			return new SQLiteConnection( _config.DatabasePath );
 		}
 
-		public IEnumerable<IDecade> GetAllDecades() {
+		public IEnumerable<IDecade> GetAllDecades( bool hydrate = true ) {
 			var decades = new List<Decade>();
 			using( var db = Open() ) {
 				decades.AddRange( db.Table<Decade>().OrderBy( d => d.DirectoryName ) );
-				foreach( var decade in decades ) {
-					var previewPage = db.Query<Page> ("select * from Page where Id = ?", decade.PreviewPageId ).First();
-					previewPage.Issue = db.Query<Issue>( "select * from Issue where Id = ?", previewPage.IssueId ).First();
-					decade.PreviewPage = previewPage;
+				if( hydrate ) {
+					foreach( var decade in decades ) {
+						var previewPage = db.Query<Page>( "select * from Page where Id = ?", decade.PreviewPageId ).First();
+						previewPage.Issue = db.Query<Issue>( "select * from Issue where Id = ?", previewPage.IssueId ).First();
+						decade.PreviewPage = previewPage;
+					}
 				}
 			}
 
 			return decades;
 		}
 
-		public IEnumerable<IIssue> GetAllIssues() {
-			var issues = new List<Issue>();
-			using( var db = Open() ) {
-				issues.AddRange( db.Table<Issue>().OrderBy( i => i.ReleaseDate ) );
-			}
-			return issues;
-		}
-
 		public IEnumerable<IIssue> GetAllIssuesInDecade( IDecade decade ) {
 			var issues = new List<Issue>();
 			using( var db = Open() ) {
 				issues.AddRange( db.Table<Issue>().Where( i => i.DecadeId == decade.Id ).OrderBy( i => i.ReleaseDate ) );
+				foreach( var issue in issues ) {
+					issue.Decade = db.Query<Decade>( "select * from Decade where Id = ?", issue.DecadeId ).First();
+					issue.CoverPage = db.Query<Page>( "select * from Page where Id = ?", issue.CoverPageId ).First();
+				}
 			}
 			return issues;
 		}

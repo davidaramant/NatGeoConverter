@@ -16,19 +16,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-#line 2 "MainIndexBody.cshtml"
+#line 2 "DecadeBody.cshtml"
 using Utilities.EnumerableExtensions;
 
 #line default
 #line hidden
 
-#line 3 "MainIndexBody.cshtml"
+#line 3 "DecadeBody.cshtml"
 using System.IO;
 
 #line default
 #line hidden
 
-#line 4 "MainIndexBody.cshtml"
+#line 4 "DecadeBody.cshtml"
 using Website_Generator.Models;
 
 #line default
@@ -36,13 +36,13 @@ using Website_Generator.Models;
 
 
 [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "2.6.0.0")]
-public partial class MainIndexBody : MainIndexBodyBase
+public partial class DecadeBody : DecadeBodyBase
 {
 
 #line hidden
 
-#line 1 "MainIndexBody.cshtml"
-public MainIndexBodyModel Model { get; set; }
+#line 1 "DecadeBody.cshtml"
+public DecadeBodyModel Model { get; set; }
 
 #line default
 #line hidden
@@ -57,59 +57,117 @@ WriteLiteral(" class=\"container\"");
 WriteLiteral(">\n");
 
 
-#line 6 "MainIndexBody.cshtml"
- foreach( var batch in Model.GetDecades().InBatchesOf( 4 ) ) {
+#line 6 "DecadeBody.cshtml"
+ foreach( var yearGroup in Model.GetIssues().GroupBy( d => d.ReleaseDate.Year ).OrderBy( yearGroup => yearGroup.First().ReleaseDate ) ) {
 
 
 #line default
 #line hidden
 WriteLiteral("\t<div");
 
-WriteLiteral(" class=\"row\"");
+WriteLiteral(" class=\"panel panel-primary\"");
 
-WriteLiteral(">\n");
+WriteLiteral(">\n\t\t<div");
+
+WriteLiteral(" class=\"panel-heading\"");
+
+WriteLiteral("><h2");
+
+WriteLiteral(" class=\"pabel-title\"");
+
+WriteLiteral(">");
 
 
-#line 8 "MainIndexBody.cshtml"
-	
+#line 8 "DecadeBody.cshtml"
+                                                Write(yearGroup.First().ReleaseDate.Year);
+
 
 #line default
 #line hidden
+WriteLiteral("</h2></div><div");
 
-#line 8 "MainIndexBody.cshtml"
-  foreach( var decade in batch ) {
+WriteLiteral(" class=\"panel-body\"");
+
+WriteLiteral("> \n");
+
+
+#line 9 "DecadeBody.cshtml"
 		
 
 #line default
 #line hidden
 
-#line 9 "MainIndexBody.cshtml"
+#line 9 "DecadeBody.cshtml"
+   foreach( var batch in yearGroup.OrderBy( issue => issue.ReleaseDate ).InBatchesOf( 4 ) ) {
+
+
+#line default
+#line hidden
+WriteLiteral("\t\t\t<div");
+
+WriteLiteral(" class=\"row\"");
+
+WriteLiteral(">\n");
+
+
+#line 11 "DecadeBody.cshtml"
+			
+
+#line default
+#line hidden
+
+#line 11 "DecadeBody.cshtml"
+    foreach( var issue in batch ) {
+				
+
+#line default
+#line hidden
+
+#line 12 "DecadeBody.cshtml"
 Write(Model.RenderThumbnail(
-		    linkUrl: Path.Combine( "html", decade.IndexFileName ),
-			description: decade.DisplayName,
-			imgUrl: Path.Combine( Model.Config.RelativeThumbnailImageDir,
-					decade.DirectoryName,
-					decade.PreviewPage.Issue.DirectoryName,
-					decade.PreviewPage.FileName ),
-			imgWidth: decade.PreviewPage.ThumbnailImageDisplayWidth,
-			imgHeight: decade.PreviewPage.ThumbnailImageDisplayHeight,
-			imgAltText: String.Format( "Decade preview for {0}", decade.DisplayName ) ));
+					linkUrl: Path.Combine( Model.Decade.DirectoryName, issue.DirectoryName, issue.IndexFileName ),
+					description: issue.ShortDisplayName,
+					imgUrl: Path.Combine( 
+									"..", 
+									Model.Config.RelativeThumbnailImageDir, 
+									Model.Decade.DirectoryName, 
+									issue.DirectoryName, 
+									issue.CoverPage.FileName ),
+					imgWidth: issue.CoverPage.ThumbnailImageDisplayWidth,
+					imgHeight: issue.CoverPage.ThumbnailImageDisplayHeight,
+					imgAltText: String.Format( "Preview for {0}", issue.ShortDisplayName ) ));
 
 
 #line default
 #line hidden
 
-#line 18 "MainIndexBody.cshtml"
-                                                                              ;
-	}
+#line 23 "DecadeBody.cshtml"
+                                                                             ;
+			}
 
 
 #line default
 #line hidden
-WriteLiteral("\t</div>\n");
+WriteLiteral("\t\t\t</div>\n");
 
 
-#line 21 "MainIndexBody.cshtml"
+#line 26 "DecadeBody.cshtml"
+		}
+
+
+#line default
+#line hidden
+WriteLiteral("\t\t</div>\n\t</div> ");
+
+
+#line 28 "DecadeBody.cshtml"
+        
+
+#line default
+#line hidden
+
+#line 28 "DecadeBody.cshtml"
+                              
 }
 
 
@@ -123,7 +181,7 @@ WriteLiteral("</div>");
 // NOTE: this is the default generated helper class. You may choose to extract it to a separate file 
 // in order to customize it or share it between multiple templates, and specify the template's base 
 // class via the @inherits directive.
-public abstract class MainIndexBodyBase
+public abstract class DecadeBodyBase
 {
 
 		// This field is OPTIONAL, but used by the default implementation of Generate, Write, WriteAttribute and WriteLiteral

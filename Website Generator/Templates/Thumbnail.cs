@@ -16,6 +16,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+#line 2 "Thumbnail.cshtml"
+using Website_Generator.Models;
+
+#line default
+#line hidden
+
 
 [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "2.6.0.0")]
 public partial class Thumbnail : ThumbnailBase
@@ -40,7 +46,7 @@ WriteLiteral(">\n\t<a");
 
 WriteAttribute ("href", " href=\"", "\""
 
-#line 3 "Thumbnail.cshtml"
+#line 4 "Thumbnail.cshtml"
 , Tuple.Create<string,object,bool> ("", Model.LinkUrl
 
 #line default
@@ -62,7 +68,7 @@ WriteLiteral(" class=\"panel-title\"");
 WriteLiteral(">");
 
 
-#line 6 "Thumbnail.cshtml"
+#line 7 "Thumbnail.cshtml"
                        Write(Model.Description);
 
 
@@ -76,7 +82,7 @@ WriteLiteral(">\n\t\t\t\t<img");
 
 WriteAttribute ("src", " src=\"", "\""
 
-#line 9 "Thumbnail.cshtml"
+#line 10 "Thumbnail.cshtml"
 , Tuple.Create<string,object,bool> ("", Model.ImgUrl
 
 #line default
@@ -85,7 +91,7 @@ WriteAttribute ("src", " src=\"", "\""
 );
 WriteAttribute ("width", " width=\"", "\""
 
-#line 9 "Thumbnail.cshtml"
+#line 10 "Thumbnail.cshtml"
 , Tuple.Create<string,object,bool> ("", Model.ImgWidth
 
 #line default
@@ -94,7 +100,7 @@ WriteAttribute ("width", " width=\"", "\""
 );
 WriteAttribute ("height", " height=\"", "\""
 
-#line 9 "Thumbnail.cshtml"
+#line 10 "Thumbnail.cshtml"
                       , Tuple.Create<string,object,bool> ("", Model.ImgHeight
 
 #line default
@@ -105,7 +111,7 @@ WriteLiteral(" class=\"img-thumbnail center-block\"");
 
 WriteAttribute ("alt", " alt=\"", "\""
 
-#line 9 "Thumbnail.cshtml"
+#line 10 "Thumbnail.cshtml"
                                                                                 , Tuple.Create<string,object,bool> ("", Model.ImgAltText
 
 #line default

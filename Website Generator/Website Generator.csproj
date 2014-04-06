@@ -51,17 +51,21 @@
     <Compile Include="Templates\SiteLayout.cs">
       <DependentUpon>SiteLayout.cshtml</DependentUpon>
     </Compile>
-    <Compile Include="Templates\SiteLayoutModel.cs" />
     <Compile Include="Templates\Thumbnail.cs">
       <DependentUpon>Thumbnail.cshtml</DependentUpon>
     </Compile>
-    <Compile Include="Templates\ThumbnailModel.cs" />
     <Compile Include="Templates\MainIndexBody.cs">
       <DependentUpon>MainIndexBody.cshtml</DependentUpon>
     </Compile>
-    <Compile Include="Templates\MainIndexBodyModel.cs" />
-    <Compile Include="Templates\BaseModel.cs" />
-    <Compile Include="Templates\IBodyModel.cs" />
+    <Compile Include="Models\IBodyModel.cs" />
+    <Compile Include="Models\MainIndexBodyModel.cs" />
+    <Compile Include="Models\SiteLayoutModel.cs" />
+    <Compile Include="Models\ThumbnailModel.cs" />
+    <Compile Include="Models\BaseModel.cs" />
+    <Compile Include="Templates\DecadeBody.cs">
+      <DependentUpon>DecadeBody.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DecadeBodyModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -76,6 +80,10 @@
     <None Include="Templates\MainIndexBody.cshtml">
       <Generator>RazorTemplatePreprocessor</Generator>
       <LastGenOutput>MainIndexBody.cs</LastGenOutput>
+    </None>
+    <None Include="Templates\DecadeBody.cshtml">
+      <Generator>RazorTemplatePreprocessor</Generator>
+      <LastGenOutput>DecadeBody.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -98,5 +106,6 @@
   -->
   <ItemGroup>
     <Folder Include="Templates\" />
+    <Folder Include="Models\" />
   </ItemGroup>
 </Project>

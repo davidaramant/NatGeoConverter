@@ -1,7 +1,7 @@
 ﻿using System;
 using Utilities;
 
-namespace Website_Generator {
+namespace Website_Generator.Models {
 	public sealed class ThumbnailModel : BaseModel {
 		public string LinkUrl { get; private set; }
 

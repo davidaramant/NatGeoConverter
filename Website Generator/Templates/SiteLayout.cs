@@ -16,6 +16,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+#line 2 "SiteLayout.cshtml"
+using Website_Generator.Models;
+
+#line default
+#line hidden
+
 
 [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "2.6.0.0")]
 public partial class SiteLayout : SiteLayoutBase
@@ -55,7 +61,7 @@ WriteLiteral(" content=\"width=device-width, initial-scale=1\"");
 WriteLiteral("/>\n \t    <title>");
 
 
-#line 8 "SiteLayout.cshtml"
+#line 9 "SiteLayout.cshtml"
         Write(Model.PageTitle);
 
 
@@ -64,13 +70,13 @@ WriteLiteral("/>\n \t    <title>");
 WriteLiteral("</title>\n");
 
 
-#line 9 "SiteLayout.cshtml"
+#line 10 "SiteLayout.cshtml"
 	
 
 #line default
 #line hidden
 
-#line 9 "SiteLayout.cshtml"
+#line 10 "SiteLayout.cshtml"
   foreach( var cssUrl in Model.GetCssUrls() ) {
 
 
@@ -80,7 +86,7 @@ WriteLiteral("\t\t<link");
 
 WriteAttribute ("href", " href=\"", "\""
 
-#line 10 "SiteLayout.cshtml"
+#line 11 "SiteLayout.cshtml"
 , Tuple.Create<string,object,bool> ("", cssUrl
 
 #line default
@@ -92,7 +98,7 @@ WriteLiteral(" rel=\"stylesheet\"");
 WriteLiteral("/>\n");
 
 
-#line 11 "SiteLayout.cshtml"
+#line 12 "SiteLayout.cshtml"
 	}
 
 
@@ -104,7 +110,7 @@ WriteLiteral(" rel=\"shortcut icon\"");
 
 WriteAttribute ("href", " href=\"", "\""
 
-#line 12 "SiteLayout.cshtml"
+#line 13 "SiteLayout.cshtml"
 , Tuple.Create<string,object,bool> ("", Model.IconUrl
 
 #line default
@@ -115,7 +121,7 @@ WriteLiteral("/>\n\t</head>\n\t<body");
 
 WriteAttribute ("class", " class=\"", "\""
 
-#line 14 "SiteLayout.cshtml"
+#line 15 "SiteLayout.cshtml"
 , Tuple.Create<string,object,bool> ("", Model.Body.BodyClass
 
 #line default
@@ -147,13 +153,13 @@ WriteLiteral(" class=\"breadcrumb list-inline\"");
 WriteLiteral(">\n");
 
 
-#line 20 "SiteLayout.cshtml"
+#line 21 "SiteLayout.cshtml"
 				
 
 #line default
 #line hidden
 
-#line 20 "SiteLayout.cshtml"
+#line 21 "SiteLayout.cshtml"
      foreach( var link in Model.Body.GetBreadcrumbParts() ) {
 					if( link.HasUrl ) {
 
@@ -164,7 +170,7 @@ WriteLiteral("\t\t\t\t\t\t<li><a");
 
 WriteAttribute ("href", " href=\"", "\""
 
-#line 22 "SiteLayout.cshtml"
+#line 23 "SiteLayout.cshtml"
 , Tuple.Create<string,object,bool> ("", link.Url
 
 #line default
@@ -174,7 +180,7 @@ WriteAttribute ("href", " href=\"", "\""
 WriteLiteral(">");
 
 
-#line 22 "SiteLayout.cshtml"
+#line 23 "SiteLayout.cshtml"
                          Write(link.Name);
 
 
@@ -183,7 +189,7 @@ WriteLiteral(">");
 WriteLiteral("</a></li>\n");
 
 
-#line 23 "SiteLayout.cshtml"
+#line 24 "SiteLayout.cshtml"
 					} else {
 
 
@@ -196,7 +202,7 @@ WriteLiteral(" class=\"active\"");
 WriteLiteral(">");
 
 
-#line 24 "SiteLayout.cshtml"
+#line 25 "SiteLayout.cshtml"
                     Write(link.Name);
 
 
@@ -205,7 +211,7 @@ WriteLiteral(">");
 WriteLiteral("</li>\n");
 
 
-#line 25 "SiteLayout.cshtml"
+#line 26 "SiteLayout.cshtml"
 					}
 				}
 
@@ -223,13 +229,13 @@ WriteLiteral(" class=\"btn-group\"");
 WriteLiteral(">\n");
 
 
-#line 31 "SiteLayout.cshtml"
+#line 32 "SiteLayout.cshtml"
 					
 
 #line default
 #line hidden
 
-#line 31 "SiteLayout.cshtml"
+#line 32 "SiteLayout.cshtml"
       if( Model.Body.Previous != null )
 					{
 
@@ -242,7 +248,7 @@ WriteLiteral(" class=\"btn navbar-btn btn-default btn-page\"");
 
 WriteAttribute ("href", " href=\"", "\""
 
-#line 33 "SiteLayout.cshtml"
+#line 34 "SiteLayout.cshtml"
                     , Tuple.Create<string,object,bool> ("", Model.Body.Previous.Url
 
 #line default
@@ -256,7 +262,7 @@ WriteLiteral(" class=\"glyphicon glyphicon-chevron-left\"");
 WriteLiteral("/>\n\t\t\t\t\t\t</a>\n");
 
 
-#line 36 "SiteLayout.cshtml"
+#line 37 "SiteLayout.cshtml"
 					} else {
 
 
@@ -275,7 +281,7 @@ WriteLiteral(" class=\"glyphicon glyphicon-chevron-left\"");
 WriteLiteral("/>\n\t\t\t\t\t\t</button>\n");
 
 
-#line 40 "SiteLayout.cshtml"
+#line 41 "SiteLayout.cshtml"
 					}
 
 
@@ -287,7 +293,7 @@ WriteLiteral(" class=\"btn navbar-btn btn-default\"");
 
 WriteAttribute ("disabled", " disabled=\"", "\""
 
-#line 41 "SiteLayout.cshtml"
+#line 42 "SiteLayout.cshtml"
                     , Tuple.Create<string,object,bool> ("", Model.Body.AllowResizeText
 
 #line default
@@ -306,7 +312,7 @@ WriteLiteral(" class=\"btn navbar-btn btn-default\"");
 
 WriteAttribute ("disabled", " disabled=\"", "\""
 
-#line 44 "SiteLayout.cshtml"
+#line 45 "SiteLayout.cshtml"
                     , Tuple.Create<string,object,bool> ("", Model.Body.AllowResizeText
 
 #line default
@@ -322,13 +328,13 @@ WriteLiteral(" class=\"glyphicon glyphicon-resize-vertical\"");
 WriteLiteral("/>\n\t\t\t\t\t\t</button>  \t\t\t\t\t\t\t\t\t\t\n");
 
 
-#line 47 "SiteLayout.cshtml"
+#line 48 "SiteLayout.cshtml"
 					
 
 #line default
 #line hidden
 
-#line 47 "SiteLayout.cshtml"
+#line 48 "SiteLayout.cshtml"
       if( Model.Body.Next != null )
 					{
 
@@ -341,7 +347,7 @@ WriteLiteral(" class=\"btn navbar-btn btn-default btn-page\"");
 
 WriteAttribute ("href", " href=\"", "\""
 
-#line 49 "SiteLayout.cshtml"
+#line 50 "SiteLayout.cshtml"
                     , Tuple.Create<string,object,bool> ("", Model.Body.Next.Url
 
 #line default
@@ -355,7 +361,7 @@ WriteLiteral(" class=\"glyphicon glyphicon-chevron-right\"");
 WriteLiteral("/>\n\t\t\t\t\t\t</a>\n");
 
 
-#line 52 "SiteLayout.cshtml"
+#line 53 "SiteLayout.cshtml"
 					} else {
 
 
@@ -374,7 +380,7 @@ WriteLiteral(" class=\"glyphicon glyphicon-chevron-right\"");
 WriteLiteral("/>\n\t\t\t\t\t\t</button>\n");
 
 
-#line 56 "SiteLayout.cshtml"
+#line 57 "SiteLayout.cshtml"
 					}
 
 
@@ -385,7 +391,7 @@ WriteLiteral("\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\t</di
 WriteLiteral("  \t");
 
 
-#line 62 "SiteLayout.cshtml"
+#line 63 "SiteLayout.cshtml"
 Write(Model.RenderBody());
 
 
@@ -394,7 +400,7 @@ Write(Model.RenderBody());
 WriteLiteral("\n");
 
 
-#line 63 "SiteLayout.cshtml"
+#line 64 "SiteLayout.cshtml"
  foreach( var jsUrl in Model.GetJSUrls() ) {
 
 
@@ -404,7 +410,7 @@ WriteLiteral("\t<script");
 
 WriteAttribute ("src", " src=\"", "\""
 
-#line 64 "SiteLayout.cshtml"
+#line 65 "SiteLayout.cshtml"
 , Tuple.Create<string,object,bool> ("", jsUrl
 
 #line default
@@ -414,7 +420,7 @@ WriteAttribute ("src", " src=\"", "\""
 WriteLiteral("></script>\n");
 
 
-#line 65 "SiteLayout.cshtml"
+#line 66 "SiteLayout.cshtml"
 }
 
 

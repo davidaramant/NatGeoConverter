@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using DataModel;
 using Utilities;
 
-namespace Website_Generator {
+namespace Website_Generator.Models {
 	public interface IBodyModel {
 		/// <summary>
 		/// Gets the body contents as a string.

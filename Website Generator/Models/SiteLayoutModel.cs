@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Utilities;
 
-namespace Website_Generator {
+namespace Website_Generator.Models {
 	public sealed class SiteLayoutModel : BaseModel {
 		readonly int _depth;
 		readonly IBodyModel _bodyModel;

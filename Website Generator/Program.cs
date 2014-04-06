@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.Text;
 using Utilities.EnumerableExtensions;
 using Utilities;
+using Website_Generator.Models;
 
 namespace Website_Generator {
 	class Program {
@@ -32,7 +33,7 @@ namespace Website_Generator {
 
 
 			GenerateMainIndex( config, model );
-			//GenerateDecadeIndexes( decades );
+			GenerateDecadeIndexes( config, model );
 			//GenerateIssueIndexes( decades );
 			//GeneratePageIndexes( decades );
 			Out.WL( "HTML generation took: " + timer.Elapsed );
@@ -41,10 +42,10 @@ namespace Website_Generator {
 		static void GenerateMainIndex( IProjectConfig config, NGCollection ngCollection ) {
 			var template = new SiteLayout() { 
 				Model = new SiteLayoutModel( 
-							config: config, 
-							pageTitle: "The Complete National Geographic", 
-							depth: 0, 
-							bodyModel: new MainIndexBodyModel( config, ngCollection ) ) 
+					config: config, 
+					pageTitle: "The Complete National Geographic", 
+					depth: 0, 
+					bodyModel: new MainIndexBodyModel( config, ngCollection ) ) 
 			};
 
 			var fileContents = template.GenerateString();
@@ -55,41 +56,71 @@ namespace Website_Generator {
 				Encoding.UTF8 );
 		}
 
-		static void GenerateMainIndexOLD( IProjectConfig config, NGCollection ngColletion ) {
-			var sb = new StringBuilder();
-			sb.Append( GetHeader( depth: 0, title: "The Complete National Geographic" ) );
-			sb.Append( GetNavBar( NamedLink.Empty( "Decades" ) ) );
+		static void GenerateDecadeIndexes( IProjectConfig config, NGCollection ngCollection ) {
+			Func<IDecade,NamedLink> createLink = decade => {
+				if( decade == null )
+					return null;
 
-			sb.Append( @"<div class=""container""> " );
+				return new NamedLink( decade.DisplayName, decade.IndexFileName );
+			};
 
-			foreach( var batch in ngColletion.GetAllDecades().InBatchesOf( 4 ) ) {
-				sb.AppendLine( @"<div class=""row"">" );
-				foreach( var decade in batch ) {
-					var firstIssue = ngColletion.GetAllIssuesInDecade( decade ).First();
-					var coverPage = ngColletion.GetAllPagesInIssue( firstIssue ).First( p => p.FileName.StartsWith( "NGM_" ) );
+			foreach( var decadeContext in ngCollection.GetAllDecades( hydrate:false ).WithContext() ) {
+				var template = new SiteLayout() {
+					Model = new SiteLayoutModel(
+						config: config,
+						pageTitle: "NatGeo: The " + decadeContext.Current.DisplayName,
+						depth: 1,
+						bodyModel: new DecadeBodyModel( config: config,
+							issues: ngCollection.GetAllIssuesInDecade( decadeContext.Current ),
+							previous: createLink( decadeContext.Previous ),
+							next: createLink( decadeContext.Next ) ) )
+				};
 
-					sb.AppendFormat( 
-						GetThumbnailHtml(
-							displayName: decade.DisplayName,
-							previewText: String.Format( "Decade preview for {0}", decade.DisplayName ),
-							imgUrl: Path.Combine( config.RelativeThumbnailImageDir,
-								decade.DirectoryName,
-								firstIssue.DirectoryName,
-								coverPage.FileName ),
-							linkUrl: Path.Combine( decade.DirectoryName, decade.IndexFileName ),
-							width: coverPage.ThumbnailImageDisplayWidth,
-							height: coverPage.ThumbnailImageDisplayHeight ) );
-				}
-				sb.AppendLine( @"</div>" );
+				var fileContents = template.GenerateString();
+
+				File.WriteAllText(
+					Path.Combine( config.AbsoluteHtmlDir, decadeContext.Current.IndexFileName ),
+					fileContents,
+					Encoding.UTF8 );
 			}
-
-
-			sb.AppendLine( @"</div> <!-- container --> " );
-			sb.AppendLine( GetFooter( depth: 0 ) );
-
-			File.WriteAllText( Path.Combine( config.BaseDir, "index.html" ), sb.ToString(), Encoding.UTF8 );
 		}
+		/*
+		static void GenerateDecadeIndexes( IEnumerable<NGDecade> decades ) {
+			foreach( var decade in decades ) {
+				var sb = new StringBuilder();
+				sb.Append( GetHeader( depth: 1, title: "NatGeo: The " + decade.DisplayName ) );
+				sb.Append( GetNavBar( new NamedLink( "Decades", Path.Combine( "..", "index.html" ) ),
+					NamedLink.Empty( decade.DisplayName ) ) );
 
+				sb.Append( @"<div class=""container""> " );
+
+				foreach( var yearGroup in decade.GroupBy( d => d.ReleaseDate.Year ).OrderBy( yearGroup => yearGroup.First().ReleaseDate ) ) {
+					sb.AppendFormat( @"<div class=""panel panel-primary""><div class=""panel-heading""><h2 class=""pabel-title"">{0}</h2></div><div class=""panel-body"">", 
+						yearGroup.First().ReleaseDate.Year );
+
+					foreach( var batch in yearGroup.OrderBy( issue => issue.ReleaseDate ).InBatchesOf( 4 ) ) {
+						sb.AppendLine( @"<div class=""row"">" );
+						foreach( var issue in batch ) {
+							sb.Append( GetThumbnailHtml(
+								displayName: issue.ShortDisplayName,
+								previewText: String.Format( "Preview for {0}", issue.ShortDisplayName ),
+								imgUrl: Path.Combine( "..", issue.Cover.RelativeThumbnailUrl ),
+								linkUrl: Path.Combine( decade.DirectoryName, issue.RelativeIndexUrl ) ) );
+						}
+						sb.AppendLine( @"</div>" ); // row
+					}
+					sb.AppendLine( @"</div></div>" ); // panel body, panel
+				}
+
+
+				sb.AppendLine( @"</div> <!-- container --> " );
+
+				sb.Append( GetFooter( depth: 1 ) );
+
+				File.WriteAllText( Path.Combine( _basePath, "html", decade.IndexFileName ), sb.ToString(), Encoding.UTF8 );
+			}
+		}
+		*/
 		static string GetThumbnailHtml( string displayName,
 		                                string previewText,
 		                                string imgUrl,
@@ -227,43 +258,6 @@ namespace Website_Generator {
 			footer.Append( @"</body></html>" );
 			return footer.ToString();
 		}
-		/*
-		static void GenerateDecadeIndexes( IEnumerable<NGDecade> decades ) {
-			foreach( var decade in decades ) {
-				var sb = new StringBuilder();
-				sb.Append( GetHeader( depth: 1, title: "NatGeo: The " + decade.DisplayName ) );
-				sb.Append( GetNavBar( new NamedLink( "Decades", Path.Combine( "..", "index.html" ) ),
-					NamedLink.Empty( decade.DisplayName ) ) );
-
-				sb.Append( @"<div class=""container""> " );
-
-				foreach( var yearGroup in decade.GroupBy( d => d.ReleaseDate.Year ).OrderBy( yearGroup => yearGroup.First().ReleaseDate ) ) {
-					sb.AppendFormat( @"<div class=""panel panel-primary""><div class=""panel-heading""><h2 class=""pabel-title"">{0}</h2></div><div class=""panel-body"">", 
-						yearGroup.First().ReleaseDate.Year );
-
-					foreach( var batch in yearGroup.OrderBy( issue => issue.ReleaseDate ).InBatchesOf( 4 ) ) {
-						sb.AppendLine( @"<div class=""row"">" );
-						foreach( var issue in batch ) {
-							sb.Append( GetThumbnailHtml(
-								displayName: issue.ShortDisplayName,
-								previewText: String.Format( "Preview for {0}", issue.ShortDisplayName ),
-								imgUrl: Path.Combine( "..", issue.Cover.RelativeThumbnailUrl ),
-								linkUrl: Path.Combine( decade.DirectoryName, issue.RelativeIndexUrl ) ) );
-						}
-						sb.AppendLine( @"</div>" ); // row
-					}
-					sb.AppendLine( @"</div></div>" ); // panel body, panel
-				}
-
-
-				sb.AppendLine( @"</div> <!-- container --> " );
-
-				sb.Append( GetFooter( depth: 1 ) );
-
-				File.WriteAllText( Path.Combine( _basePath, "html", decade.IndexFileName ), sb.ToString(), Encoding.UTF8 );
-			}
-		}
-		*/
 		/*
 		static void GenerateIssueIndexes( IEnumerable<NGDecade> decades ) {
 			foreach( var decade in decades ) {
