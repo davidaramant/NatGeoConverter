@@ -2,11 +2,12 @@
 @using Utilities.EnumerableExtensions
 @using System.IO;
 @using Website_Generator.Models
+@using Utilities
 <div class="container">
-@foreach( var yearGroup in Model.GetIssues().GroupBy( d => d.ReleaseDate.Year ).OrderBy( yearGroup => yearGroup.First().ReleaseDate ) ) {
+@foreach( var yearGroup in Model.GetIssues().GroupBy( d => d.ReleaseDate.Year, (key,g)=>new{Year = key, Issues = g.ToArray() } ).OrderBy( yearGroup => yearGroup.Year ) ) {
 	<div class="panel panel-primary">
-		<div class="panel-heading"><h2 class="pabel-title">@yearGroup.First().ReleaseDate.Year</h2></div><div class="panel-body"> 
-		@foreach( var batch in yearGroup.OrderBy( issue => issue.ReleaseDate ).InBatchesOf( 4 ) ) {
+		<div class="panel-heading"><a href="@UriPath.Combine( Model.Decade.DirectoryName, yearGroup.Year + ".html" )"><h2 class="pabel-title">@yearGroup.Year</h2></a></div><div class="panel-body"> 
+		@foreach( var batch in yearGroup.Issues.OrderBy( issue => issue.ReleaseDate ).InBatchesOf( 4 ) ) {
 			<div class="row">
 			@foreach( var issue in batch ) {
 				@Model.RenderThumbnail(

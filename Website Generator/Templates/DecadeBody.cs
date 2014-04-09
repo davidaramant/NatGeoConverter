@@ -34,6 +34,12 @@ using Website_Generator.Models;
 #line default
 #line hidden
 
+#line 5 "DecadeBody.cshtml"
+using Utilities;
+
+#line default
+#line hidden
+
 
 [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "2.6.0.0")]
 public partial class DecadeBody : DecadeBodyBase
@@ -57,8 +63,8 @@ WriteLiteral(" class=\"container\"");
 WriteLiteral(">\n");
 
 
-#line 6 "DecadeBody.cshtml"
- foreach( var yearGroup in Model.GetIssues().GroupBy( d => d.ReleaseDate.Year ).OrderBy( yearGroup => yearGroup.First().ReleaseDate ) ) {
+#line 7 "DecadeBody.cshtml"
+ foreach( var yearGroup in Model.GetIssues().GroupBy( d => d.ReleaseDate.Year, (key,g)=>new{Year = key, Issues = g.ToArray() } ).OrderBy( yearGroup => yearGroup.Year ) ) {
 
 
 #line default
@@ -71,6 +77,17 @@ WriteLiteral(">\n\t\t<div");
 
 WriteLiteral(" class=\"panel-heading\"");
 
+WriteLiteral("><a");
+
+WriteAttribute ("href", " href=\"", "\""
+
+#line 9 "DecadeBody.cshtml"
+, Tuple.Create<string,object,bool> ("", UriPath.Combine( Model.Decade.DirectoryName, yearGroup.Year + ".html" )
+
+#line default
+#line hidden
+, false)
+);
 WriteLiteral("><h2");
 
 WriteLiteral(" class=\"pabel-title\"");
@@ -78,27 +95,27 @@ WriteLiteral(" class=\"pabel-title\"");
 WriteLiteral(">");
 
 
-#line 8 "DecadeBody.cshtml"
-                                                Write(yearGroup.First().ReleaseDate.Year);
+#line 9 "DecadeBody.cshtml"
+                                                                                                                                   Write(yearGroup.Year);
 
 
 #line default
 #line hidden
-WriteLiteral("</h2></div><div");
+WriteLiteral("</h2></a></div><div");
 
 WriteLiteral(" class=\"panel-body\"");
 
 WriteLiteral("> \n");
 
 
-#line 9 "DecadeBody.cshtml"
+#line 10 "DecadeBody.cshtml"
 		
 
 #line default
 #line hidden
 
-#line 9 "DecadeBody.cshtml"
-   foreach( var batch in yearGroup.OrderBy( issue => issue.ReleaseDate ).InBatchesOf( 4 ) ) {
+#line 10 "DecadeBody.cshtml"
+   foreach( var batch in yearGroup.Issues.OrderBy( issue => issue.ReleaseDate ).InBatchesOf( 4 ) ) {
 
 
 #line default
@@ -110,20 +127,20 @@ WriteLiteral(" class=\"row\"");
 WriteLiteral(">\n");
 
 
-#line 11 "DecadeBody.cshtml"
+#line 12 "DecadeBody.cshtml"
 			
 
 #line default
 #line hidden
 
-#line 11 "DecadeBody.cshtml"
+#line 12 "DecadeBody.cshtml"
     foreach( var issue in batch ) {
 				
 
 #line default
 #line hidden
 
-#line 12 "DecadeBody.cshtml"
+#line 13 "DecadeBody.cshtml"
 Write(Model.RenderThumbnail(
 					linkUrl: Path.Combine( Model.Decade.DirectoryName, issue.DirectoryName, issue.IndexFileName ),
 					description: issue.ShortDisplayName,
@@ -141,7 +158,7 @@ Write(Model.RenderThumbnail(
 #line default
 #line hidden
 
-#line 23 "DecadeBody.cshtml"
+#line 24 "DecadeBody.cshtml"
                                                                              ;
 			}
 
@@ -151,7 +168,7 @@ Write(Model.RenderThumbnail(
 WriteLiteral("\t\t\t</div>\n");
 
 
-#line 26 "DecadeBody.cshtml"
+#line 27 "DecadeBody.cshtml"
 		}
 
 
@@ -160,13 +177,13 @@ WriteLiteral("\t\t\t</div>\n");
 WriteLiteral("\t\t</div>\n\t</div> ");
 
 
-#line 28 "DecadeBody.cshtml"
+#line 29 "DecadeBody.cshtml"
         
 
 #line default
 #line hidden
 
-#line 28 "DecadeBody.cshtml"
+#line 29 "DecadeBody.cshtml"
                               
 }
 
