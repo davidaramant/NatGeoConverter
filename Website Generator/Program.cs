@@ -34,6 +34,7 @@ namespace Website_Generator {
 
 			GenerateMainIndex( config, model );
 			GenerateDecadeIndexes( config, model );
+			GenerateYearIndexes( config, model );
 			//GenerateIssueIndexes( decades );
 			//GeneratePageIndexes( decades );
 			Out.WL( "HTML generation took: " + timer.Elapsed );
@@ -80,6 +81,69 @@ namespace Website_Generator {
 
 				File.WriteAllText(
 					Path.Combine( config.AbsoluteHtmlDir, decadeContext.Current.IndexFileName ),
+					fileContents,
+					Encoding.UTF8 );
+			}
+		}
+
+		static void GenerateYearIndexes( IProjectConfig config, NGCollection ngCollection ) {
+			Func<int,string> yearToDecade = year => (year / 10) + "x";
+
+			var yearContexts = 
+				ngCollection.GetAllIssues().
+				GroupBy( i => i.ReleaseDate.Year,
+					(key, issues ) => new{Year = key, Issues = issues.ToArray() } ).
+				WithContext();
+
+			foreach( var yearContext in yearContexts ) {
+				NamedLink previous = null;
+				if( yearContext.Previous != null ) {
+					var url = yearContext.Previous.Year + ".html";
+
+					if( yearToDecade( yearContext.Previous.Year ) != yearToDecade( yearContext.Current.Year ) ) {
+						url = UriPath.CombineWithDepth( 1, yearToDecade( yearContext.Previous.Year ), url );
+					}
+
+					previous = new NamedLink( 
+						name: yearContext.Previous.Year.ToString(),
+						url: url );
+				}
+
+				NamedLink next = null;
+				if( yearContext.Next != null ) {
+					var url = yearContext.Next.Year + ".html";
+
+					if( yearToDecade( yearContext.Next.Year ) != yearToDecade( yearContext.Current.Year ) ) {
+						url = UriPath.CombineWithDepth( 1, yearToDecade( yearContext.Next.Year ), url );
+					}
+
+					next = new NamedLink( 
+						name: yearContext.Next.Year.ToString(),
+						url: url );
+				}
+
+
+				var template = new SiteLayout() {
+					Model = new SiteLayoutModel(
+						config: config,
+						pageTitle: "NatGeo: " + yearContext.Current.Year,
+						depth: 2,
+						bodyModel: new YearBodyModel( 
+							config: config,
+							year: yearContext.Current.Year,
+							issues: yearContext.Current.Issues,
+							previous: previous,
+							next: next ))
+				};
+
+				var fileContents = template.GenerateString();
+
+				var path = Path.Combine( config.AbsoluteHtmlDir,
+								yearToDecade(yearContext.Current.Year),
+					           yearContext.Current.Year + ".html" );
+				Utility.CreatePath( path );
+				File.WriteAllText(
+					path,
 					fileContents,
 					Encoding.UTF8 );
 			}

@@ -66,6 +66,10 @@
       <DependentUpon>DecadeBody.cshtml</DependentUpon>
     </Compile>
     <Compile Include="Models\DecadeBodyModel.cs" />
+    <Compile Include="Models\YearBodyModel.cs" />
+    <Compile Include="Templates\YearBody.cs">
+      <DependentUpon>YearBody.cshtml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -84,6 +88,10 @@
     <None Include="Templates\DecadeBody.cshtml">
       <Generator>RazorTemplatePreprocessor</Generator>
       <LastGenOutput>DecadeBody.cs</LastGenOutput>
+    </None>
+    <None Include="Templates\YearBody.cshtml">
+      <Generator>RazorTemplatePreprocessor</Generator>
+      <LastGenOutput>YearBody.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>

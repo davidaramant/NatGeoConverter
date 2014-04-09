@@ -1,0 +1,26 @@
+﻿@model YearBodyModel
+@using Utilities.EnumerableExtensions
+@using System.IO;
+@using Website_Generator.Models
+@using Utilities
+<div class="container">
+@foreach( var batch in Model.GetIssues().OrderBy( issue => issue.ReleaseDate ).InBatchesOf( 4 ) ) {
+	<div class="row">
+	@foreach( var issue in batch ) {
+		@Model.RenderThumbnail(
+			linkUrl: Path.Combine( issue.DirectoryName, issue.IndexFileName ),
+			description: issue.ShortDisplayName,
+			imgUrl: Path.Combine( 
+							"..",
+							"..", 
+							Model.Config.RelativeThumbnailImageDir, 
+							Model.Decade.DirectoryName, 
+							issue.DirectoryName, 
+							issue.CoverPage.FileName ),
+			imgWidth: issue.CoverPage.ThumbnailImageDisplayWidth,
+			imgHeight: issue.CoverPage.ThumbnailImageDisplayHeight,
+			imgAltText: String.Format( "Preview for {0}", issue.ShortDisplayName ) );
+	}
+	</div>
+}
+</div>
