@@ -47,13 +47,15 @@ namespace DataModel {
 			return issues;
 		}
 
-		public IEnumerable<IIssue> GetAllIssues() {
+		public IEnumerable<IIssue> GetAllIssues( bool hydrateCoverPage = true ) {
 			var issues = new List<Issue>();
 			using( var db = Open() ) {
 				issues.AddRange( db.Table<Issue>().OrderBy( i => i.ReleaseDate ) );
 				foreach( var issue in issues ) {
 					issue.Decade = db.Query<Decade>( "select * from Decade where Id = ?", issue.DecadeId ).First();
-					issue.CoverPage = db.Query<Page>( "select * from Page where Id = ?", issue.CoverPageId ).First();
+					if( hydrateCoverPage ) {
+						issue.CoverPage = db.Query<Page>( "select * from Page where Id = ?", issue.CoverPageId ).First();
+					}
 				}
 			}
 			return issues;

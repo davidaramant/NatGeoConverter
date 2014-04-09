@@ -70,6 +70,10 @@
     <Compile Include="Templates\YearBody.cs">
       <DependentUpon>YearBody.cshtml</DependentUpon>
     </Compile>
+    <Compile Include="Models\IssueBodyModel.cs" />
+    <Compile Include="Templates\IssueBody.cs">
+      <DependentUpon>IssueBody.cshtml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -92,6 +96,10 @@
     <None Include="Templates\YearBody.cshtml">
       <Generator>RazorTemplatePreprocessor</Generator>
       <LastGenOutput>YearBody.cs</LastGenOutput>
+    </None>
+    <None Include="Templates\IssueBody.cshtml">
+      <Generator>RazorTemplatePreprocessor</Generator>
+      <LastGenOutput>IssueBody.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>

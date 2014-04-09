@@ -35,7 +35,7 @@ namespace Website_Generator {
 			GenerateMainIndex( config, model );
 			GenerateDecadeIndexes( config, model );
 			GenerateYearIndexes( config, model );
-			//GenerateIssueIndexes( decades );
+			GenerateIssueIndexes( config, model );
 			//GeneratePageIndexes( decades );
 			Out.WL( "HTML generation took: " + timer.Elapsed );
 		}
@@ -133,13 +133,13 @@ namespace Website_Generator {
 							year: yearContext.Current.Year,
 							issues: yearContext.Current.Issues,
 							previous: previous,
-							next: next ))
+							next: next ) )
 				};
 
 				var fileContents = template.GenerateString();
 
 				var path = Path.Combine( config.AbsoluteHtmlDir,
-								yearToDecade(yearContext.Current.Year),
+					           yearToDecade( yearContext.Current.Year ),
 					           yearContext.Current.Year + ".html" );
 				Utility.CreatePath( path );
 				File.WriteAllText(
@@ -148,43 +148,56 @@ namespace Website_Generator {
 					Encoding.UTF8 );
 			}
 		}
-		/*
-		static void GenerateDecadeIndexes( IEnumerable<NGDecade> decades ) {
-			foreach( var decade in decades ) {
-				var sb = new StringBuilder();
-				sb.Append( GetHeader( depth: 1, title: "NatGeo: The " + decade.DisplayName ) );
-				sb.Append( GetNavBar( new NamedLink( "Decades", Path.Combine( "..", "index.html" ) ),
-					NamedLink.Empty( decade.DisplayName ) ) );
 
-				sb.Append( @"<div class=""container""> " );
+		static void GenerateIssueIndexes( IProjectConfig config, NGCollection ngCollection ) {
+			Func<IIssue,IIssue, NamedLink> createLink = (issue,current) => {
+				if( issue == null )
+					return null;
 
-				foreach( var yearGroup in decade.GroupBy( d => d.ReleaseDate.Year ).OrderBy( yearGroup => yearGroup.First().ReleaseDate ) ) {
-					sb.AppendFormat( @"<div class=""panel panel-primary""><div class=""panel-heading""><h2 class=""pabel-title"">{0}</h2></div><div class=""panel-body"">", 
-						yearGroup.First().ReleaseDate.Year );
+				var url = UriPath.Combine(issue.DirectoryName, issue.IndexFileName);
 
-					foreach( var batch in yearGroup.OrderBy( issue => issue.ReleaseDate ).InBatchesOf( 4 ) ) {
-						sb.AppendLine( @"<div class=""row"">" );
-						foreach( var issue in batch ) {
-							sb.Append( GetThumbnailHtml(
-								displayName: issue.ShortDisplayName,
-								previewText: String.Format( "Preview for {0}", issue.ShortDisplayName ),
-								imgUrl: Path.Combine( "..", issue.Cover.RelativeThumbnailUrl ),
-								linkUrl: Path.Combine( decade.DirectoryName, issue.RelativeIndexUrl ) ) );
-						}
-						sb.AppendLine( @"</div>" ); // row
-					}
-					sb.AppendLine( @"</div></div>" ); // panel body, panel
+				if( issue.DecadeId != current.DecadeId )
+				{
+					url = UriPath.CombineWithDepth(2,issue.Decade.DirectoryName,url);
+				}
+				else
+				{
+					url = UriPath.CombineWithDepth(1,url);
 				}
 
+				return new NamedLink( issue.LongDisplayName, url );
+			};
 
-				sb.AppendLine( @"</div> <!-- container --> " );
+			foreach( var issueContext in ngCollection.GetAllIssues( hydrateCoverPage:false ).WithContext() ) {
+				var template = new SiteLayout() {
+					Model = new SiteLayoutModel(
+						config: config,
+						pageTitle: "NatGeo: " + issueContext.Current.LongDisplayName,
+						depth: 3,
+						bodyModel: new IssueBodyModel( config: config,
+							issue: issueContext.Current,
+							pages: ngCollection.GetAllPagesInIssue( issueContext.Current ),
+							previous: createLink( issueContext.Previous, issueContext.Current ),
+							next: createLink( issueContext.Next, issueContext.Current ) ) )
+				};
 
-				sb.Append( GetFooter( depth: 1 ) );
+				var fileContents = template.GenerateString();
 
-				File.WriteAllText( Path.Combine( _basePath, "html", decade.IndexFileName ), sb.ToString(), Encoding.UTF8 );
+				var path = Path.Combine( 
+								config.AbsoluteHtmlDir, 
+								issueContext.Current.Decade.DirectoryName, 
+								issueContext.Current.DirectoryName, 
+								issueContext.Current.IndexFileName );
+
+				Utility.CreatePath( path );
+
+				File.WriteAllText(
+					path,
+					fileContents,
+					Encoding.UTF8 );
 			}
 		}
-		*/
+
 		static string GetThumbnailHtml( string displayName,
 		                                string previewText,
 		                                string imgUrl,
