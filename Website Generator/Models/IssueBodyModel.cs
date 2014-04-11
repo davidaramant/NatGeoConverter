@@ -5,7 +5,7 @@ using DataModel;
 using System.Linq;
 
 namespace Website_Generator.Models {
-	public sealed class IssueBodyModel: BaseModel, IBodyModel {
+	public sealed class IssueBodyModel: BaseBodyModel, IBodyModel {
 		readonly IIssue _issue;
 		readonly IEnumerable<IPage> _pages;
 
@@ -22,8 +22,6 @@ namespace Website_Generator.Models {
 			return _pages;
 		}
 
-		public string BodyClass { get { return null; } }
-
 		public IEnumerable<NamedLink> GetBreadcrumbParts() {
 			yield return new NamedLink( "Decades", UriPath.CombineWithDepth( 3, "index.html" ) );
 			yield return new NamedLink( Decade.DisplayName, UriPath.CombineWithDepth( 2, Decade.IndexFileName ) );
@@ -33,24 +31,16 @@ namespace Website_Generator.Models {
 			yield return NamedLink.Empty( Issue.ShortDisplayName );
 		}
 
-		public NamedLink Previous { get; private set; }
-
-		public NamedLink Next { get; private set; }
-
-		public bool AllowResize { get { return false; } }
-
-		public string AllowResizeText { get { return AllowResize ? (string)null : "disabled"; } }
-
 		public IssueBodyModel( IProjectConfig config,
 		                       IIssue issue,
 		                       IEnumerable<IPage> pages,
 		                       NamedLink previous,
-		                       NamedLink next ) : base( config ) {
-
+		                       NamedLink next ) : base( config: config,
+		                                                   previous: previous,
+		                                                   next: next,
+		                                                   allowResize: false ) {
 			_pages = pages;
 			_issue = issue;
-			Previous = previous;
-			Next = next;
 		}
 	}
 }

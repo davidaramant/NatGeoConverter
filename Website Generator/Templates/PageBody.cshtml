@@ -1,0 +1,14 @@
+﻿@model PageBodyModel
+@using Utilities.EnumerableExtensions
+@using System.IO;
+@using Website_Generator.Models
+@using Utilities
+<div class="container-fluid no-padding">
+	<img 
+		id="pageScan" 
+		src="@Model.ImageUrl" 
+		alt="@Model.Page.DisplayName" 
+		class="img-responsive center-block"
+		height="@Model.Page.FullImageHeight"
+		width="@Model.Page.FullImageWidth"/>
+</div>

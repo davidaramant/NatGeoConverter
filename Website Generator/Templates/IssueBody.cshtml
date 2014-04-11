@@ -10,10 +10,8 @@
 		@Model.RenderThumbnail(
 			linkUrl: page.IndexName,
 			description: "Page " + page.Number,
-			imgUrl: Path.Combine(
-							"..", 
-							"..",
-							"..", 
+			imgUrl: UriPath.CombineWithDepth(
+							3, 
 							Model.Config.RelativeThumbnailImageDir, 
 							Model.Decade.DirectoryName, 
 							Model.Issue.DirectoryName, 

@@ -4,14 +4,18 @@ using DataModel;
 using Utilities;
 
 namespace Website_Generator.Models {
-	public sealed class MainIndexBodyModel : BaseModel, IBodyModel {
+	public sealed class MainIndexBodyModel : BaseBodyModel, IBodyModel {
 		private readonly NGCollection _ngCollection;
 
 		public IEnumerable<IDecade> GetDecades() {
 			return _ngCollection.GetAllDecades();
 		}
 
-		public MainIndexBodyModel( IProjectConfig config, NGCollection ngCollection ) : base( config ) {
+		public MainIndexBodyModel( IProjectConfig config, NGCollection ngCollection )  : 
+		base( config: config,
+			previous: null,
+			next: null,
+			allowResize: false ) {
 			_ngCollection = ngCollection;
 		}
 
@@ -20,19 +24,9 @@ namespace Website_Generator.Models {
 			return template.GenerateString();
 		}
 
-		public string BodyClass { get { return null; } }
-
 		public IEnumerable<NamedLink> GetBreadcrumbParts() {
 			yield return NamedLink.Empty( "Decades" );
 		}
-
-		public NamedLink Previous { get { return null; } }
-
-		public NamedLink Next { get { return null; } }
-
-		public bool AllowResize { get { return false; } }
-
-		public string AllowResizeText { get { return AllowResize ? (string)null : "disabled"; } }
 	}
 }
 

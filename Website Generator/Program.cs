@@ -31,12 +31,12 @@ namespace Website_Generator {
 			var model = new NGCollection( config );
 			var timer = Stopwatch.StartNew();
 
+			//GenerateMainIndex( config, model );
+			//GenerateDecadeIndexes( config, model );
+			//GenerateYearIndexes( config, model );
+			//GenerateIssueIndexes( config, model );
+			GeneratePageIndexes( config, model );
 
-			GenerateMainIndex( config, model );
-			GenerateDecadeIndexes( config, model );
-			GenerateYearIndexes( config, model );
-			GenerateIssueIndexes( config, model );
-			//GeneratePageIndexes( decades );
 			Out.WL( "HTML generation took: " + timer.Elapsed );
 		}
 
@@ -150,19 +150,16 @@ namespace Website_Generator {
 		}
 
 		static void GenerateIssueIndexes( IProjectConfig config, NGCollection ngCollection ) {
-			Func<IIssue,IIssue, NamedLink> createLink = (issue,current) => {
+			Func<IIssue,IIssue, NamedLink> createLink = (issue, current ) => {
 				if( issue == null )
 					return null;
 
-				var url = UriPath.Combine(issue.DirectoryName, issue.IndexFileName);
+				var url = UriPath.Combine( issue.DirectoryName, issue.IndexFileName );
 
-				if( issue.DecadeId != current.DecadeId )
-				{
-					url = UriPath.CombineWithDepth(2,issue.Decade.DirectoryName,url);
-				}
-				else
-				{
-					url = UriPath.CombineWithDepth(1,url);
+				if( issue.DecadeId != current.DecadeId ) {
+					url = UriPath.CombineWithDepth( 2, issue.Decade.DirectoryName, url );
+				} else {
+					url = UriPath.CombineWithDepth( 1, url );
 				}
 
 				return new NamedLink( issue.LongDisplayName, url );
@@ -184,10 +181,10 @@ namespace Website_Generator {
 				var fileContents = template.GenerateString();
 
 				var path = Path.Combine( 
-								config.AbsoluteHtmlDir, 
-								issueContext.Current.Decade.DirectoryName, 
-								issueContext.Current.DirectoryName, 
-								issueContext.Current.IndexFileName );
+					           config.AbsoluteHtmlDir, 
+					           issueContext.Current.Decade.DirectoryName, 
+					           issueContext.Current.DirectoryName, 
+					           issueContext.Current.IndexFileName );
 
 				Utility.CreatePath( path );
 
@@ -195,6 +192,46 @@ namespace Website_Generator {
 					path,
 					fileContents,
 					Encoding.UTF8 );
+			}
+		}
+
+		static void GeneratePageIndexes( IProjectConfig config, NGCollection ngCollection ) {
+			Func<IPage, NamedLink> createLink = page => {
+				if( page == null )
+					return null;
+
+				return new NamedLink( page.DisplayName, page.IndexName );
+			};
+
+			foreach( var issue in ngCollection.GetAllIssues( hydrateCoverPage:false ) ) {
+				var pages = ngCollection.GetAllPagesInIssue( issue ).ToArray();
+				foreach( var pageContext in pages.WithContext() ) {
+					var template = new SiteLayout() {
+						Model = new SiteLayoutModel(
+							config: config,
+							pageTitle: String.Format( "NatGeo: {0} of {1}", pageContext.Current.DisplayName, pages.Length ),
+							depth: 3,
+							bodyModel: new PageBodyModel( config: config,
+								page: pageContext.Current,
+								previous: createLink( pageContext.Previous ),
+								next: createLink( pageContext.Next ) ) )
+					};
+
+					var fileContents = template.GenerateString();
+
+					var path = Path.Combine( 
+						           config.AbsoluteHtmlDir, 
+						           pageContext.Current.Issue.Decade.DirectoryName, 
+						           pageContext.Current.Issue.DirectoryName, 
+						           pageContext.Current.IndexName );
+
+					Utility.CreatePath( path );
+
+					File.WriteAllText(
+						path,
+						fileContents,
+						Encoding.UTF8 );
+				}
 			}
 		}
 

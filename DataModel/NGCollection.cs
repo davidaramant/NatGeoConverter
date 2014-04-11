@@ -65,6 +65,9 @@ namespace DataModel {
 			var pages = new List<Page>();
 			using( var db = Open() ) {
 				pages.AddRange( db.Table<Page>().Where( p => p.IssueId == issue.Id ).OrderBy( p => p.Number ) );
+				foreach( var page in pages ) {
+					page.Issue = issue;
+				}
 			}
 			return pages;
 		}

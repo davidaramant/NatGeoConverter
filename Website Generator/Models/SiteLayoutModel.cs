@@ -22,14 +22,10 @@ namespace Website_Generator.Models {
 		}
 
 		public IEnumerable<string> GetJSUrls() {
-			var javascriptFiles = new List<string> {
+			var javascriptFiles = new [] {
 				"jquery.min.js",
 				"bootstrap.min.js",
-			};
-			// TODO: Add optional JS files to BodyModel
-			if( false ) {
-				javascriptFiles.Add( "imageFitToggles.js" );
-			}
+			}.Concat( _bodyModel.GetExtraJSFiles() );
 
 			return javascriptFiles.Select( name => UriPath.CombineWithDepth( _depth, "js", name ) );
 		}

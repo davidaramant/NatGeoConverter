@@ -16,25 +16,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-#line 2 "IssueBody.cshtml"
+#line 2 "PageBody.cshtml"
 using Utilities.EnumerableExtensions;
 
 #line default
 #line hidden
 
-#line 3 "IssueBody.cshtml"
+#line 3 "PageBody.cshtml"
 using System.IO;
 
 #line default
 #line hidden
 
-#line 4 "IssueBody.cshtml"
+#line 4 "PageBody.cshtml"
 using Website_Generator.Models;
 
 #line default
 #line hidden
 
-#line 5 "IssueBody.cshtml"
+#line 5 "PageBody.cshtml"
 using Utilities;
 
 #line default
@@ -42,13 +42,13 @@ using Utilities;
 
 
 [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorTemplatePreprocessor", "2.6.0.0")]
-public partial class IssueBody : IssueBodyBase
+public partial class PageBody : PageBodyBase
 {
 
 #line hidden
 
-#line 1 "IssueBody.cshtml"
-public IssueBodyModel Model { get; set; }
+#line 1 "PageBody.cshtml"
+public PageBodyModel Model { get; set; }
 
 #line default
 #line hidden
@@ -58,72 +58,51 @@ public override void Execute()
 {
 WriteLiteral("<div");
 
-WriteLiteral(" class=\"container\"");
+WriteLiteral(" class=\"container-fluid no-padding\"");
 
-WriteLiteral(">\n");
+WriteLiteral(">\n\t<img");
 
+WriteLiteral(" \n\t\tid=\"pageScan\"");
 
-#line 7 "IssueBody.cshtml"
- foreach( var batch in Model.GetPages().OrderBy( page => page.Number ).InBatchesOf( 4 ) ) {
+WriteAttribute ("src", " \n\t\tsrc=\"", "\""
 
-
-#line default
-#line hidden
-WriteLiteral("\t<div");
-
-WriteLiteral(" class=\"row\"");
-
-WriteLiteral(">\n");
-
-
-#line 9 "IssueBody.cshtml"
-	
+#line 9 "PageBody.cshtml"
+, Tuple.Create<string,object,bool> ("", Model.ImageUrl
 
 #line default
 #line hidden
+, false)
+);
+WriteAttribute ("alt", " \n\t\talt=\"", "\""
 
-#line 9 "IssueBody.cshtml"
-  foreach( var page in batch ) {
-		
-
-#line default
-#line hidden
-
-#line 10 "IssueBody.cshtml"
-Write(Model.RenderThumbnail(
-			linkUrl: page.IndexName,
-			description: "Page " + page.Number,
-			imgUrl: UriPath.CombineWithDepth(
-							3, 
-							Model.Config.RelativeThumbnailImageDir, 
-							Model.Decade.DirectoryName, 
-							Model.Issue.DirectoryName, 
-							page.FileName ),
-			imgWidth: page.ThumbnailImageDisplayWidth,
-			imgHeight: page.ThumbnailImageDisplayHeight,
-			imgAltText: String.Format( "Preview for page {0}", page.Number ) ));
-
+#line 10 "PageBody.cshtml"
+, Tuple.Create<string,object,bool> ("", Model.Page.DisplayName
 
 #line default
 #line hidden
+, false)
+);
+WriteLiteral(" \n\t\tclass=\"img-responsive center-block\"");
 
-#line 21 "IssueBody.cshtml"
-                                                                     ;
-	}
+WriteAttribute ("height", "\n\t\theight=\"", "\""
 
-
-#line default
-#line hidden
-WriteLiteral("\t</div>\n");
-
-
-#line 24 "IssueBody.cshtml"
-}
-
+#line 12 "PageBody.cshtml"
+, Tuple.Create<string,object,bool> ("", Model.Page.FullImageHeight
 
 #line default
 #line hidden
-WriteLiteral("</div>");
+, false)
+);
+WriteAttribute ("width", "\n\t\twidth=\"", "\""
+
+#line 13 "PageBody.cshtml"
+, Tuple.Create<string,object,bool> ("", Model.Page.FullImageWidth
+
+#line default
+#line hidden
+, false)
+);
+WriteLiteral("/>\n</div>");
 
 }
 }
@@ -131,7 +110,7 @@ WriteLiteral("</div>");
 // NOTE: this is the default generated helper class. You may choose to extract it to a separate file 
 // in order to customize it or share it between multiple templates, and specify the template's base 
 // class via the @inherits directive.
-public abstract class IssueBodyBase
+public abstract class PageBodyBase
 {
 
 		// This field is OPTIONAL, but used by the default implementation of Generate, Write, WriteAttribute and WriteLiteral

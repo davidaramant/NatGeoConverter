@@ -22,5 +22,7 @@ namespace Website_Generator.Models {
 		bool AllowResize { get; }
 
 		string AllowResizeText { get; }
+
+		IEnumerable<string> GetExtraJSFiles();
 	}
 }

@@ -74,6 +74,11 @@
     <Compile Include="Templates\IssueBody.cs">
       <DependentUpon>IssueBody.cshtml</DependentUpon>
     </Compile>
+    <Compile Include="Models\PageBodyModel.cs" />
+    <Compile Include="Templates\PageBody.cs">
+      <DependentUpon>PageBody.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BaseBodyModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -100,6 +105,10 @@
     <None Include="Templates\IssueBody.cshtml">
       <Generator>RazorTemplatePreprocessor</Generator>
       <LastGenOutput>IssueBody.cs</LastGenOutput>
+    </None>
+    <None Include="Templates\PageBody.cshtml">
+      <Generator>RazorTemplatePreprocessor</Generator>
+      <LastGenOutput>PageBody.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>

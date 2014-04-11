@@ -5,7 +5,7 @@ using DataModel;
 using System.Linq;
 
 namespace Website_Generator.Models {
-	public class DecadeBodyModel : BaseModel, IBodyModel {
+	public sealed class DecadeBodyModel : BaseBodyModel, IBodyModel {
 		readonly IDecade _decade;
 		readonly IEnumerable<IIssue> _issues;
 
@@ -15,30 +15,27 @@ namespace Website_Generator.Models {
 		}
 
 		public IDecade Decade { get { return _decade; } }
+
 		public IEnumerable<IIssue> GetIssues() {
 			return _issues;
 		}
 
-		public string BodyClass { get { return null; } }
-
-		public IEnumerable<NamedLink> GetBreadcrumbParts() {
-			yield return new NamedLink( "Decades", UriPath.CombineWithDepth( 1, "index.html") );
+ 	    public IEnumerable<NamedLink> GetBreadcrumbParts() {
+			yield return new NamedLink( "Decades", UriPath.CombineWithDepth( 1, "index.html" ) );
 			yield return NamedLink.Empty( _decade.DisplayName );
 		}
 
-		public NamedLink Previous { get; private set; }
-
-		public NamedLink Next { get; private set; }
-
-		public bool AllowResize { get { return false; } }
-
-		public string AllowResizeText { get { return AllowResize ? (string)null : "disabled"; } }
-
-		public DecadeBodyModel( IProjectConfig config, IEnumerable<IIssue> issues, NamedLink previous, NamedLink next ) : base(config) {
+		public DecadeBodyModel( 
+			IProjectConfig config, 
+			IEnumerable<IIssue> issues, 
+			NamedLink previous, 
+			NamedLink next ) : 
+			base( config: config,
+			     previous: previous,
+			     next: next,
+			     allowResize: false ) {
 			_issues = issues;
 			_decade = issues.First().Decade;
-			Previous = previous;
-			Next = next;
 		}
 	}
 }
