@@ -5,21 +5,21 @@
 @using Utilities
 <div class="container">
 @foreach( var batch in Model.GetPages().OrderBy( page => page.Number ).InBatchesOf( 4 ) ) {
-	<div class="row">
-	@foreach( var page in batch ) {
-		@Model.RenderThumbnail(
-			linkUrl: page.IndexName,
-			description: "Page " + page.Number,
-			imgUrl: UriPath.CombineWithDepth(
-							3, 
-							Model.Config.RelativeThumbnailImageDir, 
-							Model.Decade.DirectoryName, 
-							Model.Issue.DirectoryName, 
-							page.FileName ),
-			imgWidth: page.ThumbnailImageDisplayWidth,
-			imgHeight: page.ThumbnailImageDisplayHeight,
-			imgAltText: String.Format( "Preview for page {0}", page.Number ) );
-	}
-	</div>
+  <div class="row">
+  @foreach( var page in batch ) {
+    @Model.RenderThumbnail(
+      linkUrl: page.IndexName,
+      description: "Page " + page.Number,
+      imgUrl: UriPath.CombineWithDepth(
+              3, 
+              Model.Config.RelativeThumbnailImageDir, 
+              Model.Decade.DirectoryName, 
+              Model.Issue.DirectoryName, 
+              page.FileName ),
+      imgWidth: page.ThumbnailImageDisplayWidth,
+      imgHeight: page.ThumbnailImageDisplayHeight,
+      imgAltText: String.Format( "Preview for page {0}", page.Number ) );
+  }
+  </div>
 }
 </div>
