@@ -43,9 +43,6 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="NGDecade.cs" />
-    <Compile Include="NGIssue.cs" />
-    <Compile Include="NGPage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Database\SQLite.cs" />
     <Compile Include="Database\DBModel.cs" />

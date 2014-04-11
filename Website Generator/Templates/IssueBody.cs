@@ -69,7 +69,7 @@ WriteLiteral(">\n");
 
 #line default
 #line hidden
-WriteLiteral("\t<div");
+WriteLiteral("  <div");
 
 WriteLiteral(" class=\"row\"");
 
@@ -77,44 +77,44 @@ WriteLiteral(">\n");
 
 
 #line 9 "IssueBody.cshtml"
-	
+  
 
 #line default
 #line hidden
 
 #line 9 "IssueBody.cshtml"
-  foreach( var page in batch ) {
-		
+   foreach( var page in batch ) {
+    
 
 #line default
 #line hidden
 
 #line 10 "IssueBody.cshtml"
 Write(Model.RenderThumbnail(
-			linkUrl: page.IndexName,
-			description: "Page " + page.Number,
-			imgUrl: UriPath.CombineWithDepth(
-							3, 
-							Model.Config.RelativeThumbnailImageDir, 
-							Model.Decade.DirectoryName, 
-							Model.Issue.DirectoryName, 
-							page.FileName ),
-			imgWidth: page.ThumbnailImageDisplayWidth,
-			imgHeight: page.ThumbnailImageDisplayHeight,
-			imgAltText: String.Format( "Preview for page {0}", page.Number ) ));
+      linkUrl: page.IndexName,
+      description: "Page " + page.Number,
+      imgUrl: UriPath.CombineWithDepth(
+              3, 
+              Model.Config.RelativeThumbnailImageDir, 
+              Model.Decade.DirectoryName, 
+              Model.Issue.DirectoryName, 
+              page.FileName ),
+      imgWidth: page.ThumbnailImageDisplayWidth,
+      imgHeight: page.ThumbnailImageDisplayHeight,
+      imgAltText: String.Format( "Preview for page {0}", page.Number ) ));
 
 
 #line default
 #line hidden
 
 #line 21 "IssueBody.cshtml"
-                                                                     ;
-	}
+                                                                        ;
+  }
 
 
 #line default
 #line hidden
-WriteLiteral("\t</div>\n");
+WriteLiteral("  </div>\n");
 
 
 #line 24 "IssueBody.cshtml"

@@ -69,11 +69,11 @@ WriteLiteral(">\n");
 
 #line default
 #line hidden
-WriteLiteral("\t<div");
+WriteLiteral("  <div");
 
 WriteLiteral(" class=\"panel panel-primary\"");
 
-WriteLiteral(">\n\t\t<div");
+WriteLiteral(">\n    <div");
 
 WriteLiteral(" class=\"panel-heading\"");
 
@@ -82,7 +82,7 @@ WriteLiteral("><a");
 WriteAttribute ("href", " href=\"", "\""
 
 #line 9 "DecadeBody.cshtml"
-, Tuple.Create<string,object,bool> ("", UriPath.Combine( Model.Decade.DirectoryName, yearGroup.Year + ".html" )
+ , Tuple.Create<string,object,bool> ("", UriPath.Combine( Model.Decade.DirectoryName, yearGroup.Year + ".html" )
 
 #line default
 #line hidden
@@ -96,7 +96,7 @@ WriteLiteral(">");
 
 
 #line 9 "DecadeBody.cshtml"
-                                                                                                                                   Write(yearGroup.Year);
+                                                                                                                                     Write(yearGroup.Year);
 
 
 #line default
@@ -109,18 +109,18 @@ WriteLiteral("> \n");
 
 
 #line 10 "DecadeBody.cshtml"
-		
+    
 
 #line default
 #line hidden
 
 #line 10 "DecadeBody.cshtml"
-   foreach( var batch in yearGroup.Issues.OrderBy( issue => issue.ReleaseDate ).InBatchesOf( 4 ) ) {
+     foreach( var batch in yearGroup.Issues.OrderBy( issue => issue.ReleaseDate ).InBatchesOf( 4 ) ) {
 
 
 #line default
 #line hidden
-WriteLiteral("\t\t\t<div");
+WriteLiteral("      <div");
 
 WriteLiteral(" class=\"row\"");
 
@@ -128,63 +128,63 @@ WriteLiteral(">\n");
 
 
 #line 12 "DecadeBody.cshtml"
-			
+      
 
 #line default
 #line hidden
 
 #line 12 "DecadeBody.cshtml"
-    foreach( var issue in batch ) {
-				
+       foreach( var issue in batch ) {
+        
 
 #line default
 #line hidden
 
 #line 13 "DecadeBody.cshtml"
-Write(Model.RenderThumbnail(
-					linkUrl: Path.Combine( Model.Decade.DirectoryName, issue.DirectoryName, issue.IndexFileName ),
-					description: issue.ShortDisplayName,
-					imgUrl: Path.Combine( 
-									"..", 
-									Model.Config.RelativeThumbnailImageDir, 
-									Model.Decade.DirectoryName, 
-									issue.DirectoryName, 
-									issue.CoverPage.FileName ),
-					imgWidth: issue.CoverPage.ThumbnailImageDisplayWidth,
-					imgHeight: issue.CoverPage.ThumbnailImageDisplayHeight,
-					imgAltText: String.Format( "Preview for {0}", issue.ShortDisplayName ) ));
+   Write(Model.RenderThumbnail(
+          linkUrl: Path.Combine( Model.Decade.DirectoryName, issue.DirectoryName, issue.IndexFileName ),
+          description: issue.ShortDisplayName,
+          imgUrl: Path.Combine( 
+                  "..", 
+                  Model.Config.RelativeThumbnailImageDir, 
+                  Model.Decade.DirectoryName, 
+                  issue.DirectoryName, 
+                  issue.CoverPage.FileName ),
+          imgWidth: issue.CoverPage.ThumbnailImageDisplayWidth,
+          imgHeight: issue.CoverPage.ThumbnailImageDisplayHeight,
+          imgAltText: String.Format( "Preview for {0}", issue.ShortDisplayName ) ));
 
 
 #line default
 #line hidden
 
 #line 24 "DecadeBody.cshtml"
-                                                                             ;
-			}
+                                                                                  ;
+      }
 
 
 #line default
 #line hidden
-WriteLiteral("\t\t\t</div>\n");
+WriteLiteral("      </div>\n");
 
 
 #line 27 "DecadeBody.cshtml"
-		}
+    }
 
 
 #line default
 #line hidden
-WriteLiteral("\t\t</div>\n\t</div> ");
+WriteLiteral("    </div>\n  </div> ");
 
 
 #line 29 "DecadeBody.cshtml"
-        
+         
 
 #line default
 #line hidden
 
 #line 29 "DecadeBody.cshtml"
-                              
+                               
 }
 
 

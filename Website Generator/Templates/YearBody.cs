@@ -69,7 +69,7 @@ WriteLiteral(">\n");
 
 #line default
 #line hidden
-WriteLiteral("\t<div");
+WriteLiteral("  <div");
 
 WriteLiteral(" class=\"row\"");
 
@@ -77,45 +77,45 @@ WriteLiteral(">\n");
 
 
 #line 9 "YearBody.cshtml"
-	
+  
 
 #line default
 #line hidden
 
 #line 9 "YearBody.cshtml"
-  foreach( var issue in batch ) {
-		
+   foreach( var issue in batch ) {
+    
 
 #line default
 #line hidden
 
 #line 10 "YearBody.cshtml"
 Write(Model.RenderThumbnail(
-			linkUrl: Path.Combine( issue.DirectoryName, issue.IndexFileName ),
-			description: issue.ShortDisplayName,
-			imgUrl: Path.Combine( 
-							"..",
-							"..", 
-							Model.Config.RelativeThumbnailImageDir, 
-							Model.Decade.DirectoryName, 
-							issue.DirectoryName, 
-							issue.CoverPage.FileName ),
-			imgWidth: issue.CoverPage.ThumbnailImageDisplayWidth,
-			imgHeight: issue.CoverPage.ThumbnailImageDisplayHeight,
-			imgAltText: String.Format( "Preview for {0}", issue.ShortDisplayName ) ));
+      linkUrl: Path.Combine( issue.DirectoryName, issue.IndexFileName ),
+      description: issue.ShortDisplayName,
+      imgUrl: Path.Combine( 
+              "..",
+              "..", 
+              Model.Config.RelativeThumbnailImageDir, 
+              Model.Decade.DirectoryName, 
+              issue.DirectoryName, 
+              issue.CoverPage.FileName ),
+      imgWidth: issue.CoverPage.ThumbnailImageDisplayWidth,
+      imgHeight: issue.CoverPage.ThumbnailImageDisplayHeight,
+      imgAltText: String.Format( "Preview for {0}", issue.ShortDisplayName ) ));
 
 
 #line default
 #line hidden
 
 #line 22 "YearBody.cshtml"
-                                                                           ;
-	}
+                                                                              ;
+  }
 
 
 #line default
 #line hidden
-WriteLiteral("\t</div>\n");
+WriteLiteral("  </div>\n");
 
 
 #line 25 "YearBody.cshtml"

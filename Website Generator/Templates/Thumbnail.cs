@@ -42,7 +42,7 @@ WriteLiteral("<div");
 
 WriteLiteral(" class=\"col-md-3 col-sm-3 col-sx-3\"");
 
-WriteLiteral(">\n\t<a");
+WriteLiteral(">\n  <a");
 
 WriteAttribute ("href", " href=\"", "\""
 
@@ -53,15 +53,15 @@ WriteAttribute ("href", " href=\"", "\""
 #line hidden
 , false)
 );
-WriteLiteral(">\n\t\t<div");
+WriteLiteral(">\n    <div");
 
 WriteLiteral(" class=\"panel panel-default\"");
 
-WriteLiteral(">\n\t\t\t<div");
+WriteLiteral(">\n      <div");
 
 WriteLiteral(" class=\"panel-heading\"");
 
-WriteLiteral(">\n\t\t\t\t<h3");
+WriteLiteral(">\n        <h3");
 
 WriteLiteral(" class=\"panel-title\"");
 
@@ -69,16 +69,16 @@ WriteLiteral(">");
 
 
 #line 7 "Thumbnail.cshtml"
-                       Write(Model.Description);
+                           Write(Model.Description);
 
 
 #line default
 #line hidden
-WriteLiteral("</h3>\n\t\t\t</div>\n\t\t\t<div");
+WriteLiteral("</h3>\n      </div>\n      <div");
 
 WriteLiteral(" class=\"panel-body\"");
 
-WriteLiteral(">\n\t\t\t\t<img");
+WriteLiteral(">\n        <img");
 
 WriteAttribute ("src", " src=\"", "\""
 
@@ -92,7 +92,7 @@ WriteAttribute ("src", " src=\"", "\""
 WriteAttribute ("width", " width=\"", "\""
 
 #line 10 "Thumbnail.cshtml"
-, Tuple.Create<string,object,bool> ("", Model.ImgWidth
+ , Tuple.Create<string,object,bool> ("", Model.ImgWidth
 
 #line default
 #line hidden
@@ -101,7 +101,7 @@ WriteAttribute ("width", " width=\"", "\""
 WriteAttribute ("height", " height=\"", "\""
 
 #line 10 "Thumbnail.cshtml"
-                      , Tuple.Create<string,object,bool> ("", Model.ImgHeight
+                          , Tuple.Create<string,object,bool> ("", Model.ImgHeight
 
 #line default
 #line hidden
@@ -112,13 +112,13 @@ WriteLiteral(" class=\"img-thumbnail center-block\"");
 WriteAttribute ("alt", " alt=\"", "\""
 
 #line 10 "Thumbnail.cshtml"
-                                                                                , Tuple.Create<string,object,bool> ("", Model.ImgAltText
+                                                                                    , Tuple.Create<string,object,bool> ("", Model.ImgAltText
 
 #line default
 #line hidden
 , false)
 );
-WriteLiteral("/>\n\t\t\t</div>\n\t\t</div>\n\t</a>\n</div>");
+WriteLiteral("/>\n      </div>\n    </div>\n  </a>\n</div>");
 
 }
 }

@@ -63,7 +63,7 @@ WriteLiteral(">\n");
 
 #line default
 #line hidden
-WriteLiteral("\t<div");
+WriteLiteral("  <div");
 
 WriteLiteral(" class=\"row\"");
 
@@ -71,42 +71,42 @@ WriteLiteral(">\n");
 
 
 #line 8 "MainIndexBody.cshtml"
-	
+  
 
 #line default
 #line hidden
 
 #line 8 "MainIndexBody.cshtml"
-  foreach( var decade in batch ) {
-		
+   foreach( var decade in batch ) {
+    
 
 #line default
 #line hidden
 
 #line 9 "MainIndexBody.cshtml"
 Write(Model.RenderThumbnail(
-		    linkUrl: Path.Combine( "html", decade.IndexFileName ),
-			description: decade.DisplayName,
-			imgUrl: Path.Combine( Model.Config.RelativeThumbnailImageDir,
-					decade.DirectoryName,
-					decade.PreviewPage.Issue.DirectoryName,
-					decade.PreviewPage.FileName ),
-			imgWidth: decade.PreviewPage.ThumbnailImageDisplayWidth,
-			imgHeight: decade.PreviewPage.ThumbnailImageDisplayHeight,
-			imgAltText: String.Format( "Decade preview for {0}", decade.DisplayName ) ));
+        linkUrl: Path.Combine( "html", decade.IndexFileName ),
+      description: decade.DisplayName,
+      imgUrl: Path.Combine( Model.Config.RelativeThumbnailImageDir,
+          decade.DirectoryName,
+          decade.PreviewPage.Issue.DirectoryName,
+          decade.PreviewPage.FileName ),
+      imgWidth: decade.PreviewPage.ThumbnailImageDisplayWidth,
+      imgHeight: decade.PreviewPage.ThumbnailImageDisplayHeight,
+      imgAltText: String.Format( "Decade preview for {0}", decade.DisplayName ) ));
 
 
 #line default
 #line hidden
 
 #line 18 "MainIndexBody.cshtml"
-                                                                              ;
-	}
+                                                                                 ;
+  }
 
 
 #line default
 #line hidden
-WriteLiteral("\t</div>\n");
+WriteLiteral("  </div>\n");
 
 
 #line 21 "MainIndexBody.cshtml"

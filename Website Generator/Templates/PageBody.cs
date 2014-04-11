@@ -60,11 +60,11 @@ WriteLiteral("<div");
 
 WriteLiteral(" class=\"container-fluid no-padding\"");
 
-WriteLiteral(">\n\t<img");
+WriteLiteral(">\n  <img");
 
-WriteLiteral(" \n\t\tid=\"pageScan\"");
+WriteLiteral(" \n    id=\"pageScan\"");
 
-WriteAttribute ("src", " \n\t\tsrc=\"", "\""
+WriteAttribute ("src", " \n    src=\"", "\""
 
 #line 9 "PageBody.cshtml"
 , Tuple.Create<string,object,bool> ("", Model.ImageUrl
@@ -73,7 +73,7 @@ WriteAttribute ("src", " \n\t\tsrc=\"", "\""
 #line hidden
 , false)
 );
-WriteAttribute ("alt", " \n\t\talt=\"", "\""
+WriteAttribute ("alt", " \n    alt=\"", "\""
 
 #line 10 "PageBody.cshtml"
 , Tuple.Create<string,object,bool> ("", Model.Page.DisplayName
@@ -82,9 +82,9 @@ WriteAttribute ("alt", " \n\t\talt=\"", "\""
 #line hidden
 , false)
 );
-WriteLiteral(" \n\t\tclass=\"img-responsive center-block\"");
+WriteLiteral(" \n    class=\"img-responsive center-block\"");
 
-WriteAttribute ("height", "\n\t\theight=\"", "\""
+WriteAttribute ("height", "\n    height=\"", "\""
 
 #line 12 "PageBody.cshtml"
 , Tuple.Create<string,object,bool> ("", Model.Page.FullImageHeight
@@ -93,7 +93,7 @@ WriteAttribute ("height", "\n\t\theight=\"", "\""
 #line hidden
 , false)
 );
-WriteAttribute ("width", "\n\t\twidth=\"", "\""
+WriteAttribute ("width", "\n    width=\"", "\""
 
 #line 13 "PageBody.cshtml"
 , Tuple.Create<string,object,bool> ("", Model.Page.FullImageWidth
