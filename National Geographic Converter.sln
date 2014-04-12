@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "National Geographic Converter", "National Geographic Converter\National Geographic Converter.csproj", "{0ABC8203-C372-4F25-B8A0-CD0F2D069467}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CNG Converter", "CNG Converter\CNG Converter.csproj", "{0ABC8203-C372-4F25-B8A0-CD0F2D069467}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Website Generator", "Website Generator\Website Generator.csproj", "{95D597A3-5E98-4968-95F5-9DC9D3B88DF3}"
 EndProject
@@ -45,7 +45,7 @@ Global
 		{95D597A3-5E98-4968-95F5-9DC9D3B88DF3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = Website Generator\Website Generator.csproj
+		StartupItem = CNG Converter\CNG Converter.csproj
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
