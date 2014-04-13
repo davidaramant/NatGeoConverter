@@ -12,8 +12,12 @@ using System.Linq;
 namespace Website_Generator {
 	public static class ThumbnailGeneration {
 		public static void GenerateThumbnails( IProjectConfig config ) {
+			GenerateThumbnails( config.AbsoluteFullImageDir, config.AbsoluteThumbnailImageDir, config.ThumbnailSize );
+		}
+
+		public static void GenerateThumbnails( string fullImageDir, string thumbnailDir, Size thumbnailSize ) {
 			var timer = Stopwatch.StartNew();
-			var allJpgs = Directory.GetFiles( config.AbsoluteFullImageDir, "*.jpg", SearchOption.AllDirectories );
+			var allJpgs = Directory.GetFiles( fullImageDir, "*.jpg", SearchOption.AllDirectories );
 			Out.WL( "Reading all paths took: {0}", timer.Elapsed );
 
 			const int batchSize = 1000;
@@ -28,11 +32,11 @@ namespace Website_Generator {
 				batchTimer.Start();
 				Out.WL( "Batch {0}/{1}", batch.Number, numBatches );
 				foreach( var fullImagePath in batch.Images ) {
-					var thumbPath = ConvertFullPathToThumbnailPath( config, fullImagePath );
+					var thumbPath = ConvertFullPathToThumbnailPath( fullImageDir, thumbnailDir, fullImagePath );
 
 					Utility.CreateDirInFilePath( thumbPath );
 
-					using( var p = StartGeneratingThumbnail( fullImagePath, thumbPath, config.ThumbnailSize ) ) {
+					using( var p = StartGeneratingThumbnail( fullImagePath, thumbPath, thumbnailSize ) ) {
 						p.WaitForExit();
 					}
 				}
@@ -56,10 +60,10 @@ namespace Website_Generator {
 			return System.Diagnostics.Process.Start( processInfo );
 		}
 
-		static string ConvertFullPathToThumbnailPath( IProjectConfig config, string fullImagePath )
+		static string ConvertFullPathToThumbnailPath( string fullImageDir, string thumbnailDir, string fullImagePath )
 		{
-			var relativePath = fullImagePath.GetPathRelativeTo( config.AbsoluteFullImageDir );
-			return Path.Combine( config.AbsoluteThumbnailImageDir, relativePath );
+			var relativePath = fullImagePath.GetPathRelativeTo( fullImageDir );
+			return Path.Combine( thumbnailDir, relativePath );
 		}
 	}
 }

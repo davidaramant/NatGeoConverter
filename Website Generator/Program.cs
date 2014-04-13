@@ -28,17 +28,10 @@ namespace Website_Generator {
 		static void DoStuff( string[] args ) {
 			var config = new ProjectConfig( baseDir: Path.Combine( "/", "Users", "davidaramant", "Web", "NatGeo" ) );
 
-			OtherContent.Content.CopyToOutput( config );
-
-			//string newPages = @"/Users/davidaramant/Desktop/Fixed Pages";
-
-
-
-
-			//return; 
-
 			var model = new NGCollection( config );
 			var timer = Stopwatch.StartNew();
+
+			OtherContent.Content.CopyToOutput( config );
 
 			GenerateMainIndex( config, model );
 			GenerateDecadeIndexes( config, model );

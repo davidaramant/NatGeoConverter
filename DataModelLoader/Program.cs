@@ -19,11 +19,8 @@ namespace DataModelLoader {
 			PopulateDatabase( config );
 
 			Console.Out.WriteLine( "Generating model took: {0}", timer.Elapsed );
-			timer.Reset();
 
 			CheckDatabase( dbPath: config.DatabasePath );
-
-			Console.Out.WriteLine( "Accessing DB took: {0}", timer.Elapsed );
 		}
 
 		private static void CheckDatabase( string dbPath ) {
