@@ -30,7 +30,7 @@ namespace Website_Generator {
 				foreach( var fullImagePath in batch.Images ) {
 					var thumbPath = ConvertFullPathToThumbnailPath( config, fullImagePath );
 
-					Utility.CreatePath( thumbPath );
+					Utility.CreateDirInFilePath( thumbPath );
 
 					using( var p = StartGeneratingThumbnail( fullImagePath, thumbPath, config.ThumbnailSize ) ) {
 						p.WaitForExit();

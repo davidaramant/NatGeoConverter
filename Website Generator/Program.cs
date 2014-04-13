@@ -28,12 +28,14 @@ namespace Website_Generator {
 		static void DoStuff( string[] args ) {
 			var config = new ProjectConfig( baseDir: Path.Combine( "/", "Users", "davidaramant", "Web", "NatGeo" ) );
 
+			OtherContent.Content.CopyToOutput( config );
+
 			//string newPages = @"/Users/davidaramant/Desktop/Fixed Pages";
 
 
 
 
-			//return; 
+			return; 
 
 			var model = new NGCollection( config );
 			var timer = Stopwatch.StartNew();
@@ -148,7 +150,7 @@ namespace Website_Generator {
 				var path = Path.Combine( config.AbsoluteHtmlDir,
 					           yearToDecade( yearContext.Current.Year ),
 					           yearContext.Current.Year + ".html" );
-				Utility.CreatePath( path );
+				Utility.CreateDirInFilePath( path );
 				File.WriteAllText(
 					path,
 					fileContents,
@@ -193,7 +195,7 @@ namespace Website_Generator {
 					           issueContext.Current.DirectoryName, 
 					           issueContext.Current.IndexFileName );
 
-				Utility.CreatePath( path );
+				Utility.CreateDirInFilePath( path );
 
 				File.WriteAllText(
 					path,
@@ -233,7 +235,7 @@ namespace Website_Generator {
 						           pageContext.Current.Issue.DirectoryName, 
 						           pageContext.Current.IndexName );
 
-					Utility.CreatePath( path );
+					Utility.CreateDirInFilePath( path );
 
 					File.WriteAllText(
 						path,

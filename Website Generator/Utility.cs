@@ -2,10 +2,14 @@
 
 namespace Website_Generator {
 	public static class Utility {
-		public static void CreatePath( string path ) {
+		public static void CreateDirInFilePath( string path ) {
 			var dirPart = Path.GetDirectoryName( path );
-			if( !Directory.Exists( dirPart ) ) {
-				Directory.CreateDirectory( dirPart );
+			CreateDir( dirPart );
+		}
+
+		public static void CreateDir( string path )	{
+			if( !Directory.Exists( path ) ) {
+				Directory.CreateDirectory( path );
 			}
 		}
 	}
