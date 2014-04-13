@@ -28,6 +28,13 @@ namespace Website_Generator {
 		static void DoStuff( string[] args ) {
 			var config = new ProjectConfig( baseDir: Path.Combine( "/", "Users", "davidaramant", "Web", "NatGeo" ) );
 
+			//string newPages = @"/Users/davidaramant/Desktop/Fixed Pages";
+
+
+
+
+			//return; 
+
 			var model = new NGCollection( config );
 			var timer = Stopwatch.StartNew();
 
@@ -209,10 +216,11 @@ namespace Website_Generator {
 					var template = new SiteLayout() {
 						Model = new SiteLayoutModel(
 							config: config,
-							pageTitle: String.Format( "NatGeo: {0} of {1}", pageContext.Current.DisplayName, pages.Length ),
+							pageTitle: String.Format( "NatGeo: {0}", pageContext.Current.DisplayName ),
 							depth: 3,
 							bodyModel: new PageBodyModel( config: config,
 								page: pageContext.Current,
+								totalPages: pages.Length,
 								previous: createLink( pageContext.Previous ),
 								next: createLink( pageContext.Next ) ) )
 					};
@@ -233,6 +241,6 @@ namespace Website_Generator {
 						Encoding.UTF8 );
 				}
 			}
-		}			
+		}
 	}
 }

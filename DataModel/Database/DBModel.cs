@@ -105,7 +105,7 @@ namespace DataModel.Database {
 
 		[Ignore]
 		public string IndexName {
-			get { return Path.GetFileName( FileName ) + ".html"; }
+			get { return Path.GetFileNameWithoutExtension( FileName ) + ".html"; }
 		}
 
 		[Ignore]
