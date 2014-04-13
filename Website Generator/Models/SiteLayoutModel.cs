@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Utilities;
+using Website_Generator.OtherContent;
 
 namespace Website_Generator.Models {
 	public sealed class SiteLayoutModel : BaseModel {
@@ -16,15 +17,15 @@ namespace Website_Generator.Models {
 
 		public IEnumerable<string> GetCssUrls() {
 			return new [] {
-				"bootstrap.min.css",
-				"customizations.css"
+				Content.CSS.Bootstrap,
+				Content.CSS.Customizations
 			}.Select( name => UriPath.CombineWithDepth( _depth, "css", name ) );
 		}
 
 		public IEnumerable<string> GetJSUrls() {
 			var javascriptFiles = new [] {
-				"jquery.min.js",
-				"bootstrap.min.js",
+				Content.JS.JQuery,
+				Content.JS.Bootstrap,
 			}.Concat( _bodyModel.GetExtraJSFiles() );
 
 			return javascriptFiles.Select( name => UriPath.CombineWithDepth( _depth, "js", name ) );

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Utilities;
 using DataModel;
 using System.Linq;
+using Website_Generator.OtherContent;
 
 namespace Website_Generator.Models {
 	public sealed class PageBodyModel : BaseBodyModel, IBodyModel {
@@ -41,7 +42,7 @@ namespace Website_Generator.Models {
 		}
 
 		public override IEnumerable<string> GetExtraJSFiles() {
-			yield return "imageFitToggles.js";
+			yield return Content.JS.ImageFit;
 		}
 
 		protected override string GetBodyClass() {
