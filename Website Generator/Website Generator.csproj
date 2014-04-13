@@ -110,6 +110,15 @@
       <Generator>RazorTemplatePreprocessor</Generator>
       <LastGenOutput>PageBody.cs</LastGenOutput>
     </None>
+    <None Include="OtherContent\css\bootstrap.min.css" />
+    <None Include="OtherContent\css\customizations.css" />
+    <None Include="OtherContent\fonts\glyphicons-halflings-regular.eot" />
+    <None Include="OtherContent\fonts\glyphicons-halflings-regular.svg" />
+    <None Include="OtherContent\fonts\glyphicons-halflings-regular.ttf" />
+    <None Include="OtherContent\fonts\glyphicons-halflings-regular.woff" />
+    <None Include="OtherContent\js\bootstrap.min.js" />
+    <None Include="OtherContent\js\imageFitToggles.js" />
+    <None Include="OtherContent\js\jquery.min.js" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DataModel\DataModel.csproj">
@@ -132,6 +141,10 @@
   <ItemGroup>
     <Folder Include="Templates\" />
     <Folder Include="Models\" />
+    <Folder Include="OtherContent\" />
+    <Folder Include="OtherContent\js\" />
+    <Folder Include="OtherContent\css\" />
+    <Folder Include="OtherContent\fonts\" />
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>
