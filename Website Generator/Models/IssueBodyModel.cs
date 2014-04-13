@@ -18,8 +18,20 @@ namespace Website_Generator.Models {
 
 		public IIssue Issue { get { return _issue; } }
 
+		public IPage Cover{
+			get { return _pages.First(); }
+		}
+
+		public string CoverThumbnailUrl {
+			get{ return UriPath.CombineWithDepth( 3,
+					Config.RelativeThumbnailImageDir,
+					Decade.DirectoryName,
+					Issue.DirectoryName,
+					Cover.FileName ); }
+		}
+
 		public IEnumerable<IPage> GetPages() {
-			return _pages;
+			return _pages.Skip(1);
 		}
 
 		public IEnumerable<NamedLink> GetBreadcrumbParts() {

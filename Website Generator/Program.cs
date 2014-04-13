@@ -35,7 +35,7 @@ namespace Website_Generator {
 
 
 
-			return; 
+			//return; 
 
 			var model = new NGCollection( config );
 			var timer = Stopwatch.StartNew();
@@ -58,12 +58,8 @@ namespace Website_Generator {
 					bodyModel: new MainIndexBodyModel( config, ngCollection ) ) 
 			};
 
-			var fileContents = template.GenerateString();
-
-			File.WriteAllText( 
-				Path.Combine( config.BaseDir, "index.html" ), 
-				fileContents, 
-				Encoding.UTF8 );
+			var path = Path.Combine( config.BaseDir, "index.html" );
+			SaveFile( path, tw => template.Generate( tw ) );
 		}
 
 		static void GenerateDecadeIndexes( IProjectConfig config, NGCollection ngCollection ) {
@@ -86,12 +82,9 @@ namespace Website_Generator {
 							next: createLink( decadeContext.Next ) ) )
 				};
 
-				var fileContents = template.GenerateString();
+				var path = Path.Combine( config.AbsoluteHtmlDir, decadeContext.Current.IndexFileName );
 
-				File.WriteAllText(
-					Path.Combine( config.AbsoluteHtmlDir, decadeContext.Current.IndexFileName ),
-					fileContents,
-					Encoding.UTF8 );
+				SaveFile( path, tw => template.Generate( tw ) );
 			}
 		}
 
@@ -145,16 +138,11 @@ namespace Website_Generator {
 							next: next ) )
 				};
 
-				var fileContents = template.GenerateString();
-
 				var path = Path.Combine( config.AbsoluteHtmlDir,
 					           yearToDecade( yearContext.Current.Year ),
 					           yearContext.Current.Year + ".html" );
-				Utility.CreateDirInFilePath( path );
-				File.WriteAllText(
-					path,
-					fileContents,
-					Encoding.UTF8 );
+
+				SaveFile( path, tw => template.Generate( tw ) );
 			}
 		}
 
@@ -187,20 +175,13 @@ namespace Website_Generator {
 							next: createLink( issueContext.Next, issueContext.Current ) ) )
 				};
 
-				var fileContents = template.GenerateString();
-
 				var path = Path.Combine( 
 					           config.AbsoluteHtmlDir, 
 					           issueContext.Current.Decade.DirectoryName, 
 					           issueContext.Current.DirectoryName, 
 					           issueContext.Current.IndexFileName );
 
-				Utility.CreateDirInFilePath( path );
-
-				File.WriteAllText(
-					path,
-					fileContents,
-					Encoding.UTF8 );
+				SaveFile( path, tw => template.Generate( tw ) );
 			}
 		}
 
@@ -227,21 +208,22 @@ namespace Website_Generator {
 								next: createLink( pageContext.Next ) ) )
 					};
 
-					var fileContents = template.GenerateString();
-
 					var path = Path.Combine( 
 						           config.AbsoluteHtmlDir, 
 						           pageContext.Current.Issue.Decade.DirectoryName, 
 						           pageContext.Current.Issue.DirectoryName, 
 						           pageContext.Current.IndexName );
 
-					Utility.CreateDirInFilePath( path );
-
-					File.WriteAllText(
-						path,
-						fileContents,
-						Encoding.UTF8 );
+					SaveFile( path, tw => template.Generate( tw ) );
 				}
+			}
+		}
+
+		static void SaveFile( string filePath, Action<TextWriter> contentWriter ) {
+			Utility.CreateDirInFilePath( filePath );
+
+			using( var stream = new StreamWriter( filePath, false, Encoding.UTF8 ) ) {
+				contentWriter( stream );
 			}
 		}
 	}

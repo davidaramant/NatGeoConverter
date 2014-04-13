@@ -60,10 +60,58 @@ WriteLiteral("<div");
 
 WriteLiteral(" class=\"container\"");
 
-WriteLiteral(">\n");
+WriteLiteral(">\n\n  <div");
+
+WriteLiteral(" class=\"jumbotron\"");
+
+WriteLiteral(">\n    <a");
+
+WriteAttribute ("href", " href=\"", "\""
+
+#line 9 "IssueBody.cshtml"
+, Tuple.Create<string,object,bool> ("", Model.Cover.IndexName
+
+#line default
+#line hidden
+, false)
+);
+WriteLiteral(">\n      <img");
+
+WriteAttribute ("src", " \n        src=\"", "\""
+
+#line 11 "IssueBody.cshtml"
+, Tuple.Create<string,object,bool> ("", Model.CoverThumbnailUrl
+
+#line default
+#line hidden
+, false)
+);
+WriteAttribute ("width", " \n        width=\"", "\""
+
+#line 12 "IssueBody.cshtml"
+, Tuple.Create<string,object,bool> ("", Model.Cover.ThumbnailImageDisplayWidth
+
+#line default
+#line hidden
+, false)
+);
+WriteAttribute ("height", " \n        height=\"", "\""
+
+#line 13 "IssueBody.cshtml"
+, Tuple.Create<string,object,bool> ("", Model.Cover.ThumbnailImageDisplayHeight
+
+#line default
+#line hidden
+, false)
+);
+WriteLiteral(" \n        class=\"img-thumbnail\"");
+
+WriteLiteral(" \n        alt=\"Preview for cover\"");
+
+WriteLiteral("/>\n    </a>\n  </div>\n\n");
 
 
-#line 7 "IssueBody.cshtml"
+#line 19 "IssueBody.cshtml"
  foreach( var batch in Model.GetPages().OrderBy( page => page.Number ).InBatchesOf( 4 ) ) {
 
 
@@ -76,20 +124,20 @@ WriteLiteral(" class=\"row\"");
 WriteLiteral(">\n");
 
 
-#line 9 "IssueBody.cshtml"
+#line 21 "IssueBody.cshtml"
   
 
 #line default
 #line hidden
 
-#line 9 "IssueBody.cshtml"
+#line 21 "IssueBody.cshtml"
    foreach( var page in batch ) {
     
 
 #line default
 #line hidden
 
-#line 10 "IssueBody.cshtml"
+#line 22 "IssueBody.cshtml"
 Write(Model.RenderThumbnail(
       linkUrl: page.IndexName,
       description: "Page " + page.Number,
@@ -107,7 +155,7 @@ Write(Model.RenderThumbnail(
 #line default
 #line hidden
 
-#line 21 "IssueBody.cshtml"
+#line 33 "IssueBody.cshtml"
                                                                         ;
   }
 
@@ -117,7 +165,7 @@ Write(Model.RenderThumbnail(
 WriteLiteral("  </div>\n");
 
 
-#line 24 "IssueBody.cshtml"
+#line 36 "IssueBody.cshtml"
 }
 
 

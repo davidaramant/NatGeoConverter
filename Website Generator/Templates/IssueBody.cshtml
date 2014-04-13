@@ -4,6 +4,18 @@
 @using Website_Generator.Models
 @using Utilities
 <div class="container">
+
+  <div class="jumbotron">
+    <a href="@Model.Cover.IndexName">
+      <img 
+        src="@Model.CoverThumbnailUrl" 
+        width="@Model.Cover.ThumbnailImageDisplayWidth" 
+        height="@Model.Cover.ThumbnailImageDisplayHeight" 
+        class="img-thumbnail" 
+        alt="Preview for cover"/>
+    </a>
+  </div>
+
 @foreach( var batch in Model.GetPages().OrderBy( page => page.Number ).InBatchesOf( 4 ) ) {
   <div class="row">
   @foreach( var page in batch ) {
