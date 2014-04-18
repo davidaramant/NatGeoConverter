@@ -38,6 +38,12 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="NGModel\issues.cs" />
+    <Compile Include="NGModel\Extensions\NGModelExtensions.cs" />
+    <Compile Include="NGModel\Extensions\PageExceptions.cs" />
+    <Compile Include="NGModel\Extensions\Correction.cs" />
+    <Compile Include="NGModel\Extensions\PageRun.cs" />
+    <Compile Include="NGModel\Extensions\LargePage.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -49,5 +55,9 @@
       <Project>{29661BB8-97B0-4462-A443-0CFFCBE3C1BE}</Project>
       <Name>Utilities</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="NGModel\" />
+    <Folder Include="NGModel\Extensions\" />
   </ItemGroup>
 </Project>
