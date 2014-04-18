@@ -49,6 +49,7 @@
     <Compile Include="Extensions\ElementWithMinOrMaxTests.cs" />
     <Compile Include="Extensions\WithContextTests.cs" />
     <Compile Include="UriPathTests.cs" />
+    <Compile Include="JsonDeserializerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DataModel\DataModel.csproj">
