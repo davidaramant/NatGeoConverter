@@ -6,7 +6,11 @@ namespace Utilities {
 		private readonly string _baseDir;
 
 		public string DatabasePath {
-			get { return Path.Combine( BaseDir, "data", "imgDatabase.sqlite3" ); }
+			get { return Path.Combine( DatabaseDir, "imgDatabase.sqlite3" ); }
+		}
+
+		public string DatabaseDir {
+			get { return Path.Combine( BaseDir, "data" ); }
 		}
 
 		public string BaseDir {
