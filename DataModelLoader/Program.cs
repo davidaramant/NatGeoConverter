@@ -8,6 +8,7 @@ using Utilities.PathExtensions;
 using Utilities;
 using System.Drawing;
 using System.Text.RegularExpressions;
+using DataModelLoader.NGModel.Extensions;
 
 namespace DataModelLoader {
 	class MainClass {
@@ -16,11 +17,34 @@ namespace DataModelLoader {
 
 			var timer = System.Diagnostics.Stopwatch.StartNew();
 
+			LoadNGIssues( config );
+
+			return;
+
 			PopulateDatabase( config );
 
 			Console.Out.WriteLine( "Generating model took: {0}", timer.Elapsed );
 
 			CheckDatabase( dbPath: config.DatabasePath );
+		}
+
+		private static void LoadNGIssues( IProjectConfig config ) {
+			var exceptions = new List<NGModel.Extensions.PageExceptions>();
+
+			var dbPath = Path.Combine( config.DatabaseDir, "cngcontent.sqlite3" );
+			using( var db = new SQLiteConnection( dbPath ) ) {
+				var issues = db.Table<NGModel.issues>().ToArray();
+
+				foreach( var issue in issues ) {
+					try{
+					exceptions.Add(	issue.GetPageExceptions() );
+					}
+					catch( Exception e ) {
+						Out.WL( "{0}: {1}", issue.search_time, e );
+					}
+				}
+
+			}
 		}
 
 		private static void CheckDatabase( string dbPath ) {
@@ -61,7 +85,10 @@ namespace DataModelLoader {
 							Select( (fullImagePath, index ) => {
 								var fileName = Path.GetFileName( fullImagePath );
 								var fullSize = ImageSizeLoader.GetJpegImageSize( fullImagePath );
-								var thumbSize = ImageSizeLoader.GetJpegImageSize( GetThumbnailPath( config, decadeName, issueDirName, fileName ) );
+								var thumbSize = ImageSizeLoader.GetJpegImageSize( GetThumbnailPath( config,
+									                decadeName,
+									                issueDirName,
+									                fileName ) );
 								return new Page { 
 									IssueId = issue.Id,
 									Number = index + 1,
