@@ -13,7 +13,7 @@ namespace Tests {
 		public void ShouldDeserializeJson() {
 			var json = @"{ ""Name"": ""Dog"" }";
 
-			var deserialized = JsonDeserializer.Deserialise<Test>( json );
+			var deserialized = JsonUtility.Deserialise<Test>( json );
 
 			Assert.That( deserialized, Is.Not.Null, "Did not return an object." );
 			Assert.That( deserialized.Name, Is.EqualTo( "Dog" ), "Did not read object properties." );

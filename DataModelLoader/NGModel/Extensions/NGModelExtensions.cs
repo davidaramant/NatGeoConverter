@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using Utilities;
+using DataModel.Database;
 
 namespace DataModelLoader.NGModel.Extensions {
 	public static class NGModelExtensions {
-		private static string ConvertToJson( string ngFormat ) {
+		public static string ConvertToJson( string ngFormat ) {
 			if( ngFormat.StartsWith( ";" ) ) {
 				ngFormat = ngFormat.Substring( 1, ngFormat.Length - 1 );
 			}
@@ -15,7 +16,15 @@ namespace DataModelLoader.NGModel.Extensions {
 		}
 
 		public static PageExceptions GetPageExceptions( this issues issue ) {
-			return JsonDeserializer.Deserialise<PageExceptions>( ConvertToJson( issue.page_exceptions ) );
+			return JsonUtility.Deserialise<PageExceptions>( ConvertToJson( issue.page_exceptions ) );
+		}
+
+		public static int GetSearchTime( this Issue issue )
+		{
+			return 
+				issue.ReleaseDate.Year * 10000 +
+				issue.ReleaseDate.Month * 100 +
+				issue.ReleaseDate.Day;
 		}
 	}
 }

@@ -45,7 +45,7 @@
     <Compile Include="Out.cs" />
     <Compile Include="UriPath.cs" />
     <Compile Include="NamedLink.cs" />
-    <Compile Include="JsonDeserializer.cs" />
+    <Compile Include="JsonUtility.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

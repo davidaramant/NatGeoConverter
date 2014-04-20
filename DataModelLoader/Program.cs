@@ -29,21 +29,34 @@ namespace DataModelLoader {
 		}
 
 		private static void LoadNGIssues( IProjectConfig config ) {
-			var exceptions = new List<NGModel.Extensions.PageExceptions>();
-
 			var dbPath = Path.Combine( config.DatabaseDir, "cngcontent.sqlite3" );
-			using( var db = new SQLiteConnection( dbPath ) ) {
-				var issues = db.Table<NGModel.issues>().ToArray();
 
-				foreach( var issue in issues ) {
-					try{
-					exceptions.Add(	issue.GetPageExceptions() );
-					}
-					catch( Exception e ) {
-						Out.WL( "{0}: {1}", issue.search_time, e );
+			using( var db = new SQLiteConnection( dbPath ) ) {
+				var issues = 
+					db.Table<NGModel.issues>().Where( i => i.search_time < 20090000 ).ToArray().
+					Select( i=> new { Issue = i, Exceptions = i.GetPageExceptions() } ).
+					ToArray();
+	
+				foreach( var op in Enum.GetValues( typeof( CorrectionOperation)).Cast<CorrectionOperation>() ) {
+					var issuesWithOp = 
+						issues.Where( i => i.Exceptions.corrections.Any( c => c.GetOperation() == op ) ).
+						OrderBy( i => i.Issue.search_time ).ToArray();
+					Out.WL( new string( '#', 79 ) );
+					Out.WL( "{0}: {1}", op, issuesWithOp.Length );
+
+					foreach( var i in issuesWithOp ) {
+						Out.WL( "Issue: {0}", i.Issue.search_time );
+						Out.WL( "E: {0}", JsonUtility.FormatJson( NGModelExtensions.ConvertToJson( i.Issue.page_exceptions ) ) );
+						Out.WL();
 					}
 				}
+			}
+		}
 
+		private static NGModel.issues LoadNGIssue( IProjectConfig config, Issue issue ) {
+			var dbPath = Path.Combine( config.DatabaseDir, "cngcontent.sqlite3" );
+			using( var db = new SQLiteConnection( dbPath ) ) {
+				return db.Table<NGModel.issues>().Where( i => i.search_time == issue.GetSearchTime() ).First();
 			}
 		}
 
