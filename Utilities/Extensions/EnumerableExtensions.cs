@@ -115,6 +115,14 @@ namespace Utilities.EnumerableExtensions {
 
 			yield return new ElementContext<T>( previous: current, current: next, next: default(T) );
 		}
+
+		public static void Move<T>( this List<T> list, int index, int adjustment )
+		{
+			var item = list[ index ];
+
+			list.RemoveAt( index );
+			list.Insert( index + adjustment, item );
+		}
 	}
 }
 

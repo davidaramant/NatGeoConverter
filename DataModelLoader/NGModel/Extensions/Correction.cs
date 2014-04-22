@@ -8,6 +8,14 @@ namespace DataModelLoader.NGModel.Extensions {
 
 		public string filename { get; set; }
 
+		public string new_filename { get; set; }
+
+		public int? adjustment { get; set; }
+
+		public int? other_search_time { get; set; }
+
+		public string other_filename { get; set; }
+
 		public CorrectionOperation GetOperation() {
 			switch( op ) {
 				case "remove_image":
@@ -41,47 +49,38 @@ namespace DataModelLoader.NGModel.Extensions {
 		/// Useless.  Used to mark new images found in the app bundle.
 		/// </summary>
 		AddNewImageBefore,
-
 		/// <summary>
-		/// ?
+		/// Unused.
 		/// </summary>
 		DeleteMissingNumberedPages,
-
 		/// <summary>
-		/// Do manually?
+		/// Corrected manually.
 		/// </summary>
 		InsertImageFromOtherIssue,
-
 		/// <summary>
 		/// Useless.  Marks a large page for their special snowflake app.
 		/// </summary>
 		MarkLargePage,
-
 		/// <summary>
 		/// Rearranges page order.
 		/// </summary>
 		MoveImage,
-
 		/// <summary>
 		/// Useless.  Moves the map to where it was in the issue.
 		/// </summary>
 		MoveMap,
-
 		/// <summary>
 		/// Useless.  The CNG app works on aspect ratio or something dumb.
 		/// </summary>
 		NotLargePage,
-
 		/// <summary>
-		/// Do this manually?
+		/// Corrected manually.
 		/// </summary>
 		RemoveImage,
-
 		/// <summary>
-		/// Do this manually?
+		/// Corrected manually.
 		/// </summary>
 		RemoveMap,
-
 		/// <summary>
 		/// Do "page numbers" actually matter? YES, unfortunately
 		/// </summary>

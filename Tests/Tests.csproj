@@ -50,6 +50,7 @@
     <Compile Include="Extensions\WithContextTests.cs" />
     <Compile Include="UriPathTests.cs" />
     <Compile Include="JsonDeserializerTests.cs" />
+    <Compile Include="Extensions\MoveExtensionTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DataModel\DataModel.csproj">

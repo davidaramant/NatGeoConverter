@@ -80,7 +80,11 @@ namespace DataModel.Database {
 		[PrimaryKey, AutoIncrement]
 		public int Id { get; set; }
 
+		public int Order { get; set; }
+
 		public int Number { get; set; }
+
+		public bool Unnumbered { get; set; }
 
 		[MaxLength( 54 )] // This is the longest file name
 		public string FileName { get; set; }

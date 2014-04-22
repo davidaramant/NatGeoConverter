@@ -9,6 +9,7 @@ using Utilities;
 using System.Drawing;
 using System.Text.RegularExpressions;
 using DataModelLoader.NGModel.Extensions;
+using Utilities.EnumerableExtensions;
 
 namespace DataModelLoader {
 	class MainClass {
@@ -34,14 +35,20 @@ namespace DataModelLoader {
 			using( var db = new SQLiteConnection( dbPath ) ) {
 				var issues = 
 					db.Table<NGModel.issues>().Where( i => i.search_time < 20090000 ).ToArray().
-					Select( i=> new { Issue = i, Exceptions = i.GetPageExceptions() } ).
+					Select( i => new { Issue = i, Exceptions = i.GetPageExceptions() } ).
 					ToArray();
 	
+				Out.WL( "Exceptions: {0}", JsonUtility.FormatJson( NGModelExtensions.ConvertToJson( issues.First().Issue.page_exceptions ) ) );
+				return;
+
+
 				foreach( var op in Enum.GetValues( typeof( CorrectionOperation)).Cast<CorrectionOperation>() ) {
 					var issuesWithOp = 
 						issues.Where( i => i.Exceptions.corrections.Any( c => c.GetOperation() == op ) ).
 						OrderBy( i => i.Issue.search_time ).ToArray();
-					Out.WL( new string( '#', 79 ) );
+					Out.WL( new string( '#', 120 ) );
+					Out.WL( new string( '#', 120 ) );
+					Out.WL( new string( '#', 120 ) );
 					Out.WL( "{0}: {1}", op, issuesWithOp.Length );
 
 					foreach( var i in issuesWithOp ) {
@@ -92,9 +99,10 @@ namespace DataModelLoader {
 						var issue = new Issue { DecadeId = decade.Id, ReleaseDate = ParseIssueDirIntoDate( issueDirName ) };
 						db.Insert( issue );
 
+						var ngIssue = LoadNGIssue( config, issue );
+
 						var allPages = 
 							Directory.GetFiles( issueDir, "*.jpg", SearchOption.TopDirectoryOnly ).
-							OrderBy( name => name ).
 							Select( (fullImagePath, index ) => {
 								var fileName = Path.GetFileName( fullImagePath );
 								var fullSize = ImageSizeLoader.GetJpegImageSize( fullImagePath );
@@ -104,7 +112,6 @@ namespace DataModelLoader {
 									                fileName ) );
 								return new Page { 
 									IssueId = issue.Id,
-									Number = index + 1,
 									FileName = fileName,
 									FullImageWidth = fullSize.Width,
 									FullImageHeight = fullSize.Height,
@@ -113,9 +120,9 @@ namespace DataModelLoader {
 								}; 
 							} ).ToList();
 
-						db.InsertAll( allPages );
+						db.InsertAll( GetOrderedPages( ngIssue, allPages ) );
 
-						issue.CoverPageId = allPages.First( page => Regex.IsMatch( page.IndexName, @"^NGM_(\w{2}_)?\d{4}" ) ).Id;
+						issue.CoverPageId = allPages.First().Id;
 						db.Update( issue );
 
 						if( firstIssue ) {
@@ -126,6 +133,61 @@ namespace DataModelLoader {
 					}
 				}
 			}
+		}
+
+		private static IEnumerable<Page> GetOrderedPages( NGModel.issues ngIssue, IEnumerable<Page> unorderdPages ) {
+			var exceptions = ngIssue.GetPageExceptions();
+			var normalPages = 
+				unorderdPages.
+				Where( p => p.FileName.StartsWith( exceptions.basename ) ).
+				OrderBy( p => p.FileName ).
+				ToList();
+			var supplements = unorderdPages.Except( normalPages ).OrderBy( p => p.FileName );
+
+			// Handle exceptions
+			foreach( var correction in exceptions.corrections ) {
+				switch( correction.GetOperation() ) {
+					case CorrectionOperation.MoveImage:
+						var indexOfPage = normalPages.FindIndex( p => p.FileName == correction.filename );
+						normalPages.Move( indexOfPage, correction.adjustment.Value );
+						break;				
+					case CorrectionOperation.UnnumberedImage:
+						var page = normalPages.First( p => p.FileName == correction.filename );
+						page.Unnumbered = true;
+						break;
+					default:
+						break;
+				}
+			}
+
+			// TODO: What is this used for?
+			// Handle page runs
+			/*
+			foreach( var pageRun in exceptions.page_runs ) {
+			}
+			*/
+
+			// Set numbers
+			int currentPageNumber = ngIssue.numbered_page_start_value;
+			foreach( var page in normalPages.Skip( ngIssue.numbered_page_offset ) ) {
+				if( !page.Unnumbered ) {
+					page.Number = currentPageNumber++;
+				}
+			}
+
+			// Set order
+
+			var orderedPages = new List<Page>();
+			orderedPages.AddRange( normalPages );
+			foreach( var supplement in supplements ) {
+				supplement.Unnumbered = true;
+				orderedPages.Add( supplement );
+			}
+
+			return orderedPages.Select( (p, index ) => {
+				p.Order = index;
+				return p;
+			} );
 		}
 
 		private static string GetThumbnailPath( IProjectConfig config,
