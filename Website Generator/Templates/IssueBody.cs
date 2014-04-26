@@ -140,7 +140,7 @@ WriteLiteral(">\n");
 #line 22 "IssueBody.cshtml"
 Write(Model.RenderThumbnail(
       linkUrl: page.IndexName,
-      description: "Page " + page.Number,
+      description: page.DisplayName,
       imgUrl: UriPath.CombineWithDepth(
               3, 
               Model.Config.RelativeThumbnailImageDir, 
@@ -149,14 +149,14 @@ Write(Model.RenderThumbnail(
               page.FileName ),
       imgWidth: page.ThumbnailImageDisplayWidth,
       imgHeight: page.ThumbnailImageDisplayHeight,
-      imgAltText: String.Format( "Preview for page {0}", page.Number ) ));
+      imgAltText: page.DisplayName ));
 
 
 #line default
 #line hidden
 
 #line 33 "IssueBody.cshtml"
-                                                                        ;
+                                    ;
   }
 
 

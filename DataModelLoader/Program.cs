@@ -18,10 +18,6 @@ namespace DataModelLoader {
 
 			var timer = System.Diagnostics.Stopwatch.StartNew();
 
-			LoadNGIssues( config );
-
-			return;
-
 			PopulateDatabase( config );
 
 			Console.Out.WriteLine( "Generating model took: {0}", timer.Elapsed );
@@ -62,8 +58,10 @@ namespace DataModelLoader {
 
 		private static NGModel.issues LoadNGIssue( IProjectConfig config, Issue issue ) {
 			var dbPath = Path.Combine( config.DatabaseDir, "cngcontent.sqlite3" );
+
+			var searchTime = issue.GetSearchTime();
 			using( var db = new SQLiteConnection( dbPath ) ) {
-				return db.Table<NGModel.issues>().Where( i => i.search_time == issue.GetSearchTime() ).First();
+				return db.Table<NGModel.issues>().Where( i => i.search_time == searchTime ).First();
 			}
 		}
 
@@ -120,9 +118,11 @@ namespace DataModelLoader {
 								}; 
 							} ).ToList();
 
-						db.InsertAll( GetOrderedPages( ngIssue, allPages ) );
+						var orderedPages = GetOrderedPages( ngIssue, allPages ).ToList();
 
-						issue.CoverPageId = allPages.First().Id;
+						db.InsertAll( orderedPages );
+
+						issue.CoverPageId = orderedPages[0].Id;
 						db.Update( issue );
 
 						if( firstIssue ) {
@@ -184,8 +184,10 @@ namespace DataModelLoader {
 				orderedPages.Add( supplement );
 			}
 
+
 			return orderedPages.Select( (p, index ) => {
-				p.Order = index;
+				var order = index;
+				p.Order = order;
 				return p;
 			} );
 		}

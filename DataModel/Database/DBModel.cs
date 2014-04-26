@@ -104,7 +104,10 @@ namespace DataModel.Database {
 
 		[Ignore]
 		public string DisplayName {
-			get { return "Page " + Number; }
+			get 
+			{ 
+				return (!Unnumbered)? "Page " + Number : "Other " + Order; 
+			}
 		}
 
 		[Ignore]
