@@ -16,6 +16,9 @@ namespace DataModelLoader {
 		public static void Main( string[] args ) {
 			var config = new ProjectConfig( baseDir: Path.Combine( "/", "Users", "davidaramant", "Web", "NatGeo" ) );
 
+			//LoadNGIssues(config);
+			//return;
+
 			var timer = System.Diagnostics.Stopwatch.StartNew();
 
 			PopulateDatabase( config );
@@ -34,7 +37,17 @@ namespace DataModelLoader {
 					Select( i => new { Issue = i, Exceptions = i.GetPageExceptions() } ).
 					ToArray();
 	
-				Out.WL( "Exceptions: {0}", JsonUtility.FormatJson( NGModelExtensions.ConvertToJson( issues.First().Issue.page_exceptions ) ) );
+				var allLargePages = issues.SelectMany( i => i.Exceptions.large_pages );
+
+				var pageCountGroups = allLargePages.GroupBy( lp => lp.page_count );
+
+				foreach( var g in pageCountGroups ) {
+					Out.WL( "Page count: {0} - Number# {1}", g.First().page_count, g.Count() );
+					if( g.First().page_count == 18 ) {
+						var lp = g.First();
+					}
+				}
+
 				return;
 
 
@@ -160,18 +173,21 @@ namespace DataModelLoader {
 				}
 			}
 
-			// TODO: What is this used for?
-			// Handle page runs
-			/*
-			foreach( var pageRun in exceptions.page_runs ) {
-			}
-			*/
+			var largePageMap = exceptions.large_pages.ToDictionary( lp => lp.filename );
 
 			// Set numbers
 			int currentPageNumber = ngIssue.numbered_page_start_value;
+			foreach( var page in normalPages.Take( ngIssue.numbered_page_offset ) ) {
+				page.Unnumbered = true;
+			}
 			foreach( var page in normalPages.Skip( ngIssue.numbered_page_offset ) ) {
 				if( !page.Unnumbered ) {
 					page.Number = currentPageNumber++;
+
+					LargePage lp = null;
+					if( largePageMap.TryGetValue( page.FileName, out lp ) ) {
+						currentPageNumber += lp.page_count-1;
+					}
 				}
 			}
 

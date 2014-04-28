@@ -16,7 +16,7 @@
     </a>
   </div>
 
-@foreach( var batch in Model.GetPages().OrderBy( page => page.Number ).InBatchesOf( 4 ) ) {
+@foreach( var batch in Model.GetPages().InBatchesOf( 4 ) ) {
   <div class="row">
   @foreach( var page in batch ) {
     @Model.RenderThumbnail(

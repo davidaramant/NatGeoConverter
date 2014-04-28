@@ -1,6 +1,7 @@
 ﻿namespace DataModel {
 	public interface IPage {
 		int Id { get; }
+		int Order { get; }
 		int Number { get; }
 		string DisplayName { get; }
 		string IndexName { get; }

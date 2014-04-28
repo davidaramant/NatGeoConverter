@@ -112,7 +112,7 @@ WriteLiteral("/>\n    </a>\n  </div>\n\n");
 
 
 #line 19 "IssueBody.cshtml"
- foreach( var batch in Model.GetPages().OrderBy( page => page.Number ).InBatchesOf( 4 ) ) {
+ foreach( var batch in Model.GetPages().InBatchesOf( 4 ) ) {
 
 
 #line default

@@ -106,7 +106,11 @@ namespace DataModel.Database {
 		public string DisplayName {
 			get 
 			{ 
-				return (!Unnumbered)? "Page " + Number : "Other " + Order; 
+				var display = Order.ToString();
+				if( !Unnumbered ) {
+					display += " (Page " + Number + ")";
+				}
+				return display;
 			}
 		}
 

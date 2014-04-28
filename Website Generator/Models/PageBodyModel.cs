@@ -38,7 +38,7 @@ namespace Website_Generator.Models {
 				UriPath.CombineWithDepth( 1,
 					Issue.ReleaseDate.Year + ".html" ) );
 			yield return new NamedLink( Issue.ShortDisplayName, Issue.IndexFileName );
-			yield return NamedLink.Empty( String.Format( "{0} of {1}", Page.DisplayName, _totalPages ) );
+			yield return NamedLink.Empty( String.Format( "{0} of {1}", Page.Order + 1, _totalPages ) );
 		}
 
 		public override IEnumerable<string> GetExtraJSFiles() {
