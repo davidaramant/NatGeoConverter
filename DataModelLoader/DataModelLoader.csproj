@@ -44,6 +44,7 @@
     <Compile Include="NGModel\Extensions\Correction.cs" />
     <Compile Include="NGModel\Extensions\PageRun.cs" />
     <Compile Include="NGModel\Extensions\LargePage.cs" />
+    <Compile Include="NGModel\articles.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

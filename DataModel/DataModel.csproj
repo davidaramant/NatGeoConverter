@@ -45,11 +45,14 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Database\SQLite.cs" />
-    <Compile Include="Database\DBModel.cs" />
     <Compile Include="NGCollection.cs" />
     <Compile Include="IDecade.cs" />
     <Compile Include="IIssue.cs" />
     <Compile Include="IPage.cs" />
+    <Compile Include="Database\Decade.cs" />
+    <Compile Include="Database\Issue.cs" />
+    <Compile Include="Database\Page.cs" />
+    <Compile Include="Database\Article.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
