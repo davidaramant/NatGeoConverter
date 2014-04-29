@@ -21,7 +21,8 @@ namespace DataModelLoader {
 
 			var timer = System.Diagnostics.Stopwatch.StartNew();
 
-			PopulateDatabase( config );
+			//PopulateDatabase( config );
+			ReDoPageOrder( config );
 
 			Console.Out.WriteLine( "Generating model took: {0}", timer.Elapsed );
 
@@ -87,6 +88,20 @@ namespace DataModelLoader {
 			}
 		}
 
+		private static void ReDoPageOrder( IProjectConfig config ) {
+			using( var db = new SQLiteConnection( databasePath: config.DatabasePath ) ) {
+				foreach( var issue in db.Table<Issue>().ToArray() ) {
+					var ngIssue = LoadNGIssue( config, issue );
+
+					var pagesInIssue = db.Table<Page>().Where( p => p.IssueId == issue.Id ).ToArray();
+
+					var orderedPages = OrderPages( ngIssue, pagesInIssue ).ToList();
+
+					db.UpdateAll( orderedPages );
+				}
+			}
+		}
+
 		private static void PopulateDatabase( IProjectConfig config ) {
 			using( var db = new SQLiteConnection( databasePath: config.DatabasePath ) ) {
 				db.DropTable<Decade>();
@@ -131,7 +146,7 @@ namespace DataModelLoader {
 								}; 
 							} ).ToList();
 
-						var orderedPages = GetOrderedPages( ngIssue, allPages ).ToList();
+						var orderedPages = OrderPages( ngIssue, allPages ).ToList();
 
 						db.InsertAll( orderedPages );
 
@@ -148,7 +163,7 @@ namespace DataModelLoader {
 			}
 		}
 
-		private static IEnumerable<Page> GetOrderedPages( NGModel.issues ngIssue, IEnumerable<Page> unorderdPages ) {
+		private static IEnumerable<Page> OrderPages( NGModel.issues ngIssue, IEnumerable<Page> unorderdPages ) {
 			var exceptions = ngIssue.GetPageExceptions();
 			var normalPages = 
 				unorderdPages.
@@ -192,7 +207,6 @@ namespace DataModelLoader {
 			}
 
 			// Set order
-
 			var orderedPages = new List<Page>();
 			orderedPages.AddRange( normalPages );
 			foreach( var supplement in supplements ) {
