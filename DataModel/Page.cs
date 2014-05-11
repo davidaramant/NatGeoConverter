@@ -2,8 +2,8 @@
 using System.IO;
 using SQLite;
 
-namespace DataModel.Database {
-	public sealed class Page : IPage {
+namespace DataModel {
+	public sealed class Page {
 		#region Database
 
 		[PrimaryKey, AutoIncrement]
@@ -65,7 +65,7 @@ namespace DataModel.Database {
 		public string IssueDirName { get; set; }
 
 		[Ignore]
-		public IIssue Issue { get; set; }
+		public Issue Issue { get; set; }
 	}
 }
 

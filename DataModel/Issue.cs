@@ -2,8 +2,8 @@
 using System.IO;
 using SQLite;
 
-namespace DataModel.Database {
-	public sealed class Issue : IIssue {
+namespace DataModel {
+	public sealed class Issue {
 		#region Database
 
 		[PrimaryKey, AutoIncrement]
@@ -20,7 +20,7 @@ namespace DataModel.Database {
 		#endregion Database
 
 		[Ignore]
-		public IDecade Decade { get; set; }
+		public Decade Decade { get; set; }
 
 		[Ignore]
 		public string ShortDisplayName {
@@ -43,7 +43,7 @@ namespace DataModel.Database {
 		}
 
 		[Ignore]
-		public IPage CoverPage { get; set; }
+		public Page CoverPage { get; set; }
 	}
 
 }

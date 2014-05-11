@@ -1,15 +1,15 @@
 ﻿using System;
-using System.IO;
 using System.Collections.Generic;
-using System.Linq;
-using DataModel.Database;
-using SQLite;
-using Utilities.PathExtensions;
-using Utilities;
 using System.Drawing;
+using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
-using DataModelLoader.NGModel.Extensions;
+using DataModel;
+using SQLite;
+using Utilities;
 using Utilities.EnumerableExtensions;
+using Utilities.PathExtensions;
+using DataModelLoader.NGModel.Extensions;
 
 namespace DataModelLoader {
 	class MainClass {

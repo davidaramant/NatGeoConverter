@@ -6,19 +6,19 @@ using System.Linq;
 
 namespace Website_Generator.Models {
 	public sealed class IssueBodyModel: BaseBodyModel, IBodyModel {
-		readonly IIssue _issue;
-		readonly IEnumerable<IPage> _pages;
+		readonly Issue _issue;
+		readonly IEnumerable<Page> _pages;
 
 		public string GetBody() {
 			var template = new IssueBody() { Model = this };
 			return template.GenerateString();
 		}
 
-		public IDecade Decade { get { return _issue.Decade; } }
+		public Decade Decade { get { return _issue.Decade; } }
 
-		public IIssue Issue { get { return _issue; } }
+		public Issue Issue { get { return _issue; } }
 
-		public IPage Cover{
+		public Page Cover{
 			get { return _pages.First(); }
 		}
 
@@ -30,7 +30,7 @@ namespace Website_Generator.Models {
 					Cover.FileName ); }
 		}
 
-		public IEnumerable<IPage> GetPages() {
+		public IEnumerable<Page> GetPages() {
 			return _pages.Skip(1);
 		}
 
@@ -44,8 +44,8 @@ namespace Website_Generator.Models {
 		}
 
 		public IssueBodyModel( IProjectConfig config,
-		                       IIssue issue,
-		                       IEnumerable<IPage> pages,
+		                       Issue issue,
+		                       IEnumerable<Page> pages,
 		                       NamedLink previous,
 		                       NamedLink next ) : base( config: config,
 		                                                   previous: previous,

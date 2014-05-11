@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using Utilities;
-using DataModel.Database;
+using DataModel;
 
 namespace DataModelLoader.NGModel.Extensions {
 	public static class NGModelExtensions {

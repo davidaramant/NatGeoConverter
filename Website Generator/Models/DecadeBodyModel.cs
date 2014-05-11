@@ -6,17 +6,17 @@ using System.Linq;
 
 namespace Website_Generator.Models {
 	public sealed class DecadeBodyModel : BaseBodyModel, IBodyModel {
-		readonly IDecade _decade;
-		readonly IEnumerable<IIssue> _issues;
+		readonly Decade _decade;
+		readonly IEnumerable<Issue> _issues;
 
 		public string GetBody() {
 			var template = new DecadeBody() { Model = this };
 			return template.GenerateString();
 		}
 
-		public IDecade Decade { get { return _decade; } }
+		public Decade Decade { get { return _decade; } }
 
-		public IEnumerable<IIssue> GetIssues() {
+		public IEnumerable<Issue> GetIssues() {
 			return _issues;
 		}
 
@@ -27,7 +27,7 @@ namespace Website_Generator.Models {
 
 		public DecadeBodyModel( 
 			IProjectConfig config, 
-			IEnumerable<IIssue> issues, 
+			IEnumerable<Issue> issues, 
 			NamedLink previous, 
 			NamedLink next ) : 
 			base( config: config,

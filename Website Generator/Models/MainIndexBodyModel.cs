@@ -7,7 +7,7 @@ namespace Website_Generator.Models {
 	public sealed class MainIndexBodyModel : BaseBodyModel, IBodyModel {
 		private readonly NGCollection _ngCollection;
 
-		public IEnumerable<IDecade> GetDecades() {
+		public IEnumerable<Decade> GetDecades() {
 			return _ngCollection.GetAllDecades();
 		}
 

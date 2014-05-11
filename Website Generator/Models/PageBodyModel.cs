@@ -7,7 +7,7 @@ using Website_Generator.OtherContent;
 
 namespace Website_Generator.Models {
 	public sealed class PageBodyModel : BaseBodyModel, IBodyModel {
-		readonly IPage _page;
+		readonly Page _page;
 		readonly int _totalPages;
 
 		public string GetBody() {
@@ -25,11 +25,11 @@ namespace Website_Generator.Models {
 			}
 		}
 
-		public IDecade Decade { get { return _page.Issue.Decade; } }
+		public Decade Decade { get { return _page.Issue.Decade; } }
 
-		public IIssue Issue { get { return _page.Issue; } }
+		public Issue Issue { get { return _page.Issue; } }
 
-		public IPage Page { get { return _page; } }
+		public Page Page { get { return _page; } }
 
 		public IEnumerable<NamedLink> GetBreadcrumbParts() {
 			yield return new NamedLink( "Decades", UriPath.CombineWithDepth( 3, "index.html" ) );
@@ -50,7 +50,7 @@ namespace Website_Generator.Models {
 		}
 
 		public PageBodyModel( IProjectConfig config,
-		                      IPage page,
+		                      Page page,
 		                      int totalPages,
 		                      NamedLink previous,
 		                      NamedLink next ) : base( 

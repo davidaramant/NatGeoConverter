@@ -56,7 +56,7 @@ namespace Website_Generator {
 		}
 
 		static void GenerateDecadeIndexes( IProjectConfig config, NGCollection ngCollection ) {
-			Func<IDecade,NamedLink> createLink = decade => {
+			Func<Decade,NamedLink> createLink = decade => {
 				if( decade == null )
 					return null;
 
@@ -140,7 +140,7 @@ namespace Website_Generator {
 		}
 
 		static void GenerateIssueIndexes( IProjectConfig config, NGCollection ngCollection ) {
-			Func<IIssue,IIssue, NamedLink> createLink = (issue, current ) => {
+			Func<Issue,Issue, NamedLink> createLink = (issue, current ) => {
 				if( issue == null )
 					return null;
 
@@ -179,7 +179,7 @@ namespace Website_Generator {
 		}
 
 		static void GeneratePageIndexes( IProjectConfig config, NGCollection ngCollection ) {
-			Func<IPage, NamedLink> createLink = page => {
+			Func<Page, NamedLink> createLink = page => {
 				if( page == null )
 					return null;
 

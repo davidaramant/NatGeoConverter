@@ -2,7 +2,7 @@
 using System.IO;
 using SQLite;
 
-namespace DataModel.Database {
+namespace DataModel {
 	public sealed class Article {
 		#region Database
 

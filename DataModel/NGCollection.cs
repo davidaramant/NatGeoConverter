@@ -1,6 +1,5 @@
 ﻿using System;
 using SQLite;
-using DataModel.Database;
 using System.Collections.Generic;
 using Utilities;
 using System.IO;
@@ -19,7 +18,7 @@ namespace DataModel {
 			return new SQLiteConnection( _config.DatabasePath );
 		}
 
-		public IEnumerable<IDecade> GetAllDecades( bool hydrate = true ) {
+		public IEnumerable<Decade> GetAllDecades( bool hydrate = true ) {
 			var decades = new List<Decade>();
 			using( var db = Open() ) {
 				decades.AddRange( db.Table<Decade>().OrderBy( d => d.DirectoryName ) );
@@ -35,7 +34,7 @@ namespace DataModel {
 			return decades;
 		}
 
-		public IEnumerable<IIssue> GetAllIssuesInDecade( IDecade decade ) {
+		public IEnumerable<Issue> GetAllIssuesInDecade( Decade decade ) {
 			var issues = new List<Issue>();
 			using( var db = Open() ) {
 				issues.AddRange( db.Table<Issue>().Where( i => i.DecadeId == decade.Id ).OrderBy( i => i.ReleaseDate ) );
@@ -47,7 +46,7 @@ namespace DataModel {
 			return issues;
 		}
 
-		public IEnumerable<IIssue> GetAllIssues( bool hydrateCoverPage = true ) {
+		public IEnumerable<Issue> GetAllIssues( bool hydrateCoverPage = true ) {
 			var issues = new List<Issue>();
 			using( var db = Open() ) {
 				issues.AddRange( db.Table<Issue>().OrderBy( i => i.ReleaseDate ) );
@@ -61,7 +60,7 @@ namespace DataModel {
 			return issues;
 		}
 
-		public IEnumerable<IPage> GetAllPagesInIssue( IIssue issue ) {
+		public IEnumerable<Page> GetAllPagesInIssue( Issue issue ) {
 			var pages = new List<Page>();
 			using( var db = Open() ) {
 				pages.AddRange( db.Table<Page>().Where( p => p.IssueId == issue.Id ).OrderBy( p => p.Order ) );

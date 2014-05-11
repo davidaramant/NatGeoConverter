@@ -7,8 +7,8 @@ using System.Linq;
 namespace Website_Generator.Models {
 	public sealed class YearBodyModel: BaseBodyModel, IBodyModel {
 		readonly int _year;
-		readonly IDecade _decade;
-		readonly IEnumerable<IIssue> _issues;
+		readonly Decade _decade;
+		readonly IEnumerable<Issue> _issues;
 
 		public string GetBody() {
 			var template = new YearBody() { Model = this };
@@ -17,9 +17,9 @@ namespace Website_Generator.Models {
 
 		public int Year { get { return _year; } }
 
-		public IDecade Decade { get { return _decade; } }
+		public Decade Decade { get { return _decade; } }
 
-		public IEnumerable<IIssue> GetIssues() {
+		public IEnumerable<Issue> GetIssues() {
 			return _issues;
 		}
 
@@ -31,7 +31,7 @@ namespace Website_Generator.Models {
 
 		public YearBodyModel( IProjectConfig config,
 		                      int year,
-		                      IEnumerable<IIssue> issues,
+		                      IEnumerable<Issue> issues,
 		                      NamedLink previous,
 		                      NamedLink next ) : base( config: config,
 		                                               previous: previous,
