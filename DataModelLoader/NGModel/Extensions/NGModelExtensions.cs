@@ -26,6 +26,13 @@ namespace DataModelLoader.NGModel.Extensions {
 				issue.ReleaseDate.Month * 100 +
 				issue.ReleaseDate.Day;
 		}
+
+        public static int ToSearchTime( this DateTime dateTime ) {
+            return 
+                dateTime.Year * 10000 +
+                dateTime.Month * 100 +
+                dateTime.Day;
+        }
 	}
 }
 

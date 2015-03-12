@@ -15,6 +15,8 @@ namespace DataModel {
 		[Indexed]
 		public int PageId { get; set; }
 
+        public int Length { get; set; }
+
 		public string Description { get; set; }
 
 		public string Summary { get; set; }
