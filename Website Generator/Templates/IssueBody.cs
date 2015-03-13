@@ -62,7 +62,7 @@ WriteLiteral(" class=\"container\"");
 
 WriteLiteral(">\n\n  <div");
 
-WriteLiteral(" class=\"jumbotron\"");
+WriteLiteral(" class=\"jumbotron row\"");
 
 WriteLiteral(">\n    <a");
 
@@ -75,6 +75,8 @@ WriteAttribute ("href", " href=\"", "\""
 #line hidden
 , false)
 );
+WriteLiteral(" class=\"col-md-3 col-sm-3 col-sx-3\"");
+
 WriteLiteral(">\n      <img");
 
 WriteAttribute ("src", " \n        src=\"", "\""
@@ -108,7 +110,11 @@ WriteLiteral(" \n        class=\"img-thumbnail\"");
 
 WriteLiteral(" \n        alt=\"Preview for cover\"");
 
-WriteLiteral("/>\n    </a>\n    <ul>\n");
+WriteLiteral("/>\n    </a>\n    <ul");
+
+WriteLiteral(" class=\"col-md-9 col-sm-9 col-sx-9\"");
+
+WriteLiteral(">\n");
 
 
 #line 18 "IssueBody.cshtml"

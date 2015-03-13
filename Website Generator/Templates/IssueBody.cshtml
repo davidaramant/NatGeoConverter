@@ -5,8 +5,8 @@
 @using Utilities
 <div class="container">
 
-  <div class="jumbotron">
-    <a href="@Model.Cover.IndexName">
+  <div class="jumbotron row">
+    <a href="@Model.Cover.IndexName" class="col-md-3 col-sm-3 col-sx-3">
       <img 
         src="@Model.CoverThumbnailUrl" 
         width="@Model.Cover.ThumbnailImageDisplayWidth" 
@@ -14,7 +14,7 @@
         class="img-thumbnail" 
         alt="Preview for cover"/>
     </a>
-    <ul>
+    <ul class="col-md-9 col-sm-9 col-sx-9">
     @foreach( var article in Model.GetArticles() ) {
       <li>@article.Description</li>
     }
