@@ -108,10 +108,43 @@ WriteLiteral(" \n        class=\"img-thumbnail\"");
 
 WriteLiteral(" \n        alt=\"Preview for cover\"");
 
-WriteLiteral("/>\n    </a>\n  </div>\n\n");
+WriteLiteral("/>\n    </a>\n    <ul>\n");
+
+
+#line 18 "IssueBody.cshtml"
+    
+
+#line default
+#line hidden
+
+#line 18 "IssueBody.cshtml"
+     foreach( var article in Model.GetArticles() ) {
+
+
+#line default
+#line hidden
+WriteLiteral("      <li>");
 
 
 #line 19 "IssueBody.cshtml"
+     Write(article.Description);
+
+
+#line default
+#line hidden
+WriteLiteral("</li>\n");
+
+
+#line 20 "IssueBody.cshtml"
+    }
+
+
+#line default
+#line hidden
+WriteLiteral("    </ul>\n  </div>\n\n");
+
+
+#line 24 "IssueBody.cshtml"
  foreach( var batch in Model.GetPages().InBatchesOf( 4 ) ) {
 
 
@@ -124,20 +157,20 @@ WriteLiteral(" class=\"row\"");
 WriteLiteral(">\n");
 
 
-#line 21 "IssueBody.cshtml"
+#line 26 "IssueBody.cshtml"
   
 
 #line default
 #line hidden
 
-#line 21 "IssueBody.cshtml"
+#line 26 "IssueBody.cshtml"
    foreach( var page in batch ) {
     
 
 #line default
 #line hidden
 
-#line 22 "IssueBody.cshtml"
+#line 27 "IssueBody.cshtml"
 Write(Model.RenderThumbnail(
       linkUrl: page.IndexName,
       description: page.DisplayName,
@@ -155,7 +188,7 @@ Write(Model.RenderThumbnail(
 #line default
 #line hidden
 
-#line 33 "IssueBody.cshtml"
+#line 38 "IssueBody.cshtml"
                                     ;
   }
 
@@ -165,7 +198,7 @@ Write(Model.RenderThumbnail(
 WriteLiteral("  </div>\n");
 
 
-#line 36 "IssueBody.cshtml"
+#line 41 "IssueBody.cshtml"
 }
 
 
@@ -258,7 +291,7 @@ public abstract class IssueBodyBase
 
 			//NOTE: a more sophisticated implementation would write safe and pre-escaped values directly to the
 			//instead of double-escaping. See System.Web.IHtmlString in ASP.NET 4.0 for an example of this.
-			System.Net.WebUtility.HtmlEncode (value.ToString (), writer);
+			writer.Write(System.Net.WebUtility.HtmlEncode (value.ToString ()));
 		}
 
 		// This method is REQUIRED, but you may choose to implement it differently

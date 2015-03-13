@@ -45,13 +45,22 @@ namespace DataModelLoader {
 
                     foreach( var cngArticle in cngDb.Table<NGModel.articles>().Where( a => a.search_time <= maxSearchTime ) ) {
                         var issueId = GetIssueIdFromSearchTime( db, cngArticle.search_time );
-                        articles.Add( new Article {
+                        var article = new Article {
                             IssueId = issueId,
-                            PageId = GetPageId( db, issueId, cngArticle.start_page_offset ),
                             Length = cngArticle.page_count,
                             Description = cngArticle.display_name,
                             Summary = cngArticle.summary,
-                        } );
+                        };
+
+                        if( cngArticle.start_page_offset != -1 ) {
+                            var id = GetPageId( db, issueId, cngArticle.start_page_offset );
+                            if( id != -1 ) {
+                                article.PageId = id;
+                                article.SpecifiedPage = true;
+                            } 
+                        }
+
+                        articles.Add( article );
                     }
                     db.InsertAll( articles );
                 }
@@ -74,11 +83,12 @@ namespace DataModelLoader {
             // Why are they negative????
             var number = -offset;
 
-            if( number == 1 )
-                return 0;
-            
             var page = db.Table<Page>().Where( p => p.IssueId == issueId && p.Number == number ).FirstOrDefault();
-            return page == null ? 0 : page.Id;
+
+            if( page == null ) {
+                return -1;
+            }
+            return page.Id;
         }
 
         private static void LoadNGIssues( IProjectConfig config ) {

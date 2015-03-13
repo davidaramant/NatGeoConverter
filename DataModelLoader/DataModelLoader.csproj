@@ -3,8 +3,6 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>12.0.0</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{8FCF2595-3B31-4871-9E9E-1BC5E6DFD428}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>DataModelLoader</RootNamespace>

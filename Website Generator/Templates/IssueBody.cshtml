@@ -14,6 +14,11 @@
         class="img-thumbnail" 
         alt="Preview for cover"/>
     </a>
+    <ul>
+    @foreach( var article in Model.GetArticles() ) {
+      <li>@article.Description</li>
+    }
+    </ul>
   </div>
 
 @foreach( var batch in Model.GetPages().InBatchesOf( 4 ) ) {

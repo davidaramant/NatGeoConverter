@@ -46,7 +46,7 @@ namespace DataModel {
 			return issues;
 		}
 
-		public IEnumerable<Issue> GetAllIssues( bool hydrateCoverPage = true ) {
+        public IEnumerable<Issue> GetAllIssues( bool hydrateCoverPage = true ) {
 			var issues = new List<Issue>();
 			using( var db = Open() ) {
 				issues.AddRange( db.Table<Issue>().OrderBy( i => i.ReleaseDate ) );
@@ -59,6 +59,21 @@ namespace DataModel {
 			}
 			return issues;
 		}
+
+        public IEnumerable<Article> GetAllArticlesInIssue( Issue issue ) {
+            var articles = new List<Article>();
+            using( var db = Open() ) {
+                articles.AddRange( db.Table<Article>().Where( a => a.IssueId == issue.Id ) );
+                foreach( var article in articles.Where( a => a.SpecifiedPage ) ) {
+                    var page = db.Query<Page>( "select * from Page where Id = ?", article.PageId ).FirstOrDefault();
+                    if( page == null ) {
+                        throw new ArgumentException( "Couldn't find page: " + article.PageId );
+                    }
+                    article.Page = page;
+                }
+                return articles.OrderBy( a => a.Page == null ? 0 : a.Page.Order ).ToList();
+            }
+        }
 
 		public IEnumerable<Page> GetAllPagesInIssue( Issue issue ) {
 			var pages = new List<Page>();

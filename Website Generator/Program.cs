@@ -33,11 +33,11 @@ namespace Website_Generator {
 
 			OtherContent.Content.CopyToOutput( config );
 
-			GenerateMainIndex( config, model );
-			GenerateDecadeIndexes( config, model );
-			GenerateYearIndexes( config, model );
+			//GenerateMainIndex( config, model );
+			//GenerateDecadeIndexes( config, model );
+			//GenerateYearIndexes( config, model );
 			GenerateIssueIndexes( config, model );
-			GeneratePageIndexes( config, model );
+			//GeneratePageIndexes( config, model );
 
 			Out.WL( "HTML generation took: " + timer.Elapsed );
 		}
@@ -164,6 +164,7 @@ namespace Website_Generator {
 						bodyModel: new IssueBodyModel( config: config,
 							issue: issueContext.Current,
 							pages: ngCollection.GetAllPagesInIssue( issueContext.Current ),
+                            articles: ngCollection.GetAllArticlesInIssue( issueContext.Current ),
 							previous: createLink( issueContext.Previous, issueContext.Current ),
 							next: createLink( issueContext.Next, issueContext.Current ) ) )
 				};
