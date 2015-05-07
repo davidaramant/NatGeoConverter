@@ -33,11 +33,11 @@ namespace Website_Generator {
 
 			OtherContent.Content.CopyToOutput( config );
 
-			//GenerateMainIndex( config, model );
-			//GenerateDecadeIndexes( config, model );
-			//GenerateYearIndexes( config, model );
-			GenerateIssueIndexes( config, model );
-			//GeneratePageIndexes( config, model );
+			GenerateMainIndex( config, model );
+			GenerateDecadeIndexes( config, model );
+			GenerateYearIndexes( config, model );
+			//GenerateIssueIndexes( config, model );
+			GeneratePageIndexes( config, model );
 
 			Out.WL( "HTML generation took: " + timer.Elapsed );
 		}

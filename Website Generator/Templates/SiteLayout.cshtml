@@ -17,7 +17,7 @@
     <div class="container">
       <div class="navbar-collapse collapse">
         <ul class="nav navbar-nav">
-          <ul class="breadcrumb list-inline">
+          <ul class="breadcrumb">
         @foreach( var link in Model.Body.GetBreadcrumbParts() ) {
           if( link.HasUrl ) {
             <li><a href="@link.Url">@link.Name</a></li>
